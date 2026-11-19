@@ -154,7 +154,7 @@ let S,tab='raport',qty=50,sound=true,actx=null;
 function newState(){return{m:1,pop:100,food:300,energy:100,min:200,cr:500,mor:60,rs:null,rp:{},q:[],
  b:{farm:3,power:2,battery:1,store:1,mine:1,house:2,rec:0,lab:0,port:0,shield:0},tax:10,ration:1,tech:{},prio:{},
  pr:{food:4,min:6},prev:null,over:null,
- report:['Witaj, gubernatorze! Kolonia Nowa Nadzieja liczy 100 osadników.','Cel: '+GOAL+' kolonistów w ciągu roku ('+DAYS+' dni).']}}
+ report:[{k:'txt',t:'Witaj, gubernatorze! Kolonia Nowa Nadzieja liczy 100 osadników.'},{k:'txt',t:'Cel: '+GOAL+' kolonistów w ciągu roku ('+DAYS+' dni).'}],repDays:0}}
 
 function calc(s){
  const t=s.tech,b=s.b,cap=b.house*60,workforce=s.pop*0.6,enCap=(b.battery||0)*BATCAP;
@@ -207,42 +207,67 @@ const EVENTS=[
  s=>{s.energy=Math.max(0,s.energy-60);s.mor-=4;return'Awaria zasilania: −60 kWh energii.'}
 ];
 
-function endTurn(quiet){
+// raport: wpisy z danymi, które przy wielu dniach się sumują
+const R=Math.round,ws=d=>d>1?'w sumie ':'',dd=d=>d>1?' (przez '+daysTxt(d)+')':'';
+const REP={
+ waste:{c:'warn',f:(v,d)=>R(v.a)<1?null:'Baterie pełne – zmarnowano '+ws(d)+R(v.a)+' kWh energii'+dd(d)+'.'},
+ hunger:{c:'neg',f:(v,d)=>'GŁÓD! '+(R(v.a)===1?'Zmarł '+ws(d)+'1 kolonista':'Zmarło '+ws(d)+R(v.a)+' kolonistów')+dd(d)+'.'},
+ stall:{c:'warn',f:(v,d)=>'Budowa stoi'+dd(d)+' – nikt nie pracuje na placach budowy. Zmień priorytet budowniczych w zakładce PRACA.'},
+ short:{c:'warn',f:(v,d)=>'Brak rąk do pracy'+dd(d)+' – brakuje '+v._miss+' '+(v._miss===1?'pracownika':'pracowników')+'. Niedoobsadzone: '+v._low+'. Priorytety ustawisz w zakładce PRACA.'},
+ black:{c:'neg',f:(v,d)=>'BLACKOUT'+dd(d)+'! Zasilanie pokrywa '+(d>1?'średnio ':'')+R(v.p/d)+'% potrzeb.'},
+ crowd:{c:'warn',f:(v,d)=>'Przeludnienie'+dd(d)+' – zbuduj moduły mieszkalne.'},
+ born:{c:'',f:(v,d)=>R(v.a)<1?null:(R(v.a)===1?'Urodził się '+ws(d)+'1 nowy kolonista.':'Urodziło się '+ws(d)+R(v.a)+' nowych kolonistów.')},
+ imm:{c:'',f:(v,d)=>R(v.a)<1?null:'Port: '+(R(v.a)===1?'przybył '+ws(d)+'1 imigrant.':'przybyło '+ws(d)+R(v.a)+' imigrantów.')},
+ emig:{c:'neg',f:(v,d)=>R(v.a)<1?null:'Niezadowoleni koloniści odlatują: '+ws(d)+'−'+R(v.a)+dd(d)+'.'},
+ debt:{c:'neg',f:(v,d)=>'Kolonia jest zadłużona'+dd(d)+'! Morale spada.'},
+ loss:{c:'warn',f:(v,d)=>{const f=R(v.f),m=R(v.m);if(f<1&&m<1)return null;return'Magazyny pełne – stracono '+ws(d)+(f>=1?f+' t żywności':'')+(f>=1&&m>=1?' i ':'')+(m>=1?m+' t minerałów':'')+'.'}},
+ nores:{c:'warn',f:(v,d)=>'Laboratoria nie mają projektu'+dd(d)+' – wybierz technologię w zakładce NAUKA.'}
+};
+function mergeRep(old,neu){for(const e of neu){const o=e.k==='txt'?null:old.find(x=>x.k===e.k);
+ if(!o){old.push(e);continue}o.d++;for(const f in e.v)o.v[f]=f[0]==='_'?e.v[f]:(o.v[f]||0)+e.v[f]}}
+function repLines(s){const D=s.repDays||1,rp=s.report||[];
+ const L=[...rp.filter(e=>e.top),...rp.filter(e=>!e.top)].map(e=>{
+  if(typeof e==='string')return e;
+  if(e.k==='txt')return'<span class="'+(e.c||'')+'">'+(D>1&&e.day?'Dzień '+e.day+': ':'')+e.t+'</span>';
+  const t=REP[e.k].f(e.v,e.d);return t&&'<span class="'+REP[e.k].c+'">'+t+'</span>'}).filter(Boolean);
+ return L.length?L:[D>1?'Spokojne dni w kolonii.':'Spokojny dzień w kolonii.']}
+
+function endTurn(quiet,acc){
  if(S.over)return true;
  const s=S,c=calc(s),r=[];let imp=false;
+ const add=(k,v)=>r.push({k,v:v||{},d:1}),note=(t,cl)=>r.push({k:'txt',t,c:cl,day:s.m,top:1});
  s.prev={pop:s.pop,food:s.food,energy:s.energy,min:s.min,cr:s.cr,mor:s.mor};
  s.energy=c.enStore;
- if(c.enWaste>=1)r.push('<span class="warn">Baterie pełne – zmarnowano '+Math.round(c.enWaste)+' kWh energii.</span>');
+ if(c.enWaste>0.01)add('waste',{a:c.enWaste});
  s.food+=c.foodProd-c.foodCons;
  let deaths=0;
- if(s.food<0){deaths=s.pop*0.066*c.shortRatio;s.food=0;if(!s.wasHungry)imp=true;r.push('<span class="neg">GŁÓD! Zmarło '+Math.round(deaths)+' kolonistów.</span>')}
+ if(s.food<0){deaths=s.pop*0.066*c.shortRatio;s.food=0;if(!s.wasHungry)imp=true;add('hunger',{a:deaths})}
  s.min+=c.minProd;s.cr+=c.taxInc+c.trade-c.maint;
  s.mor+=(c.mt-s.mor)*MORK;
  // postęp budowy
  if(s.q.length){s.q.forEach((x,i)=>x.d+=c.sites[i].rate);
-  s.q=s.q.filter(x=>{if(x.d<BLD[x.k].bt)return true;s.b[x.k]++;imp=true;r.unshift('<span class="pos">★ Ukończono budowę: '+BLD[x.k].n+'.</span>');beep(520,.12);return false});
-  if(s.q.length&&c.builders<0.5)r.push('<span class="warn">Budowa stoi – nikt nie pracuje na placach budowy. Zmień priorytet budowniczych w zakładce PRACA.</span>')}
- if(c.e<1){const miss=Math.ceil(c.needed-c.workforce),low=[...Object.keys(BLD).filter(k=>s.b[k]),...(c.wNeed.build?['build']:[])].filter(k=>prioOf(s,k)>0&&c.E[k]<1).map(k=>jobName(k)+' '+Math.round(c.E[k]*100)+'%');
-  r.push('<span class="warn">Brak rąk do pracy – brakuje '+miss+' '+(miss===1?'pracownika':'pracowników')+'. Niedoobsadzone: '+low.join(', ')+'. Priorytety ustawisz w zakładce PRACA.</span>')}
+  s.q=s.q.filter(x=>{if(x.d<BLD[x.k].bt)return true;s.b[x.k]++;imp=true;note('★ Ukończono budowę: '+BLD[x.k].n+'.','pos');beep(520,.12);return false});
+  if(s.q.length&&c.builders<0.5)add('stall')}
+ if(c.e<1){const miss=Math.ceil(c.needed-c.workforce),low=[...Object.keys(BLD).filter(k=>s.b[k]),...(c.wNeed.build?['build']:[])].filter(k=>prioOf(s,k)>0&&c.E[k]<1).map(k=>jobName(k)+' '+Math.floor(c.E[k]*100)+'%');
+  add('short',{_miss:miss,_low:low.join(', ')})}
  if(c.f<1&&!s.wasBlack)imp=true;
- if(c.f<1)r.push('<span class="neg">BLACKOUT! Zasilanie pokrywa '+Math.round(c.f*100)+'% potrzeb.</span>');
- if(c.crowd>0)r.push('<span class="warn">Przeludnienie – zbuduj moduły mieszkalne.</span>');
- if(!deaths&&s.pop<c.cap){const g=Math.min(s.pop*0.0082*(s.mor/60)*(s.tech.med?1.3:1),c.cap-s.pop);s.pop+=g;if(g>=1)r.push('Urodziło się '+Math.round(g)+' nowych kolonistów.')}
- if(s.b.port&&s.mor>55&&s.pop<c.cap){const im=Math.min(1.5+Math.random()*3.5,c.cap-s.pop);s.pop+=im;if(im>=1)r.push('Port: przybyło '+Math.round(im)+' imigrantów.')}
- if(s.mor<25){if(!s.wasLow)imp=true;const em=s.pop*0.01;s.pop-=em;r.push('<span class="neg">Niezadowoleni koloniści odlatują: −'+Math.round(em)+'.</span>')}
+ if(c.f<1)add('black',{p:c.f*100});
+ if(c.crowd>0)add('crowd');
+ if(!deaths&&s.pop<c.cap){const g=Math.min(s.pop*0.0082*(s.mor/60)*(s.tech.med?1.3:1),c.cap-s.pop);s.pop+=g;if(g>0)add('born',{a:g})}
+ if(s.b.port&&s.mor>55&&s.pop<c.cap){const im=Math.min(1.5+Math.random()*3.5,c.cap-s.pop);s.pop+=im;if(im>0)add('imm',{a:im})}
+ if(s.mor<25){if(!s.wasLow)imp=true;const em=s.pop*0.01;s.pop-=em;add('emig',{a:em})}
  s.pop-=deaths;
- if(s.m>10&&Math.random()<0.1){const m=EVENTS[Math.floor(Math.random()*EVENTS.length)](s);if(m){imp=true;r.unshift('<span class="cyan" style="color:var(--cyan)">★ '+m+'</span>');beep(220,.25)}}
+ if(s.m>10&&Math.random()<0.1){const m=EVENTS[Math.floor(Math.random()*EVENTS.length)](s);if(m){imp=true;note('★ '+m,'sub');beep(220,.25)}}
  for(const k in s.pr){const b=RES[k].base;s.pr[k]=Math.max(b*0.5,Math.min(b*2,s.pr[k]*(1+(Math.random()-0.5)*0.14)))}
- if(s.cr<0)r.push('<span class="neg">Kolonia jest zadłużona! Morale spada.</span>');
+ if(s.cr<0)add('debt');
  s.mor=Math.max(0,Math.min(100,s.mor));s.pop=Math.max(0,s.pop);s.energy=Math.min(s.energy,(s.b.battery||0)*BATCAP);
- {const l=clampStore(s);if(l.food>=1||l.min>=1)r.push('<span class="warn">Magazyny pełne – stracono'+(l.food>=1?' '+Math.round(l.food)+' t żywności':'')+(l.food>=1&&l.min>=1?' i':'')+(l.min>=1?' '+Math.round(l.min)+' t minerałów':'')+'.</span>')}
+ {const l=clampStore(s);if(l.food>0||l.min>0)add('loss',{f:l.food,m:l.min})}
  if(s.rs&&c.resProd>0){const k=s.rs,t=TECH[k];s.rp[k]=(s.rp[k]||0)+c.resProd;
-  if(s.rp[k]>=t.c){imp=true;s.tech[k]=1;delete s.rp[k];s.rs=null;r.unshift('<span class="pos">★ Naukowcy ukończyli projekt: '+t.n+'! '+t.d+'. Wybierz kolejny w zakładce NAUKA.</span>');beep(990,.15)}}
- else if(!s.rs&&c.resProd>0&&nextTech(s))r.push('<span class="warn">Laboratoria nie mają projektu – wybierz technologię w zakładce NAUKA.</span>');
+  if(s.rp[k]>=t.c){imp=true;s.tech[k]=1;delete s.rp[k];s.rs=null;note('★ Naukowcy ukończyli projekt: '+t.n+'! '+t.d+'. Wybierz kolejny w zakładce NAUKA.','pos');beep(990,.15)}}
+ else if(!s.rs&&c.resProd>0&&nextTech(s))add('nores');
  s.wasHungry=deaths>0;s.wasBlack=c.f<1;s.wasLow=s.mor<25;
  s.m++;
- if(!r.length)r.push('Spokojny dzień w kolonii.');
- s.report=r;s.repDays=1;
+ if(acc&&Array.isArray(s.report)){mergeRep(s.report,r);s.repDays=(s.repDays||1)+1}else{s.report=r;s.repDays=1}
  if(s.pop>=GOAL)s.over={win:true,t:'ZWYCIĘSTWO!',d:'Kolonia osiągnęła '+GOAL+' mieszkańców. Rada Ziemi przyznaje ci order Pioniera.'};
  else if(s.pop<10)s.over={win:false,t:'KOLONIA UPADŁA',d:'Zostało zbyt mało osadników, by przetrwać.'};
  else if(s.mor<=5)s.over={win:false,t:'BUNT!',d:'Koloniści przejęli władzę i odesłali cię na Ziemię.'};
@@ -293,7 +318,7 @@ function sgn(n){n=Math.round(n);return'<span class="'+(n>=0?'pos':'neg')+'">'+(n
 function siteEta(x){return x.eta===Infinity?'<span class="neg">stoi</span>':'jeszcze '+daysTxt(x.eta)}
 function pRaport(s,c){
  const prog=Math.min(100,s.pop/GOAL*100),nextMor=Math.max(0,Math.min(100,s.mor+(c.mt-s.mor)*MORK));
- return'<div class="t" style="color:var(--white)">'+(!s.repDays?'RAPORT':s.repDays===1?'RAPORT Z OSTATNIEGO DNIA':'RAPORT Z OSTATNICH '+s.repDays+' DNI')+'</div><div class="log">'+s.report.map(x=>'<p>'+x+'</p>').join('')+'</div>'+
+ return'<div class="t" style="color:var(--white)">'+(!s.repDays?'RAPORT':s.repDays===1?'RAPORT Z OSTATNIEGO DNIA':'RAPORT Z OSTATNICH '+s.repDays+' DNI')+'</div><div class="log">'+repLines(s).map(x=>'<p>'+x+'</p>').join('')+'</div>'+
  '<div class="card"><div class="t">PROGNOZA NA NASTĘPNY DZIEŃ</div>'+
  '<div class="row"><span>'+ico('work')+'Wydajność</span><span>'+Math.round(c.e*c.f*100)+'%</span></div>'+bar(c.e*c.f,1,c.e*c.f<1?'warn':'')+'<div style="height:6px"></div>'+
  (s.q.length?'<div class="row"><span>'+ico('build')+'Budowa</span><span>'+BLD[s.q[0].k].n+' '+Math.floor(c.sites[0].pct)+'% <span class="small">('+siteEta(c.sites[0])+(s.q.length>1?'; placów budowy: '+s.q.length:'')+')</span></span></div>':'')+
@@ -389,9 +414,9 @@ function advance(n){initAudio();if(busy||S.over)return;busy=true;go.disabled=go7
  const show=()=>{lab.innerHTML='DZIEŃ '+Math.min(S.m+1,DAYS)+'<br>'+dateOf(S.m+1)};
  show();document.body.appendChild(el);
  let i=0;
- const step=()=>{const imp=endTurn(n>1);i++;fill.style.width=(n>1?i/n*100:100)+'%';beep(330+i*60,.04);
+ const step=()=>{const imp=endTurn(n>1,i>0);i++;fill.style.width=(n>1?i/n*100:100)+'%';beep(330+i*60,.04);
   if(i<n&&!imp&&!S.over){show();setTimeout(step,90)}else finish()};
- const finish=()=>{if(n>1){S.prev=p0;S.repDays=i;if(i<n&&!S.over)S.report.unshift('<span class="sub">Przewijanie zatrzymane po '+i+' '+(i===1?'dniu':'dniach')+' – ważne wydarzenie.</span>');save();render();beep(660,.06)}
+ const finish=()=>{if(n>1){S.prev=p0;if(i<n&&!S.over)S.report.unshift({k:'txt',t:'Przewijanie zatrzymane po '+i+' '+(i===1?'dniu':'dniach')+' – ważne wydarzenie.',c:'sub',top:1});save();render();beep(660,.06)}
   setTimeout(()=>{el.classList.add('out');setTimeout(()=>{el.remove();busy=false;render()},200)},n>1?150:200)};
  setTimeout(step,n>1?120:200)}
 go.onclick=()=>advance(1);
