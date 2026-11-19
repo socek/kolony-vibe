@@ -1,0 +1,61 @@
+<script setup>
+import { computed } from 'vue'
+import { game, c } from '../../store.js'
+import { BLD, TECH, GOAL, MORK } from '../../game/constants.js'
+import { num, daysTxt } from '../../game/format.js'
+import { techPct, techEta } from '../../game/calc.js'
+import { repLines } from '../../game/report.js'
+import PixelIcon from '../PixelIcon.vue'
+import MeterBar from '../MeterBar.vue'
+import SignedNum from '../SignedNum.vue'
+
+const s = computed(() => game.s)
+const title = computed(() => {
+  const d = s.value.repDays
+  return !d ? 'RAPORT' : d === 1 ? 'RAPORT Z OSTATNIEGO DNIA' : 'RAPORT Z OSTATNICH ' + d + ' DNI'
+})
+const lines = computed(() => repLines(s.value))
+const eff = computed(() => c.value.e * c.value.f)
+const nextMor = computed(() => Math.max(0, Math.min(100, s.value.mor + (c.value.mt - s.value.mor) * MORK)))
+const prog = computed(() => Math.min(100, s.value.pop / GOAL * 100))
+const site = computed(() => s.value.q.length ? { name: BLD[s.value.q[0].k].n, st: c.value.sites[0] } : null)
+const R = Math.round
+</script>
+
+<template>
+  <div class="t" style="color:var(--white)">{{ title }}</div>
+  <div class="log"><p v-for="(l, i) in lines" :key="i"><span :class="l.cls">{{ l.text }}</span></p></div>
+
+  <div class="card">
+    <div class="t">PROGNOZA NA NASTĘPNY DZIEŃ</div>
+    <div class="row"><span><PixelIcon name="work" />Wydajność</span><span>{{ R(eff * 100) }}%</span></div>
+    <MeterBar :value="eff" :max="1" :cls="eff < 1 ? 'warn' : ''" />
+    <div style="height:6px"></div>
+    <div v-if="site" class="row">
+      <span><PixelIcon name="build" />Budowa</span>
+      <span>{{ site.name }} {{ Math.floor(site.st.pct) }}%
+        <span class="small">(<span v-if="site.st.eta === Infinity" class="neg">stoi</span><template v-else>jeszcze {{ daysTxt(site.st.eta) }}</template><template v-if="s.q.length > 1">; placów budowy: {{ s.q.length }}</template>)</span>
+      </span>
+    </div>
+    <div class="row"><span><PixelIcon name="food" />Żywność</span><span><SignedNum :n="c.foodProd - c.foodCons" /> t <span class="small">({{ R(c.foodProd) }} prod. / {{ R(c.foodCons) }} zuż.)</span></span></div>
+    <div class="row"><span><PixelIcon name="energy" />Energia</span><span><SignedNum :n="c.enProd - c.enNeed" /> kWh <span class="small">({{ R(c.enProd) }} prod. / {{ R(c.enNeed) }} zuż.)</span></span></div>
+    <div class="row"><span><PixelIcon name="battery" />Magazyn energii</span><span>{{ R(c.enStore) }}/{{ c.enCap }} kWh<span v-if="c.enWaste >= 1" class="small warn"> (strata {{ R(c.enWaste) }} kWh)</span></span></div>
+    <div class="row"><span><PixelIcon name="min" />Minerały</span><span><SignedNum :n="c.minProd" /> t</span></div>
+    <div class="row">
+      <span><PixelIcon name="store" />Magazyny</span>
+      <span>{{ c.stCap }} t na surowiec<span v-if="c.foodWaste >= 1 || c.minWaste >= 1" class="small warn"> (strata<template v-if="c.foodWaste >= 1"> {{ R(c.foodWaste) }} t żywn.</template><template v-if="c.minWaste >= 1"> {{ R(c.minWaste) }} t min.</template>)</span></span>
+    </div>
+    <div class="row"><span><PixelIcon name="cr" />Kredyty</span><span><SignedNum :n="c.taxInc + c.trade - c.maint" /> <span class="small">(podatki {{ R(c.taxInc) }}<template v-if="c.trade">, handel {{ R(c.trade) }}</template>, utrzymanie −{{ c.maint }})</span></span></div>
+    <div class="row">
+      <span><PixelIcon name="res" />Badania</span>
+      <span v-if="s.rs"><span class="pos">+{{ num(c.resProd / TECH[s.rs].c * 100) }}%</span> <span class="small">({{ TECH[s.rs].n }}: {{ Math.floor(techPct(s, s.rs)) }}%, {{ techEta(s, s.rs, c) }})</span></span>
+      <span v-else class="warn">brak projektu</span>
+    </div>
+    <div class="row"><span><PixelIcon name="mor" />Morale</span><span><SignedNum :n="nextMor - s.mor" /> <span class="small">({{ R(s.mor) }}% → {{ R(nextMor) }}%; przy obecnych warunkach ustali się na {{ R(c.mt) }}%)</span></span></div>
+  </div>
+
+  <div class="card">
+    <div class="row"><span><PixelIcon name="pop" />Postęp do celu</span><span>{{ R(prog) }}%</span></div>
+    <MeterBar :value="prog" :max="100" />
+  </div>
+</template>

@@ -1,0 +1,22 @@
+<script setup>
+import { closeScreen } from '../../store.js'
+import { BATCAP, STBASE, STCAP, DAYS, GOAL } from '../../game/constants.js'
+</script>
+
+<template>
+  <h1>ZASADY</h1>
+  <p>Jesteś gubernatorem kolonii na odległej planecie. Każda tura to jeden dzień. Masz rok ({{ DAYS }} dni), żeby kolonia urosła do {{ GOAL }} mieszkańców.</p>
+  <p>
+    • 60% kolonistów pracuje. Najpierw obsadzane są mieszkania, magazyny, baterie i osłony, potem reszta zadań (budynki i budowniczowie) wg priorytetów z zakładki PRACA. Zatrzymany budynek nie produkuje ani nie zużywa energii, a jego pracownicy są bezrobotni.<br>
+    • Budowa trwa. Każdy budynek wymaga określonej ilości pracy – im większy, tym więcej. Więcej budowniczych kończy budowę szybciej, ale zabiera ludzi z produkcji. Anulowana budowa zwraca połowę kosztów.<br>
+    • Budynki zużywają energię. Gdy jej brakuje, produkcja spada, a ludzie są źli.<br>
+    • Energii nie da się kupić ani sprzedać. Nadwyżkę zmagazynujesz tylko w bateriach (po {{ BATCAP }} kWh każda), resztę tracisz.<br>
+    • Żywność i minerały trzymasz w magazynach ({{ STBASE }} t bazowo + {{ STCAP }} t za każdy magazyn). Nadmiar przepada.<br>
+    • Ludzie rosną w liczbie tylko, gdy mają gdzie mieszkać i co jeść.<br>
+    • Wysokie podatki i głodowe racje obniżają morale. Przy morale 5% wybucha bunt.<br>
+    • Laboratoria codziennie posuwają naprzód wybraną w zakładce NAUKA technologię.<br>
+    • Dług powyżej 500 kr oznacza bankructwo.<br>
+    • Nadwyżki żywności i minerałów sprzedawaj na rynku, ceny zmieniają się codziennie.
+  </p>
+  <div class="btns"><button @click="closeScreen">WRÓĆ</button></div>
+</template>

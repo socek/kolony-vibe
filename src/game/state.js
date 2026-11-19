@@ -1,0 +1,22 @@
+import { GOAL, DAYS, KEY } from './constants.js'
+
+export function newState() {
+  return {
+    m: 1, pop: 100, food: 300, energy: 100, min: 200, cr: 500, mor: 60, rs: null, rp: {}, q: [],
+    b: { farm: 3, power: 2, battery: 1, store: 1, mine: 1, house: 2, rec: 0, lab: 0, port: 0, shield: 0 },
+    tax: 10, ration: 1, tech: {}, prio: {},
+    pr: { food: 4, min: 6 }, prev: null, over: null,
+    report: [
+      { k: 'txt', t: 'Witaj, gubernatorze! Kolonia Nowa Nadzieja liczy 100 osadników.' },
+      { k: 'txt', t: 'Cel: ' + GOAL + ' kolonistów w ciągu roku (' + DAYS + ' dni).' }
+    ],
+    repDays: 0
+  }
+}
+
+export function save(s) { try { localStorage.setItem(KEY, JSON.stringify(s)) } catch (e) { /* brak zapisu */ } }
+export function load() { try { const v = localStorage.getItem(KEY); return v ? JSON.parse(v) : null } catch (e) { return null } }
+
+export function score(s) {
+  return Math.round(s.pop + s.mor * 5 + Math.max(0, s.cr) / 10 + Object.keys(s.tech).length * 50 + (s.over && s.over.win ? (DAYS - s.m) * 7 : 0))
+}
