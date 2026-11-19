@@ -4,6 +4,7 @@ import { audio } from '../../game/audio.js'
 </script>
 
 <template>
+  <div class="menuscr">
   <h1>MENU</h1>
   <div class="vmenu">
     <button @click="closeScreen">WRÓĆ DO GRY</button>
@@ -13,5 +14,6 @@ import { audio } from '../../game/audio.js'
     <button @click="showScreen('about')">O GRZE</button>
     <button @click="showScreen('log')">ZMIANY</button>
     <button @click="newGame">NOWA GRA</button>
+  </div>
   </div>
 </template>
