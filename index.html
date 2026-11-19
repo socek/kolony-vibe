@@ -242,7 +242,7 @@ function endTurn(quiet){
  s.wasHungry=deaths>0;s.wasBlack=c.f<1;s.wasLow=s.mor<25;
  s.m++;
  if(!r.length)r.push('Spokojny dzień w kolonii.');
- s.report=r;
+ s.report=r;s.repDays=1;
  if(s.pop>=GOAL)s.over={win:true,t:'ZWYCIĘSTWO!',d:'Kolonia osiągnęła '+GOAL+' mieszkańców. Rada Ziemi przyznaje ci order Pioniera.'};
  else if(s.pop<10)s.over={win:false,t:'KOLONIA UPADŁA',d:'Zostało zbyt mało osadników, by przetrwać.'};
  else if(s.mor<=5)s.over={win:false,t:'BUNT!',d:'Koloniści przejęli władzę i odesłali cię na Ziemię.'};
@@ -293,7 +293,7 @@ function sgn(n){n=Math.round(n);return'<span class="'+(n>=0?'pos':'neg')+'">'+(n
 function siteEta(x){return x.eta===Infinity?'<span class="neg">stoi</span>':'jeszcze '+daysTxt(x.eta)}
 function pRaport(s,c){
  const prog=Math.min(100,s.pop/GOAL*100),nextMor=Math.max(0,Math.min(100,s.mor+(c.mt-s.mor)*MORK));
- return'<div class="t" style="color:var(--white)">RAPORT DZIENNY</div><div class="log">'+s.report.map(x=>'<p>'+x+'</p>').join('')+'</div>'+
+ return'<div class="t" style="color:var(--white)">'+(!s.repDays?'RAPORT':s.repDays===1?'RAPORT Z OSTATNIEGO DNIA':'RAPORT Z OSTATNICH '+s.repDays+' DNI')+'</div><div class="log">'+s.report.map(x=>'<p>'+x+'</p>').join('')+'</div>'+
  '<div class="card"><div class="t">PROGNOZA NA NASTĘPNY DZIEŃ</div>'+
  '<div class="row"><span>'+ico('work')+'Wydajność</span><span>'+Math.round(c.e*c.f*100)+'%</span></div>'+bar(c.e*c.f,1,c.e*c.f<1?'warn':'')+'<div style="height:6px"></div>'+
  (s.q.length?'<div class="row"><span>'+ico('build')+'Budowa</span><span>'+BLD[s.q[0].k].n+' '+Math.floor(c.sites[0].pct)+'% <span class="small">('+siteEta(c.sites[0])+(s.q.length>1?'; placów budowy: '+s.q.length:'')+')</span></span></div>':'')+
@@ -383,7 +383,7 @@ document.addEventListener('input',e=>{if(e.target.id==='tax'){S.tax=+e.target.va
 document.addEventListener('change',e=>{if(e.target.id==='tax'){S.tax=+e.target.value;save();render()}});
 let busy=false;
 function advance(n){initAudio();if(busy||S.over)return;busy=true;go.disabled=go7.disabled=true;
- const el=document.createElement('div'),p0={pop:S.pop,food:S.food,energy:S.energy,min:S.min,cr:S.cr,mor:S.mor},d0=S.m;el.className='tw';
+ const el=document.createElement('div'),p0={pop:S.pop,food:S.food,energy:S.energy,min:S.min,cr:S.cr,mor:S.mor};el.className='tw';
  el.innerHTML='<div class="twb"><div class="twt"></div><div class="meter"><i></i></div></div>';
  const lab=el.querySelector('.twt'),fill=el.querySelector('.meter i');
  const show=()=>{lab.innerHTML='DZIEŃ '+Math.min(S.m+1,DAYS)+'<br>'+dateOf(S.m+1)};
@@ -391,7 +391,7 @@ function advance(n){initAudio();if(busy||S.over)return;busy=true;go.disabled=go7
  let i=0;
  const step=()=>{const imp=endTurn(n>1);i++;fill.style.width=(n>1?i/n*100:100)+'%';beep(330+i*60,.04);
   if(i<n&&!imp&&!S.over){show();setTimeout(step,90)}else finish()};
- const finish=()=>{if(n>1){S.prev=p0;S.report.unshift('<span class="sub">Minęło '+i+' '+(i===1?'dzień':'dni')+' (dzień '+d0+'–'+(S.m-1)+').'+(i<n&&!S.over?' Przewijanie zatrzymane – ważne wydarzenie.':'')+'</span>');save();render();beep(660,.06)}
+ const finish=()=>{if(n>1){S.prev=p0;S.repDays=i;if(i<n&&!S.over)S.report.unshift('<span class="sub">Przewijanie zatrzymane po '+i+' '+(i===1?'dniu':'dniach')+' – ważne wydarzenie.</span>');save();render();beep(660,.06)}
   setTimeout(()=>{el.classList.add('out');setTimeout(()=>{el.remove();busy=false;render()},200)},n>1?150:200)};
  setTimeout(step,n>1?120:200)}
 go.onclick=()=>advance(1);
