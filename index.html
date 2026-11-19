@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Kolony Vibe 8,1</title>
+<title>Kolony Vibe</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
 <style>
@@ -68,7 +68,7 @@ input[type=range]{width:100%;accent-color:var(--yellow)}
 </head>
 <body>
 <div class="screen">
-  <h1>KOLONY VIBE<span class="sub"> 8,1</span></h1>
+  <h1>KOLONY<span class="sub"> VIBE</span></h1>
   <div class="row small"><span id="date"></span><span id="goal" class="warn"></span></div>
   <div class="meter" id="tbar"><i></i></div>
   <div class="res" id="res"></div>
@@ -372,7 +372,7 @@ function showMenu(){show('<h1>MENU</h1><div class="btns"><button data-act="close
 function showHelp(){show('<h1>ZASADY</h1><p>Jesteś gubernatorem kolonii na odległej planecie. Każda tura to miesiąc. Masz '+(MAXM/12)+' lat, żeby kolonia urosła do '+GOAL+' mieszkańców.</p>'+
  '<p>• 60% kolonistów pracuje. Najpierw obsadzane są mieszkania, magazyny i baterie, potem reszta budynków wg priorytetów z zakładki PRACA. Zatrzymany budynek nie produkuje ani nie zużywa energii, a jego pracownicy są bezrobotni.<br>• Budynki zużywają energię. Gdy jej brakuje, produkcja spada, a ludzie są źli.<br>• Energii nie da się kupić ani sprzedać. Nadwyżkę zmagazynujesz tylko w bateriach (po '+BATCAP+' kWh każda), resztę tracisz.<br>• Żywność i minerały trzymasz w magazynach ('+STBASE+' t bazowo + '+STCAP+' t za każdy magazyn). Nadmiar przepada.<br>• Ludzie rosną w liczbie tylko, gdy mają gdzie mieszkać i co jeść.<br>• Wysokie podatki i głodowe racje obniżają morale. Przy morale 5% wybucha bunt.<br>• Laboratoria co miesiąc posuwają naprzód wybraną w zakładce NAUKA technologię.<br>• Dług powyżej 500 kr oznacza bankructwo.<br>• Nadwyżki żywności i minerałów sprzedawaj na rynku, ceny zmieniają się co miesiąc.</p>'+
  '<div class="btns"><button data-act="'+(S?'close':'new')+'">'+(S?'WRÓĆ':'START')+'</button></div>')}
-function showAbout(){show('<h1>O GRZE</h1><p><span style="color:var(--white)">KOLONY VIBE 8,1</span><br>Wersja 0.1 Prototyp<br><br>Strategiczna gra ekonomiczna o zarządzaniu kolonią na odległej planecie, w klimacie 8-bitowych komputerów.</p>'+
+function showAbout(){show('<h1>O GRZE</h1><p><span style="color:var(--white)">KOLONY VIBE</span><br>Wersja 0.1 Prototyp<br><br>Strategiczna gra ekonomiczna o zarządzaniu kolonią na odległej planecie, w klimacie 8-bitowych komputerów.</p>'+
  '<p><span class="sub">POMYSŁ, PROJEKT I TESTY</span><br><span style="color:var(--white)">Dominik &quot;Socek&quot; Długajczyk</span></p>'+
  '<p><span class="sub">IMPLEMENTACJA</span><br><span style="color:var(--white)">Claude</span> – model AI firmy Anthropic (Claude Opus 5.5, Claude Code). Cały kod gry napisał Claude według wskazówek autora.</p>'+
  '<p class="small">(C) 2026</p><div class="btns"><button data-act="close">WRÓĆ</button></div>')}
@@ -384,7 +384,7 @@ function beep(f,d){if(!sound||!actx)return;try{const o=actx.createOscillator(),g
 // ekran startowy
 (function boot(){
  const saved=load();
- const lines=['KOLONY VIBE 8,1','WERSJA 0.1 PROTOTYP · (C) 2026','','READY.','LOAD "KOLONY VIBE",8,1','SEARCHING FOR KOLONY VIBE','LOADING','READY.'];
+ const lines=['KOLONY VIBE','WERSJA 0.1 PROTOTYP · (C) 2026','','READY.','LOAD "KOLONY VIBE",8,1','SEARCHING FOR KOLONY VIBE','LOADING','READY.'];
  let i=0;ovbox.innerHTML='<div id="bt"></div>';
  const t=setInterval(()=>{
   if(i<lines.length){bt.innerHTML+=lines[i]+'<br>';i++}
