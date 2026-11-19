@@ -70,6 +70,8 @@ input[type=range]{width:100%;accent-color:var(--yellow)}
 .stop{color:var(--red);background:#241b5e;padding:0 4px;animation:blink .4s steps(1) 6}
 @keyframes blink{50%{color:var(--screen);background:var(--red)}}
 @media(prefers-reduced-motion:reduce){.stop{animation:none}}
-.stopopt{padding:3px 0;cursor:pointer}
+.stopopt{padding:3px 0;cursor:pointer;flex-wrap:nowrap}
 .stopopt input{accent-color:var(--yellow);width:20px;height:20px;flex:none}
 .tile .tnote{font-size:16px;line-height:1;margin-bottom:2px}
+.vmenu{display:flex;flex-direction:column;gap:8px;max-width:320px;margin-top:14px}
+.vmenu button{text-align:left;padding:6px 12px}

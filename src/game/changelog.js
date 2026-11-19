@@ -3,6 +3,7 @@ export const VERSION = '0.2', CODENAME = 'Tukohama'
 export const CHANGELOG = [
   {
     v: '0.2 „Tukohama”', d: '19.11.2026', items: [
+      'Menu ułożone pionowo.',
       'Kampanie reklamowe w zakładce POLITYKA – kosztują kredyty i trwają określony czas, w którym mogą przybyć nowi koloniści. Skuteczność każdej kampanii jest ukryta.',
       'Głód trwa najwyżej 12 dni – z każdym dniem umiera więcej osób, a 12. dnia giną wszyscy. Kończy go dzień pełnego jedzenia; racje głodowe tylko wstrzymują umieranie.',
       'Złoża minerałów się wyczerpują – kopalnie wydobywają z nich kolejno. Nowe złoża znajdują wyprawy w nowej zakładce WYPRAWY (cel, liczebność ekipy, koszt, szansa, ryzyko).',
@@ -22,7 +23,7 @@ export const CHANGELOG = [
       'Gra nazywa się Kolony Vibe (bez „8,1”).',
       'Lista zmian w menu.',
       'Komunikat „Przewijanie zatrzymane” jest czerwony, mruga i podaje powód.',
-      'Zakładka PRZEWIJANIE – wybierasz, które wydarzenia zatrzymują przewijanie (m.in. nowe: brak rąk do pracy, stojąca budowa, pełne magazyny, zadłużenie).'
+      'Ustawienia w menu (≡) – wybierasz, które wydarzenia zatrzymują przewijanie (m.in. nowe: brak rąk do pracy, stojąca budowa, pełne magazyny, zadłużenie).'
     ]
   },
   {

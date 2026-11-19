@@ -19,7 +19,7 @@ import { BATCAP, STBASE, STCAP, DAYS, GOAL } from '../../game/constants.js'
     • Wysokie podatki i głodowe racje obniżają morale. Przy morale 5% wybucha bunt.<br>
     • Laboratoria codziennie posuwają naprzód wybraną w zakładce NAUKA technologię.<br>
     • Dług powyżej 500 kr oznacza bankructwo.<br>
-    • Przycisk ▶▶ 7 DNI przewija tydzień i zatrzymuje się przy ważnych wydarzeniach – które to są, ustawisz w zakładce PRZEWIJANIE.<br>
+    • Przycisk ▶▶ 7 DNI przewija tydzień i zatrzymuje się przy ważnych wydarzeniach – które to są, ustawisz w menu (≡) → USTAWIENIA.<br>
     • Nadwyżki żywności i minerałów sprzedawaj na rynku, ceny zmieniają się codziennie.
   </p>
   <div class="btns"><button @click="closeScreen">WRÓĆ</button></div>
