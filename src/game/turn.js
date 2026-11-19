@@ -97,7 +97,7 @@ export function endTurn(s, acc) {
     s.rp[k] = (s.rp[k] || 0) + c.resProd
     if (s.rp[k] >= t.c) {
       stops.add('research'); s.tech[k] = 1; delete s.rp[k]; s.rs = null
-      note('★ Naukowcy ukończyli projekt: ' + t.n + '! ' + t.d + '. Wybierz kolejny w zakładce NAUKA.', 'pos'); beep(990, 0.15)
+      note('★ Naukowcy ukończyli projekt: ' + t.n + '! ' + t.d + '. Wybierz kolejny w zakładce TECHNOLOGIE.', 'pos'); beep(990, 0.15)
     }
   } else if (!s.rs && c.resProd > 0 && nextTech(s)) add('nores')
   edge('nores', !s.rs && c.resProd > 0 && nextTech(s))

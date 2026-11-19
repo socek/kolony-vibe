@@ -30,7 +30,7 @@ const rowOf = computed(() => Object.fromEntries(Object.entries(BLD).map(([k, b])
     <div class="small">
       {{ r.b.d }} · koszt {{ r.b.cr }} kr, {{ r.b.mi }} t min. · {{ r.b.w }} prac. · {{ num(r.b.en) }} kWh/dzień · budowa {{ daysTxt(Math.ceil(r.b.bt / r.b.crew)) }} przy {{ r.b.crew }} budowniczych<template v-if="r.b.max"> · maks. {{ r.b.max }}</template>
     </div>
-    <div v-if="r.lock" class="locknote"><PixelIcon name="lock" />Wymaga technologii: {{ TECH[r.b.req].n }} (zakładka NAUKA)</div>
+    <div v-if="r.lock" class="locknote"><PixelIcon name="lock" />Wymaga technologii: {{ TECH[r.b.req].n }} (zakładka TECHNOLOGIE)</div>
     <div class="cost2">
       <div>
         <div class="small"><PixelIcon name="cr" />kredyty {{ fmt(Math.min(Math.max(s.cr, 0), r.b.cr)) }}/{{ r.b.cr }}</div>

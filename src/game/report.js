@@ -26,7 +26,7 @@ export const REP = {
     }
   },
   nodep: { c: 'neg', f: (v, d) => 'Kopalnie stoją' + dd(d) + ' – wszystkie złoża są wyczerpane. Wyślij wyprawę w zakładce WYPRAWY.' },
-  nores: { c: 'warn', f: (v, d) => 'Laboratoria nie mają projektu' + dd(d) + ' – wybierz technologię w zakładce NAUKA.' }
+  nores: { c: 'warn', f: (v, d) => 'Laboratoria nie mają projektu' + dd(d) + ' – wybierz technologię w zakładce TECHNOLOGIE.' }
 }
 
 export function mergeRep(old, neu) {

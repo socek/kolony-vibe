@@ -33,10 +33,12 @@ export function calc(s) {
   for (const k in wNeed) if (prioOf(s, k) > 0) needed += wNeed[k]
   for (const k in BLD) enNeed += b[k] * BLD[k].en * E[k]
   const e = needed > 0 ? Math.min(1, workforce / needed) : 1
-  const enProd = b.power * BLD.power.p * E.power * (t.graph ? 1.3 : 1)
+  // produkcja z budynku: liczba × wydajność × obsada
+  const out = k => (b[k] || 0) * BLD[k].p * E[k]
+  const enProd = out('power') + out('power2')
   const f = enNeed > 0 ? Math.min(1, (s.energy + enProd) / enNeed) : 1
-  const foodProd = b.farm * BLD.farm.p * E.farm * f * (t.hydro ? 1.3 : 1), foodCons = s.pop * 0.2 * s.ration
-  const minPot = b.mine * BLD.mine.p * E.mine * f * (t.drill ? 1.3 : 1), deps = depTotal(s), minProd = Math.min(minPot, deps), resProd = b.lab * BLD.lab.p * E.lab * f
+  const foodProd = (out('farm') + out('farm2')) * f, foodCons = s.pop * 0.2 * s.ration
+  const minPot = (out('mine') + out('mine2')) * f, deps = depTotal(s), minProd = Math.min(minPot, deps), resProd = b.lab * BLD.lab.p * E.lab * f
   const taxInc = s.pop * s.tax * 0.0167, trade = b.port * BLD.port.p * E.port * f, maint = nb * MAINT
   const unemp = avail
   const foodAfter = s.food + foodProd - foodCons
