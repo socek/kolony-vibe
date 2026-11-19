@@ -38,6 +38,8 @@ button:disabled{opacity:.35;cursor:not-allowed;background:var(--text)}
 .bar{position:sticky;bottom:0;background:var(--screen);padding:10px 0 14px;border-top:2px solid var(--border);display:flex;gap:6px;align-items:center}
 .bar .go{flex:1;font-size:26px;padding:8px;background:var(--yellow)}
 .bar .go:hover{background:var(--white)}
+.bar button{white-space:nowrap}
+@media(max-width:480px){.bar .go{font-size:21px;padding:8px 4px}}
 input[type=range]{width:100%;accent-color:var(--yellow)}
 .qty button{min-width:52px}
 .qty button.on{background:var(--yellow)}
@@ -47,14 +49,15 @@ input[type=range]{width:100%;accent-color:var(--yellow)}
 .cursor{display:inline-block;width:12px;height:20px;background:var(--text);vertical-align:-3px;animation:bl 1s steps(1) infinite}
 @keyframes bl{50%{opacity:0}}
 .hidden{display:none}
-.tw{position:fixed;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;background:var(--screen);animation:twf .6s linear forwards;pointer-events:none}
+.tw{position:fixed;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;background:var(--screen);animation:twin .08s linear forwards;pointer-events:none}
+.tw.out{animation:twout .2s linear forwards}
 .tw::before{content:'';position:absolute;inset:0;opacity:.55;background:repeating-linear-gradient(0deg,var(--border) 0 6px,var(--screen) 6px 12px,var(--cyan) 12px 15px,var(--screen) 15px 22px);animation:twr .12s steps(2) infinite}
 .tw .twb{position:relative;background:var(--screen);border:2px solid var(--text);padding:18px 22px;min-width:260px;text-align:center}
 .tw .twt{font-family:'Press Start 2P',monospace;font-size:15px;color:var(--white);line-height:1.8}
-.tw .meter i{width:0;background:var(--yellow);animation:twm .45s steps(8) forwards}
-@keyframes twf{0%{opacity:0}12%{opacity:1}80%{opacity:1}100%{opacity:0}}
+.tw .meter i{width:0;background:var(--yellow);transition:width .25s steps(4)}
+@keyframes twin{from{opacity:0}to{opacity:1}}
+@keyframes twout{from{opacity:1}to{opacity:0}}
 @keyframes twr{to{background-position:0 22px}}
-@keyframes twm{to{width:100%}}
 @media(prefers-reduced-motion:reduce){.tw::before{animation:none}}
 .ic{width:1em;height:1em;vertical-align:-.12em;margin-right:5px;shape-rendering:crispEdges}
 .tile .l .ic{width:1.15em;height:1.15em}
@@ -77,6 +80,7 @@ input[type=range]{width:100%;accent-color:var(--yellow)}
   <div class="panel" id="panel"></div>
   <div class="bar">
     <button class="go" id="go">▶ KONIEC DNIA</button>
+    <button id="go7" title="Przewiń do 7 dni – zatrzymuje się przy ważnych wydarzeniach">▶▶ 7 DNI</button>
     <button id="menu" title="Menu">≡</button>
   </div>
 </div>
@@ -203,37 +207,39 @@ const EVENTS=[
  s=>{s.energy=Math.max(0,s.energy-60);s.mor-=4;return'Awaria zasilania: −60 kWh energii.'}
 ];
 
-function endTurn(){
- if(S.over)return;
- const s=S,c=calc(s),r=[];
+function endTurn(quiet){
+ if(S.over)return true;
+ const s=S,c=calc(s),r=[];let imp=false;
  s.prev={pop:s.pop,food:s.food,energy:s.energy,min:s.min,cr:s.cr,mor:s.mor};
  s.energy=c.enStore;
  if(c.enWaste>=1)r.push('<span class="warn">Baterie pełne – zmarnowano '+Math.round(c.enWaste)+' kWh energii.</span>');
  s.food+=c.foodProd-c.foodCons;
  let deaths=0;
- if(s.food<0){deaths=s.pop*0.066*c.shortRatio;s.food=0;r.push('<span class="neg">GŁÓD! Zmarło '+Math.round(deaths)+' kolonistów.</span>')}
+ if(s.food<0){deaths=s.pop*0.066*c.shortRatio;s.food=0;if(!s.wasHungry)imp=true;r.push('<span class="neg">GŁÓD! Zmarło '+Math.round(deaths)+' kolonistów.</span>')}
  s.min+=c.minProd;s.cr+=c.taxInc+c.trade-c.maint;
  s.mor+=(c.mt-s.mor)*MORK;
  // postęp budowy
  if(s.q.length){s.q.forEach((x,i)=>x.d+=c.sites[i].rate);
-  s.q=s.q.filter(x=>{if(x.d<BLD[x.k].bt)return true;s.b[x.k]++;r.unshift('<span class="pos">★ Ukończono budowę: '+BLD[x.k].n+'.</span>');beep(520,.12);return false});
+  s.q=s.q.filter(x=>{if(x.d<BLD[x.k].bt)return true;s.b[x.k]++;imp=true;r.unshift('<span class="pos">★ Ukończono budowę: '+BLD[x.k].n+'.</span>');beep(520,.12);return false});
   if(s.q.length&&c.builders<0.5)r.push('<span class="warn">Budowa stoi – nikt nie pracuje na placach budowy. Zmień priorytet budowniczych w zakładce PRACA.</span>')}
  if(c.e<1){const miss=Math.ceil(c.needed-c.workforce),low=[...Object.keys(BLD).filter(k=>s.b[k]),...(c.wNeed.build?['build']:[])].filter(k=>prioOf(s,k)>0&&c.E[k]<1).map(k=>jobName(k)+' '+Math.round(c.E[k]*100)+'%');
   r.push('<span class="warn">Brak rąk do pracy – brakuje '+miss+' '+(miss===1?'pracownika':'pracowników')+'. Niedoobsadzone: '+low.join(', ')+'. Priorytety ustawisz w zakładce PRACA.</span>')}
+ if(c.f<1&&!s.wasBlack)imp=true;
  if(c.f<1)r.push('<span class="neg">BLACKOUT! Zasilanie pokrywa '+Math.round(c.f*100)+'% potrzeb.</span>');
  if(c.crowd>0)r.push('<span class="warn">Przeludnienie – zbuduj moduły mieszkalne.</span>');
  if(!deaths&&s.pop<c.cap){const g=Math.min(s.pop*0.0082*(s.mor/60)*(s.tech.med?1.3:1),c.cap-s.pop);s.pop+=g;if(g>=1)r.push('Urodziło się '+Math.round(g)+' nowych kolonistów.')}
  if(s.b.port&&s.mor>55&&s.pop<c.cap){const im=Math.min(1.5+Math.random()*3.5,c.cap-s.pop);s.pop+=im;if(im>=1)r.push('Port: przybyło '+Math.round(im)+' imigrantów.')}
- if(s.mor<25){const em=s.pop*0.01;s.pop-=em;r.push('<span class="neg">Niezadowoleni koloniści odlatują: −'+Math.round(em)+'.</span>')}
+ if(s.mor<25){if(!s.wasLow)imp=true;const em=s.pop*0.01;s.pop-=em;r.push('<span class="neg">Niezadowoleni koloniści odlatują: −'+Math.round(em)+'.</span>')}
  s.pop-=deaths;
- if(s.m>10&&Math.random()<0.1){const m=EVENTS[Math.floor(Math.random()*EVENTS.length)](s);if(m){r.unshift('<span class="cyan" style="color:var(--cyan)">★ '+m+'</span>');beep(220,.25)}}
+ if(s.m>10&&Math.random()<0.1){const m=EVENTS[Math.floor(Math.random()*EVENTS.length)](s);if(m){imp=true;r.unshift('<span class="cyan" style="color:var(--cyan)">★ '+m+'</span>');beep(220,.25)}}
  for(const k in s.pr){const b=RES[k].base;s.pr[k]=Math.max(b*0.5,Math.min(b*2,s.pr[k]*(1+(Math.random()-0.5)*0.14)))}
  if(s.cr<0)r.push('<span class="neg">Kolonia jest zadłużona! Morale spada.</span>');
  s.mor=Math.max(0,Math.min(100,s.mor));s.pop=Math.max(0,s.pop);s.energy=Math.min(s.energy,(s.b.battery||0)*BATCAP);
  {const l=clampStore(s);if(l.food>=1||l.min>=1)r.push('<span class="warn">Magazyny pełne – stracono'+(l.food>=1?' '+Math.round(l.food)+' t żywności':'')+(l.food>=1&&l.min>=1?' i':'')+(l.min>=1?' '+Math.round(l.min)+' t minerałów':'')+'.</span>')}
  if(s.rs&&c.resProd>0){const k=s.rs,t=TECH[k];s.rp[k]=(s.rp[k]||0)+c.resProd;
-  if(s.rp[k]>=t.c){s.tech[k]=1;delete s.rp[k];s.rs=null;r.unshift('<span class="pos">★ Naukowcy ukończyli projekt: '+t.n+'! '+t.d+'. Wybierz kolejny w zakładce NAUKA.</span>');beep(990,.15)}}
+  if(s.rp[k]>=t.c){imp=true;s.tech[k]=1;delete s.rp[k];s.rs=null;r.unshift('<span class="pos">★ Naukowcy ukończyli projekt: '+t.n+'! '+t.d+'. Wybierz kolejny w zakładce NAUKA.</span>');beep(990,.15)}}
  else if(!s.rs&&c.resProd>0&&nextTech(s))r.push('<span class="warn">Laboratoria nie mają projektu – wybierz technologię w zakładce NAUKA.</span>');
+ s.wasHungry=deaths>0;s.wasBlack=c.f<1;s.wasLow=s.mor<25;
  s.m++;
  if(!r.length)r.push('Spokojny dzień w kolonii.');
  s.report=r;
@@ -242,8 +248,9 @@ function endTurn(){
  else if(s.mor<=5)s.over={win:false,t:'BUNT!',d:'Koloniści przejęli władzę i odesłali cię na Ziemię.'};
  else if(s.cr<-500)s.over={win:false,t:'BANKRUCTWO',d:'Długi przekroczyły 500 kredytów. Korporacja przejmuje kolonię.'};
  else if(s.m>DAYS)s.over={win:false,t:'KONIEC KADENCJI',d:'Minął rok. Nie osiągnąłeś celu, ale kolonia przetrwała.'};
- save();tab='raport';render();beep(660,.06);
- if(s.over)showEnd();
+ save();tab='raport';render();if(!quiet)beep(660,.06);
+ if(s.over){showEnd();imp=true}
+ return imp;
 }
 
 function clampStore(s){const c=stCapOf(s),l={food:Math.max(0,s.food-c),min:Math.max(0,s.min-c)};s.food-=l.food;s.min-=l.min;return l}
@@ -277,7 +284,7 @@ function render(){
  res.innerHTML=tiles.map(t=>'<div class="tile"><div class="l">'+ico(t[5])+t[0]+'</div><div class="v'+(t[3]?' neg':'')+'">'+t[1]+t[2]+'</div>'+(t[4]||'')+'</div>').join('');
  tabs.innerHTML=TABS.map(t=>'<button data-tab="'+t[0]+'" class="'+(tab===t[0]?'on':'')+'">'+t[1]+'</button>').join('');
  panel.innerHTML=({raport:pRaport,budowa:pBudowa,praca:pPraca,rynek:pRynek,polityka:pPolityka,nauka:pNauka})[tab](s,c);
- go.disabled=!!s.over;
+ go.disabled=go7.disabled=!!s.over;
 }
 
 function bar(v,max,cls){const p=max>0?Math.max(0,Math.min(100,v/max*100)):0;return'<div class="meter"><i class="'+(cls||'')+'" style="width:'+p+'%"></i></div>'}
@@ -375,12 +382,20 @@ document.addEventListener('click',e=>{
 document.addEventListener('input',e=>{if(e.target.id==='tax'){S.tax=+e.target.value;const l=e.target.parentNode.querySelector('.row .t:last-child');if(l)l.textContent=S.tax+'%'}});
 document.addEventListener('change',e=>{if(e.target.id==='tax'){S.tax=+e.target.value;save();render()}});
 let busy=false;
-go.onclick=()=>{initAudio();if(busy||S.over)return;busy=true;go.disabled=true;
- const n=S.m+1,el=document.createElement('div');el.className='tw';
- el.innerHTML='<div class="twb"><div class="twt">DZIEŃ '+Math.min(n,DAYS)+'<br>'+dateOf(n)+'</div><div class="meter"><i></i></div></div>';
- document.body.appendChild(el);[330,440,550].forEach((f,i)=>setTimeout(()=>beep(f,.05),i*100));
- setTimeout(endTurn,300);
- setTimeout(()=>{el.remove();busy=false},600)};
+function advance(n){initAudio();if(busy||S.over)return;busy=true;go.disabled=go7.disabled=true;
+ const el=document.createElement('div'),p0={pop:S.pop,food:S.food,energy:S.energy,min:S.min,cr:S.cr,mor:S.mor},d0=S.m;el.className='tw';
+ el.innerHTML='<div class="twb"><div class="twt"></div><div class="meter"><i></i></div></div>';
+ const lab=el.querySelector('.twt'),fill=el.querySelector('.meter i');
+ const show=()=>{lab.innerHTML='DZIEŃ '+Math.min(S.m+1,DAYS)+'<br>'+dateOf(S.m+1)};
+ show();document.body.appendChild(el);
+ let i=0;
+ const step=()=>{const imp=endTurn(n>1);i++;fill.style.width=(n>1?i/n*100:100)+'%';beep(330+i*60,.04);
+  if(i<n&&!imp&&!S.over){show();setTimeout(step,90)}else finish()};
+ const finish=()=>{if(n>1){S.prev=p0;S.report.unshift('<span class="sub">Minęło '+i+' '+(i===1?'dzień':'dni')+' (dzień '+d0+'–'+(S.m-1)+').'+(i<n&&!S.over?' Przewijanie zatrzymane – ważne wydarzenie.':'')+'</span>');save();render();beep(660,.06)}
+  setTimeout(()=>{el.classList.add('out');setTimeout(()=>{el.remove();busy=false;render()},200)},n>1?150:200)};
+ setTimeout(step,n>1?120:200)}
+go.onclick=()=>advance(1);
+go7.onclick=()=>advance(7);
 menu.onclick=()=>{initAudio();showMenu()};
 
 function act(a){
