@@ -470,15 +470,34 @@ function act(a){
  else if(a==='cont'){hide();render()}
  else if(a==='help')showHelp();
  else if(a==='about')showAbout();
+ else if(a==='log')showLog();
  else if(a==='close')hide();
  else if(a==='sound'){sound=!sound;showMenu()}
 }
 function show(h){ovbox.innerHTML=h;ov.classList.remove('hidden')}
 function hide(){ov.classList.add('hidden')}
-function showMenu(){show('<h1>MENU</h1><div class="btns"><button data-act="close">WRÓĆ DO GRY</button><button data-act="help">ZASADY</button><button data-act="about">O GRZE</button><button data-act="sound">DŹWIĘK: '+(sound?'WŁ.':'WYŁ.')+'</button><button data-act="new">NOWA GRA</button></div>')}
+function showMenu(){show('<h1>MENU</h1><div class="btns"><button data-act="close">WRÓĆ DO GRY</button><button data-act="help">ZASADY</button><button data-act="about">O GRZE</button><button data-act="log">ZMIANY</button><button data-act="sound">DŹWIĘK: '+(sound?'WŁ.':'WYŁ.')+'</button><button data-act="new">NOWA GRA</button></div>')}
 function showHelp(){show('<h1>ZASADY</h1><p>Jesteś gubernatorem kolonii na odległej planecie. Każda tura to jeden dzień. Masz rok ('+DAYS+' dni), żeby kolonia urosła do '+GOAL+' mieszkańców.</p>'+
  '<p>• 60% kolonistów pracuje. Najpierw obsadzane są mieszkania, magazyny, baterie i osłony, potem reszta zadań (budynki i budowniczowie) wg priorytetów z zakładki PRACA. Zatrzymany budynek nie produkuje ani nie zużywa energii, a jego pracownicy są bezrobotni.<br>• Budowa trwa. Każdy budynek wymaga określonej ilości pracy – im większy, tym więcej. Więcej budowniczych kończy budowę szybciej, ale zabiera ludzi z produkcji. Anulowana budowa zwraca połowę kosztów.<br>• Budynki zużywają energię. Gdy jej brakuje, produkcja spada, a ludzie są źli.<br>• Energii nie da się kupić ani sprzedać. Nadwyżkę zmagazynujesz tylko w bateriach (po '+BATCAP+' kWh każda), resztę tracisz.<br>• Żywność i minerały trzymasz w magazynach ('+STBASE+' t bazowo + '+STCAP+' t za każdy magazyn). Nadmiar przepada.<br>• Ludzie rosną w liczbie tylko, gdy mają gdzie mieszkać i co jeść.<br>• Wysokie podatki i głodowe racje obniżają morale. Przy morale 5% wybucha bunt.<br>• Laboratoria codziennie posuwają naprzód wybraną w zakładce NAUKA technologię.<br>• Dług powyżej 500 kr oznacza bankructwo.<br>• Nadwyżki żywności i minerałów sprzedawaj na rynku, ceny zmieniają się codziennie.</p>'+
  '<div class="btns"><button data-act="'+(S?'close':'new')+'">'+(S?'WRÓĆ':'START')+'</button></div>')}
+const CHANGELOG=[
+ {v:'0.1 Prototyp',d:'19.11.2026',items:[
+  'Tura to jeden dzień, gra trwa rok (365 dni). Data i liczba pozostałych dni w nagłówku.',
+  'Budowa trwa – im większy budynek, tym dłużej. Budowniczowie z priorytetem w zakładce PRACA, kolejka placów budowy z przyciskami NAJPIERW i ANULUJ.',
+  'Przycisk ▶▶ 7 DNI – przewija tydzień i zatrzymuje się przy ważnych wydarzeniach.',
+  'Raport z wielu dni sumuje liczby (np. zmarnowana energia, narodziny) i podaje, przez ile dni coś trwało.',
+  'Priorytety pracowników (STOP / NISKI / ŚREDNI / WYSOKI) w nowej zakładce PRACA.',
+  'Badania jako projekty – wybierasz technologię, naukowcy codziennie dokładają postęp.',
+  'Osłony orbitalne jako budynek odblokowywany technologią; każda chroni przed jednym deszczem meteorytów.',
+  'Uchodźcy przybywają tylko, gdy jest dla nich miejsce.',
+  'Pikselowe ikonki budynków i zasobów, jednostki: kWh, tony, kredyty.',
+  'Animacja końca dnia, opis paska kadencji, czytelniejsza prognoza morale.',
+  'Paski kosztu budowy (kredyty i minerały) – przyciski nie skaczą przy klikaniu.',
+  'Ekran „O grze” i ta lista zmian.'
+ ]}
+];
+function showLog(){show('<h1>ZMIANY</h1>'+CHANGELOG.map(e=>'<p><span style="color:var(--white)">WERSJA '+e.v.toUpperCase()+'</span> <span class="small sub">· '+e.d+'</span></p><div class="small">'+e.items.map(x=>'<div style="margin:3px 0">• '+x+'</div>').join('')+'</div>').join('')+
+ '<div class="btns"><button data-act="close">WRÓĆ</button></div>')}
 function showAbout(){show('<h1>O GRZE</h1><p><span style="color:var(--white)">KOLONY VIBE</span><br>Wersja 0.1 Prototyp<br><br>Strategiczna gra ekonomiczna o zarządzaniu kolonią na odległej planecie, w klimacie 8-bitowych komputerów.</p>'+
  '<p><span class="sub">POMYSŁ, PROJEKT I TESTY</span><br><span style="color:var(--white)">Dominik &quot;Socek&quot; Długajczyk</span></p>'+
  '<p><span class="sub">IMPLEMENTACJA</span><br><span style="color:var(--white)">Claude</span> – model AI firmy Anthropic (Claude Opus 5.5, Claude Code). Cały kod gry napisał Claude według wskazówek autora.</p>'+
@@ -495,7 +514,7 @@ function beep(f,d){if(!sound||!actx)return;try{const o=actx.createOscillator(),g
  let i=0;ovbox.innerHTML='<div id="bt"></div>';
  const t=setInterval(()=>{
   if(i<lines.length){bt.innerHTML+=lines[i]+'<br>';i++}
-  else{clearInterval(t);bt.innerHTML+='RUN<span class="cursor"></span><div class="btns">'+(saved&&!saved.over?'<button data-act="cont" id="contb">KONTYNUUJ (dzień '+saved.m+')</button>':'')+'<button data-act="new">NOWA GRA</button><button data-act="help">ZASADY</button><button data-act="about">O GRZE</button></div>';
+  else{clearInterval(t);bt.innerHTML+='RUN<span class="cursor"></span><div class="btns">'+(saved&&!saved.over?'<button data-act="cont" id="contb">KONTYNUUJ (dzień '+saved.m+')</button>':'')+'<button data-act="new">NOWA GRA</button><button data-act="help">ZASADY</button><button data-act="about">O GRZE</button><button data-act="log">ZMIANY</button></div>';
    if(saved&&!saved.over)S=saved;}
  },220);
  S=saved&&!saved.over?saved:newState();
