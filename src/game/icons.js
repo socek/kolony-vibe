@@ -23,6 +23,7 @@ export const ICONS = {
   lab: ['..aaaa..', '...aa...', '...aa...', '..acca..', '.acccca.', 'acccccca', 'acccccca', '.aaaaaa.'],
   shield: ['eeeeeeee', 'eaaeeeee', 'eaeeeeee', 'eeeeeeee', 'eeeeeeee', '.eeeeee.', '..eeee..', '...ee...'],
   gun: ['......a.', '.....a..', '....a...', '...ffa..', '..ffff..', '.ffffff.', 'ffffffff', 'ffffffff'],
+  lock: ['..dddd..', '.d....d.', '.d....d.', 'dddddddd', 'ddd..ddd', 'ddd..ddd', 'dddddddd', '........'],
   port: ['...aa...', '..aaaa..', '..aeea..', '..aaaa..', '.aaaaaa.', 'aa.aa.aa', '...dd...', '..d..d..']
 }
 

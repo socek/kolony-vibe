@@ -78,3 +78,5 @@ input[type=range]{width:100%;accent-color:var(--yellow)}
 .vmenu button{padding:6px 12px}
 .grph{color:var(--g,var(--cyan));font-size:24px;margin:18px 0 4px;border-bottom:5px solid var(--g,var(--cyan));padding-bottom:3px;letter-spacing:1px}
 .grph + .card{border-top:0}
+.card.locked > :not(.locknote){opacity:.35;filter:grayscale(1)}
+.locknote{color:var(--red);font-size:18px;margin-top:2px}

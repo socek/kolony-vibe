@@ -3,6 +3,7 @@ export const VERSION = '0.2', CODENAME = 'Tukohama'
 export const CHANGELOG = [
   {
     v: '0.2 „Tukohama”', d: '19.11.2026', items: [
+      'Budynki wymagające nieodkrytej technologii są wyszarzone na liście budowy.',
       'Działa magnetyczne (nowa technologia i budynek obronny) – zmniejszają straty od piratów i meteorytów, ale tylko obsadzone; atak może część z nich zniszczyć.',
       'Budynki na liście budowy pogrupowane: żywność, przemysł i nauka, ludność, obrona.',
       'Menu ułożone pionowo.',

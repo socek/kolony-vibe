@@ -19,7 +19,7 @@ const rowOf = computed(() => Object.fromEntries(Object.entries(BLD).map(([k, b])
 
   <template v-for="g in BLD_GROUPS" :key="g.n">
   <div class="grph" :style="{ '--g': g.color }"><PixelIcon :name="g.icon" />{{ g.n }}</div>
-  <div v-for="r in g.ks.map(k => rowOf[k])" :key="r.k" class="card">
+  <div v-for="r in g.ks.map(k => rowOf[k])" :key="r.k" class="card" :class="{ locked: r.lock }">
     <div class="row">
       <span class="t"><PixelIcon :name="r.k" />{{ r.b.n }} ×{{ s.b[r.k] }}<span v-if="r.n" class="small warn"> +{{ r.n }} w budowie</span></span>
       <span>
@@ -29,8 +29,8 @@ const rowOf = computed(() => Object.fromEntries(Object.entries(BLD).map(([k, b])
     </div>
     <div class="small">
       {{ r.b.d }} · koszt {{ r.b.cr }} kr, {{ r.b.mi }} t min. · {{ r.b.w }} prac. · {{ num(r.b.en) }} kWh/dzień · budowa {{ daysTxt(Math.ceil(r.b.bt / r.b.crew)) }} przy {{ r.b.crew }} budowniczych<template v-if="r.b.max"> · maks. {{ r.b.max }}</template>
-      <template v-if="r.lock"> · <span class="neg">wymaga technologii: {{ TECH[r.b.req].n }}</span></template>
     </div>
+    <div v-if="r.lock" class="locknote"><PixelIcon name="lock" />Wymaga technologii: {{ TECH[r.b.req].n }} (zakładka NAUKA)</div>
     <div class="cost2">
       <div>
         <div class="small"><PixelIcon name="cr" />kredyty {{ fmt(Math.min(Math.max(s.cr, 0), r.b.cr)) }}/{{ r.b.cr }}</div>
