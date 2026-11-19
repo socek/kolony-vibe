@@ -5,7 +5,7 @@ const startDeposit = () => ({ n: 'Złoże macierzyste', t: START_DEPOSIT, max: S
 
 export function newState() {
   return {
-    m: 1, pop: 100, food: 300, energy: 100, min: 200, cr: 500, mor: 60, rs: null, rp: {}, q: [], dep: [startDeposit()], exp: [],
+    m: 1, pop: 100, food: 300, energy: 100, min: 200, cr: 500, mor: 60, rs: null, rp: {}, q: [], dep: [startDeposit()], exp: [], camp: [],
     b: { farm: 3, power: 2, battery: 1, fridge: 1, store: 1, mine: 1, house: 2, rec: 0, lab: 0, port: 0, shield: 0 },
     tax: 10, ration: 1, tech: {}, prio: {},
     pr: { food: 4, min: 6 }, prev: null, over: null,
@@ -24,6 +24,7 @@ export function load() {
     // zapisy sprzed wprowadzenia złóż i wypraw
     if (o && !o.dep) o.dep = [startDeposit()]
     if (o && !o.exp) o.exp = []
+    if (o && !o.camp) o.camp = []
     // zapisy sprzed rozdzielenia magazynów: dotychczasowe magazyny trzymały oba surowce
     if (o && o.b && o.b.fridge == null) o.b.fridge = o.b.store || 0
     return o

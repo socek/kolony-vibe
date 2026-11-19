@@ -8,6 +8,7 @@ import { dateOf } from './game/format.js'
 import { beep } from './game/audio.js'
 import { settings, stopWhy } from './game/stops.js'
 import { sendExpedition, addDeposit } from './game/expeditions.js'
+import { startCampaign } from './game/campaigns.js'
 
 const saved = load()
 const resumable = saved && !saved.over ? saved : null
@@ -61,6 +62,7 @@ export function setTax(v) { game.s.tax = v }
 export const saveNow = persist
 export function setPrio(k, l) { game.s.prio[k] = l; beep(600, 0.03); persist() }
 export function sendExp() { if (sendExpedition(game.s, ui.expRange, ui.expTeam)) { beep(440, 0.12); persist() } }
+export function campaign(k) { if (startCampaign(game.s, k)) { beep(700, 0.1); persist() } }
 export function research(k) { game.s.rs = k; beep(880, 0.08); persist() }
 
 function afterTurns() {

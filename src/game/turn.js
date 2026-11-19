@@ -4,6 +4,7 @@ import { EVENTS, EVENT_BAD } from './events.js'
 import { mergeRep } from './report.js'
 import { beep } from './audio.js'
 import { extract, tickExpeditions } from './expeditions.js'
+import { tickCampaigns } from './campaigns.js'
 
 export function clampStore(s) {
   const l = { food: Math.max(0, s.food - capOf(s, 'food')), min: Math.max(0, s.min - capOf(s, 'min')) }
@@ -81,6 +82,7 @@ export function endTurn(s, acc) {
   }
   s.pop -= deaths
   if (tickExpeditions(s, note)) stops.add('exp')
+  if (tickCampaigns(s, note)) stops.add('camp')
   if (s.m > 10 && Math.random() < 0.1) {
     const ei = Math.floor(Math.random() * EVENTS.length), m = EVENTS[ei](s)
     if (m) { stops.add(EVENT_BAD[ei] ? 'evBad' : 'evGood'); note('★ ' + m, 'sub'); beep(220, 0.25) }
