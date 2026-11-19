@@ -187,7 +187,8 @@ const EVENTS=[
  s=>{if(s.cr<=0)return null;const l=Math.min(s.cr,Math.max(50,Math.round(s.cr*0.15)));s.cr-=l;s.mor-=3;return'ATAK PIRATÓW! Zrabowano '+l+' kredytów.'},
  s=>{s.mor+=8;return'Święto Założenia Kolonii – morale rośnie.'},
  s=>{s.food+=120;return'Przechwycono lodową kometę: +120 t żywności.'},
- s=>{const n=15+Math.floor(Math.random()*15);s.pop+=n;return'Przybyli uchodźcy z upadłej stacji: +'+n+' kolonistów.'},
+ s=>{const free=Math.floor(s.b.house*60-s.pop);if(free<1)return null;const w=15+Math.floor(Math.random()*15),n=Math.min(w,free);s.pop+=n;
+   return'Przybyli uchodźcy z upadłej stacji: +'+n+' kolonistów.'+(n<w?' Dla '+(w-n)+' zabrakło miejsca – polecieli dalej.':'')},
  s=>{s.energy=Math.max(0,s.energy-60);s.mor-=4;return'Awaria zasilania: −60 kWh energii.'}
 ];
 
