@@ -343,14 +343,14 @@ function pRaport(s,c){
 }
 function pBudowa(s,c){
  const inQ=k=>s.q.filter(x=>x.k===k).length;
- return'<div class="small">Zapłacone budynki trafiają na plac budowy. Im więcej budowniczych, tym szybciej powstają – ich liczbę ustalasz priorytetem w zakładce PRACA. Wolni budowniczowie trafiają najpierw na pierwszy plac w kolejce. Utrzymanie: '+MAINT+' kr/dzień za budynek.</div>'+
- (s.q.length?'<div class="card"><div class="t">'+ico('build')+'PLACE BUDOWY</div>'+s.q.map((x,i)=>{const st=c.sites[i],B=BLD[x.k];
-  return'<div style="margin-top:6px"><div class="row"><span>'+ico(x.k)+B.n+'</span><span>'+Math.floor(st.pct)+'% · '+siteEta(st)+'</span></div>'+bar(st.pct,100,st.rate>0?'':'neg')+
-  '<div class="row small"><span>budowniczowie: '+fmt(st.a)+'/'+fmt(Math.ceil(st.need))+'</span><span>'+(i?'<button data-first="'+i+'">NAJPIERW</button> ':'')+'<button data-cancel="'+i+'" title="Zwrot połowy kosztów">ANULUJ</button></span></div></div>'}).join('')+'</div>':'')+
+ return'<div class="small">Zapłacone budynki trafiają na plac budowy (lista na dole). Im więcej budowniczych, tym szybciej powstają – ich liczbę ustalasz priorytetem w zakładce PRACA. Wolni budowniczowie trafiają najpierw na pierwszy plac w kolejce. Utrzymanie: '+MAINT+' kr/dzień za budynek.</div>'+
  Object.entries(BLD).map(([k,b])=>{
   const n=inQ(k),full=b.max&&s.b[k]+n>=b.max,lock=b.req&&!s.tech[b.req],can=!lock&&!full&&s.cr>=b.cr&&s.min>=b.mi;
   return'<div class="card"><div class="row"><span class="t">'+ico(k)+b.n+' ×'+s.b[k]+(n?' <span class="small warn">+'+n+' w budowie</span>':'')+'</span><span><button data-demo="'+k+'" '+(s.b[k]?'':'disabled')+' title="Rozbierz">−</button> <button data-build="'+k+'" '+(can?'':'disabled')+'>BUDUJ</button></span></div>'+
-  '<div class="small">'+b.d+' · koszt '+b.cr+' kr, '+b.mi+' t min. · '+b.w+' prac. · '+num(b.en)+' kWh/dzień · budowa '+daysTxt(Math.ceil(b.bt/b.crew))+' przy '+b.crew+' budowniczych'+(b.max?' · maks. '+b.max:'')+(lock?' · <span class="neg">wymaga technologii: '+TECH[b.req].n+'</span>':'')+'</div>'+(can||lock||full?'':'<div class="cost2"><div><div class="small">'+ico('cr')+'kredyty '+fmt(Math.min(Math.max(s.cr,0),b.cr))+'/'+b.cr+'</div>'+bar(s.cr,b.cr,s.cr>=b.cr?'':'warn')+'</div><div><div class="small">'+ico('min')+'minerały '+fmt(Math.min(s.min,b.mi))+'/'+b.mi+' t</div>'+bar(s.min,b.mi,s.min>=b.mi?'':'warn')+'</div></div>')+'</div>'}).join('');
+  '<div class="small">'+b.d+' · koszt '+b.cr+' kr, '+b.mi+' t min. · '+b.w+' prac. · '+num(b.en)+' kWh/dzień · budowa '+daysTxt(Math.ceil(b.bt/b.crew))+' przy '+b.crew+' budowniczych'+(b.max?' · maks. '+b.max:'')+(lock?' · <span class="neg">wymaga technologii: '+TECH[b.req].n+'</span>':'')+'</div>'+('<div class="cost2"><div><div class="small">'+ico('cr')+'kredyty '+fmt(Math.min(Math.max(s.cr,0),b.cr))+'/'+b.cr+'</div>'+bar(s.cr,b.cr,s.cr>=b.cr?'':'warn')+'</div><div><div class="small">'+ico('min')+'minerały '+fmt(Math.min(s.min,b.mi))+'/'+b.mi+' t</div>'+bar(s.min,b.mi,s.min>=b.mi?'':'warn')+'</div></div>')+'</div>'}).join('')+
+ (s.q.length?'<div class="card" style="border-top:2px solid var(--text)"><div class="t">'+ico('build')+'PLACE BUDOWY</div>'+s.q.map((x,i)=>{const st=c.sites[i],B=BLD[x.k];
+  return'<div style="margin-top:6px"><div class="row"><span>'+ico(x.k)+B.n+'</span><span>'+Math.floor(st.pct)+'% · '+siteEta(st)+'</span></div>'+bar(st.pct,100,st.rate>0?'':'neg')+
+  '<div class="row small"><span>budowniczowie: '+fmt(st.a)+'/'+fmt(Math.ceil(st.need))+'</span><span>'+(i?'<button data-first="'+i+'">NAJPIERW</button> ':'')+'<button data-cancel="'+i+'" title="Zwrot połowy kosztów">ANULUJ</button></span></div></div>'}).join('')+'</div>':'');
 }
 function pPraca(s,c){
  const emp=c.workforce-c.unemp,inf=INFRA.reduce((a,k)=>a+c.wNeed[k],0);
