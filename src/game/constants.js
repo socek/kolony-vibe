@@ -30,7 +30,7 @@ export const GOAL = 1000, DAYS = 365, YEAR = 2150, KEY = 'kolony-vibe-v2'
 export const INFRA = ['battery', 'store', 'house', 'shield']
 export const JOBS = ['build', 'farm', 'power', 'mine', 'rec', 'lab', 'port']
 export const PRIO = [[0, 'STOP'], [1, 'NISKI'], [2, 'ŚREDNI'], [3, 'WYSOKI']]
-export const TABS = [['raport', 'RAPORT'], ['budowa', 'BUDOWA'], ['praca', 'PRACA'], ['rynek', 'RYNEK'], ['polityka', 'POLITYKA'], ['nauka', 'NAUKA']]
+export const TABS = [['raport', 'RAPORT'], ['budowa', 'BUDOWA'], ['praca', 'PRACA'], ['rynek', 'RYNEK'], ['polityka', 'POLITYKA'], ['nauka', 'NAUKA'], ['przewijanie', 'PRZEWIJANIE']]
 export const RATIONS = [[0.75, 'Głodowe'], [1, 'Normalne'], [1.25, 'Obfite']]
 export const MDAYS = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 export const MNAMES = ['STY', 'LUT', 'MAR', 'KWI', 'MAJ', 'CZE', 'LIP', 'SIE', 'WRZ', 'PAŹ', 'LIS', 'GRU']

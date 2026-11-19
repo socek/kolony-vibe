@@ -70,3 +70,5 @@ input[type=range]{width:100%;accent-color:var(--yellow)}
 .stop{color:var(--red);background:#241b5e;padding:0 4px;animation:blink .4s steps(1) 6}
 @keyframes blink{50%{color:var(--screen);background:var(--red)}}
 @media(prefers-reduced-motion:reduce){.stop{animation:none}}
+.stopopt{padding:3px 0;cursor:pointer}
+.stopopt input{accent-color:var(--yellow);width:20px;height:20px;flex:none}

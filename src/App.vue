@@ -12,8 +12,9 @@ import WorkTab from './components/tabs/WorkTab.vue'
 import MarketTab from './components/tabs/MarketTab.vue'
 import PolicyTab from './components/tabs/PolicyTab.vue'
 import ResearchTab from './components/tabs/ResearchTab.vue'
+import StopsTab from './components/tabs/StopsTab.vue'
 
-const PANELS = { raport: ReportTab, budowa: BuildTab, praca: WorkTab, rynek: MarketTab, polityka: PolicyTab, nauka: ResearchTab }
+const PANELS = { raport: ReportTab, budowa: BuildTab, praca: WorkTab, rynek: MarketTab, polityka: PolicyTab, nauka: ResearchTab, przewijanie: StopsTab }
 </script>
 
 <template>

@@ -32,4 +32,7 @@ export const EVENTS = [
   s => { s.energy = Math.max(0, s.energy - 60); s.mor -= 4; return 'Awaria zasilania: −60 kWh energii.' }
 ]
 
+// które zdarzenia są złe (do ustawień zatrzymywania przewijania)
+export const EVENT_BAD = [true, true, false, true, false, true, false, false, false, true]
+
 export const EVNAMES = ['Deszcz meteorytów', 'Epidemia', 'Statek zaopatrzeniowy', 'Rozbłysk słoneczny', 'Złoże kryształów', 'Atak piratów', 'Święto Założenia', 'Lodowa kometa', 'Uchodźcy', 'Awaria zasilania']

@@ -6,6 +6,7 @@ import { endTurn, clampStore, snapshot } from './game/turn.js'
 import { EVENTS } from './game/events.js'
 import { dateOf } from './game/format.js'
 import { beep } from './game/audio.js'
+import { settings, stopWhy } from './game/stops.js'
 
 const saved = load()
 const resumable = saved && !saved.over ? saved : null
@@ -73,19 +74,19 @@ export function advance(n) {
   const p0 = snapshot(s)
   const label = () => ({ day: Math.min(game.s.m + 1, DAYS), date: dateOf(game.s.m + 1) })
   ui.turn = { ...label(), fill: 0, out: false }
-  let i = 0
+  let i = 0, why = []
   const step = () => {
-    const imp = endTurn(game.s, i > 0)
+    why = endTurn(game.s, i > 0).filter(k => k === 'over' || (n > 1 && settings.stops[k]))
     i++
     ui.tab = 'raport'
     ui.turn.fill = n > 1 ? i / n * 100 : 100
     beep(330 + i * 60, 0.04)
-    if (i < n && !imp && !game.s.over) { Object.assign(ui.turn, label()); setTimeout(step, 90) } else finish()
+    if (i < n && !why.length) { Object.assign(ui.turn, label()); setTimeout(step, 90) } else finish()
   }
   const finish = () => {
     if (n > 1) {
       game.s.prev = p0
-      if (i < n && !game.s.over) game.s.report.unshift({ k: 'txt', t: 'Przewijanie zatrzymane po ' + i + ' ' + (i === 1 ? 'dniu' : 'dniach') + ' – ważne wydarzenie.', c: 'stop', top: 1 })
+      if (i < n && !game.s.over) game.s.report.unshift({ k: 'txt', t: 'Przewijanie zatrzymane po ' + i + ' ' + (i === 1 ? 'dniu' : 'dniach') + ' – ' + why.map(stopWhy).join(', ') + '.', c: 'stop', top: 1 })
     }
     beep(660, 0.06)
     setTimeout(() => {

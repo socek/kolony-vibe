@@ -13,7 +13,8 @@ export const CHANGELOG = [
       'Paski kosztu budowy (kredyty i minerały) – przyciski nie skaczą przy klikaniu.',
       'Gra nazywa się Kolony Vibe (bez „8,1”).',
       'Lista zmian w menu.',
-      'Komunikat „Przewijanie zatrzymane” jest czerwony i mruga, żeby nie dało się go przeoczyć.'
+      'Komunikat „Przewijanie zatrzymane” jest czerwony, mruga i podaje powód.',
+      'Zakładka PRZEWIJANIE – wybierasz, które wydarzenia zatrzymują przewijanie (m.in. nowe: brak rąk do pracy, stojąca budowa, pełne magazyny, zadłużenie).'
     ]
   },
   {
