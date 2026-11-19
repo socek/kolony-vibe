@@ -72,3 +72,4 @@ input[type=range]{width:100%;accent-color:var(--yellow)}
 @media(prefers-reduced-motion:reduce){.stop{animation:none}}
 .stopopt{padding:3px 0;cursor:pointer}
 .stopopt input{accent-color:var(--yellow);width:20px;height:20px;flex:none}
+.tile .tnote{font-size:16px;line-height:1;margin-bottom:2px}

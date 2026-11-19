@@ -4,6 +4,7 @@ export const CHANGELOG = [
   {
     v: '0.2 „Tukohama”', d: '19.11.2026', items: [
       'Złoża minerałów się wyczerpują – kopalnie wydobywają z nich kolejno. Nowe złoża znajdują wyprawy w nowej zakładce WYPRAWY (cel, liczebność ekipy, koszt, szansa, ryzyko).',
+      'Kafelek Minerały pokazuje stan złóż i na ile dni wystarczą.',
       'Zdarzenie „złoże kryształów” dodaje nowe złoże zamiast jednorazowych minerałów.',
       'Tura to jeden dzień, gra trwa rok (365 dni). Data i liczba pozostałych dni w nagłówku.',
       'Budowa trwa – im większy budynek, tym dłużej. Budowniczowie z priorytetem w zakładce PRACA, kolejka placów budowy z przyciskami NAJPIERW i ANULUJ.',
