@@ -19,7 +19,8 @@ export const REP = {
     c: 'warn', f: (v, d) => {
       const f = R(v.f), m = R(v.m)
       if (f < 1 && m < 1) return null
-      return 'Magazyny pełne – stracono ' + ws(d) + (f >= 1 ? f + ' t żywności' : '') + (f >= 1 && m >= 1 ? ' i ' : '') + (m >= 1 ? m + ' t minerałów' : '') + '.'
+      const where = f >= 1 && m >= 1 ? 'Chłodnie i magazyny minerałów pełne' : f >= 1 ? 'Chłodnie pełne' : 'Magazyny minerałów pełne'
+      return where + ' – stracono ' + ws(d) + (f >= 1 ? f + ' t żywności' : '') + (f >= 1 && m >= 1 ? ' i ' : '') + (m >= 1 ? m + ' t minerałów' : '') + '.'
     }
   },
   nodep: { c: 'neg', f: (v, d) => 'Kopalnie stoją' + dd(d) + ' – wszystkie złoża są wyczerpane. Wyślij wyprawę w zakładce WYPRAWY.' },

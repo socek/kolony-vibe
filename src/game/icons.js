@@ -15,6 +15,7 @@ export const ICONS = {
   farm: ['.cc..cc.', 'cccccccc', '.cccccc.', '...cc...', '...cc...', '.dddddd.', '..dddd..', '..dddd..'],
   power: ['eeeeeeee', 'eaeaeaea', 'eeeeeeee', 'eaeaeaea', 'eeeeeeee', '...ff...', '...ff...', '.ffffff.'],
   battery: ['..aaaa..', '.aaaaaa.', '.a....a.', '.acccca.', '.acccca.', '.acccca.', '.acccca.', '.aaaaaa.'],
+  fridge: ['.aaaaaa.', '.aeeeea.', '.aeeeaa.', '.aaaaaa.', '.aeeeea.', '.aeeeaa.', '.aeeeea.', '.aaaaaa.'],
   store: ['bbbbbbbb', 'bb....bb', 'b.b..b.b', 'b..bb..b', 'b..bb..b', 'b.b..b.b', 'bb....bb', 'bbbbbbbb'],
   mine: ['..ffff..', '.f.bb.f.', 'f..bb..f', '...bb...', '...bb...', '...bb...', '...bb...', '...bb...'],
   house: ['........', '..aaaa..', '.aaaaaa.', 'aabaabaa', 'aaaaaaaa', 'aaa..aaa', 'aaa..aaa', '........'],

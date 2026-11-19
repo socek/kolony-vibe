@@ -1,14 +1,14 @@
 <script setup>
 import { computed } from 'vue'
 import { game, ui, prices, sell, buy } from '../../store.js'
-import { RES, stCapOf } from '../../game/constants.js'
+import { RES, capOf } from '../../game/constants.js'
 import { fmt } from '../../game/format.js'
 import PixelIcon from '../PixelIcon.vue'
 import MeterBar from '../MeterBar.vue'
 
 const s = computed(() => game.s)
 const rows = computed(() => Object.entries(RES).map(([k, r]) => {
-  const p = prices(k), cap = stCapOf(s.value)
+  const p = prices(k), cap = capOf(s.value, k)
   return { k, r, p, cap, sv: Math.round(p.sell * ui.qty), bv: Math.round(p.buy * ui.qty), room: s.value[k] + ui.qty <= cap }
 }))
 </script>
@@ -28,7 +28,7 @@ const rows = computed(() => Object.entries(RES).map(([k, r]) => {
       <span class="small">sprzedaż {{ x.p.sell.toFixed(1) }} · kupno {{ x.p.buy.toFixed(1) }} kr/t</span>
       <span>
         <button :disabled="s[x.k] < ui.qty" @click="sell(x.k)">SPRZEDAJ +{{ x.sv }} kr</button>
-        <button :disabled="s.cr < x.bv || !x.room" :title="x.room ? null : 'Brak miejsca w magazynach'" @click="buy(x.k)">KUP −{{ x.bv }} kr</button>
+        <button :disabled="s.cr < x.bv || !x.room" :title="x.room ? null : (x.k === 'food' ? 'Brak miejsca w chłodniach' : 'Brak miejsca w magazynach minerałów')" @click="buy(x.k)">KUP −{{ x.bv }} kr</button>
       </span>
     </div>
   </div>

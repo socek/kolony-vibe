@@ -1,4 +1,4 @@
-import { BLD, TECH, BATCAP, STBASE, STCAP, MAINT, INFRA, JOBS, prioOf } from './constants.js'
+import { BLD, TECH, BATCAP, MAINT, INFRA, JOBS, prioOf, capOf } from './constants.js'
 import { daysTxt } from './format.js'
 import { depTotal } from './expeditions.js'
 
@@ -46,9 +46,9 @@ export function calc(s) {
   const unempPen = s.pop > 0 ? unemp / s.pop * 30 : 0, black = (1 - f) * 30, starv = shortRatio * 40
   let mt = 55 - (s.tax - 10) * 1.5 + (s.ration - 1) * 40 + recB - crowd - unempPen - black - starv - (s.cr < 0 ? 10 : 0)
   mt = Math.max(0, Math.min(100, mt))
-  const stCap = STBASE + (b.store || 0) * STCAP, foodWaste = Math.max(0, foodAfter - stCap), minWaste = Math.max(0, s.min + minProd - stCap)
+  const foodCap = capOf(s, 'food'), minCap = capOf(s, 'min'), foodWaste = Math.max(0, foodAfter - foodCap), minWaste = Math.max(0, s.min + minProd - minCap)
   const enStore = Math.max(0, Math.min(enCap, s.energy + enProd - enNeed * f)), enWaste = Math.max(0, s.energy + enProd - enNeed * f - enCap)
-  return { E, wNeed, builders, sites, stCap, foodWaste, minWaste, enCap, enStore, enWaste, cap, workforce, needed, e, f, enProd, enNeed, foodProd, foodCons, minPot, deps, minProd, resProd, taxInc, trade, maint, unemp, shortRatio, mt, crowd, unempPen, black, starv, recB }
+  return { E, wNeed, builders, sites, foodCap, minCap, foodWaste, minWaste, enCap, enStore, enWaste, cap, workforce, needed, e, f, enProd, enNeed, foodProd, foodCons, minPot, deps, minProd, resProd, taxInc, trade, maint, unemp, shortRatio, mt, crowd, unempPen, black, starv, recB }
 }
 
 export const nextTech = s => Object.entries(TECH).filter(([k]) => !s.tech[k]).map(e => e[1]).sort((a, b) => a.c - b.c)[0]

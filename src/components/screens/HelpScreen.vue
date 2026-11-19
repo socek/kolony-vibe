@@ -7,12 +7,12 @@ import { BATCAP, STBASE, STCAP, DAYS, GOAL } from '../../game/constants.js'
   <h1>ZASADY</h1>
   <p>Jesteś gubernatorem kolonii na odległej planecie. Każda tura to jeden dzień. Masz rok ({{ DAYS }} dni), żeby kolonia urosła do {{ GOAL }} mieszkańców.</p>
   <p>
-    • 60% kolonistów pracuje. Najpierw obsadzane są mieszkania, magazyny, baterie i osłony, potem reszta zadań (budynki i budowniczowie) wg priorytetów z zakładki PRACA. Zatrzymany budynek nie produkuje ani nie zużywa energii, a jego pracownicy są bezrobotni.<br>
+    • 60% kolonistów pracuje. Najpierw obsadzane są mieszkania, chłodnie, magazyny, baterie i osłony, potem reszta zadań (budynki i budowniczowie) wg priorytetów z zakładki PRACA. Zatrzymany budynek nie produkuje ani nie zużywa energii, a jego pracownicy są bezrobotni.<br>
     • Budowa trwa. Każdy budynek wymaga określonej ilości pracy – im większy, tym więcej. Więcej budowniczych kończy budowę szybciej, ale zabiera ludzi z produkcji. Anulowana budowa zwraca połowę kosztów.<br>
     • Kopalnie wydobywają minerały ze złóż, które się wyczerpują. Nowe złoża znajdują wyprawy (zakładka WYPRAWY) – uczestnicy na czas wyprawy opuszczają kolonię.<br>
     • Budynki zużywają energię. Gdy jej brakuje, produkcja spada, a ludzie są źli.<br>
     • Energii nie da się kupić ani sprzedać. Nadwyżkę zmagazynujesz tylko w bateriach (po {{ BATCAP }} kWh każda), resztę tracisz.<br>
-    • Żywność i minerały trzymasz w magazynach ({{ STBASE }} t bazowo + {{ STCAP }} t za każdy magazyn). Nadmiar przepada.<br>
+    • Żywność trzymasz w chłodniach, a minerały w magazynach minerałów – każdy surowiec ma {{ STBASE }} t miejsca bazowo + {{ STCAP }} t za każdy budynek. Nadmiar przepada.<br>
     • Ludzie rosną w liczbie tylko, gdy mają gdzie mieszkać i co jeść.<br>
     • Wysokie podatki i głodowe racje obniżają morale. Przy morale 5% wybucha bunt.<br>
     • Laboratoria codziennie posuwają naprzód wybraną w zakładce NAUKA technologię.<br>

@@ -16,7 +16,7 @@ export const STOPS = [
   { k: 'short', n: 'Początek braku rąk do pracy', why: 'zabrakło rąk do pracy', def: false },
   { k: 'stall', n: 'Budowa stanęła (brak budowniczych)', why: 'budowa stanęła', def: false },
   { k: 'nores', n: 'Laboratoria bez projektu', why: 'laboratoria nie mają projektu', def: false },
-  { k: 'loss', n: 'Pełne magazyny – zaczęły się straty', why: 'magazyny są pełne', def: false },
+  { k: 'loss', n: 'Pełne chłodnie lub magazyny – zaczęły się straty', why: 'magazyny są pełne', def: false },
   { k: 'crowd', n: 'Przeludnienie', why: 'przeludnienie', def: false },
   { k: 'debt', n: 'Zadłużenie', why: 'kolonia jest zadłużona', def: false }
 ]

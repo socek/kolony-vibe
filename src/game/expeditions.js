@@ -16,7 +16,6 @@ export const RANGES = [
 ]
 // Liczebność ekipy: premia do szansy i mnożnik wielkości złoża
 export const TEAMS = [{ n: 5, bonus: 0, mult: 1 }, { n: 10, bonus: 0.1, mult: 1.2 }, { n: 20, bonus: 0.2, mult: 1.5 }]
-const ORES = ['żelaza', 'tytanu', 'krzemu', 'kryształów', 'niklu', 'miedzi']
 
 export const rangeOf = k => RANGES.find(r => r.k === k)
 export const teamOf = n => TEAMS.find(t => t.n === n)
@@ -27,7 +26,7 @@ export const expCost = (r, t) => ({ cr: t.n * r.days, food: Math.ceil(t.n * r.da
 export const depTotal = s => (s.dep || []).reduce((a, d) => a + d.t, 0)
 
 export function depositName(place) {
-  return 'Złoże ' + ORES[Math.floor(Math.random() * ORES.length)] + ' ' + place
+  return 'Złoże minerałów ' + place
 }
 
 export function addDeposit(s, name, t) {

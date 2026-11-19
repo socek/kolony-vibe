@@ -104,7 +104,7 @@ export function devAct(a) {
   const s = game.s
   ui.devMsg = ''
   if (a === 'finish') { s.q.forEach(x => s.b[x.k]++); ui.devMsg = 'Ukończono budów: ' + s.q.length + '.'; s.q = [] }
-  else if (a === 'fill') { const cc = calc(s); s.food = s.min = cc.stCap; s.energy = cc.enCap; ui.devMsg = 'Magazyny pełne.' }
+  else if (a === 'fill') { const cc = calc(s); s.food = cc.foodCap; s.min = cc.minCap; s.energy = cc.enCap; ui.devMsg = 'Magazyny pełne.' }
   else if (a === 'cash') { s.cr += 1000; ui.devMsg = '+1000 kr.' }
   else if (a === 'alltech') { for (const k in TECH) s.tech[k] = 1; s.rs = null; s.rp = {}; ui.devMsg = 'Odkryto wszystkie technologie.' }
   else if (a === 'dep') { addDeposit(s, 'Złoże deweloperskie', 1000); ui.devMsg = 'Dodano złoże 1000 t.' }

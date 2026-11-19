@@ -47,8 +47,12 @@ const depDays = computed(() => c.value.minProd > 0 ? Math.floor(c.value.deps / c
     </div>
     <div v-if="s.exp.length" class="row"><span><PixelIcon name="exp" />Wyprawy</span><span>{{ s.exp.length }} w terenie <span class="small">(najbliższy powrót za {{ daysTxt(Math.min(...s.exp.map(x => x.left))) }})</span></span></div>
     <div class="row">
-      <span><PixelIcon name="store" />Magazyny</span>
-      <span>{{ c.stCap }} t na surowiec<span v-if="c.foodWaste >= 1 || c.minWaste >= 1" class="small warn"> (strata<template v-if="c.foodWaste >= 1"> {{ R(c.foodWaste) }} t żywn.</template><template v-if="c.minWaste >= 1"> {{ R(c.minWaste) }} t min.</template>)</span></span>
+      <span><PixelIcon name="fridge" />Chłodnie</span>
+      <span>{{ c.foodCap }} t<span v-if="c.foodWaste >= 1" class="small warn"> (strata {{ R(c.foodWaste) }} t żywności)</span></span>
+    </div>
+    <div class="row">
+      <span><PixelIcon name="store" />Magazyny minerałów</span>
+      <span>{{ c.minCap }} t<span v-if="c.minWaste >= 1" class="small warn"> (strata {{ R(c.minWaste) }} t minerałów)</span></span>
     </div>
     <div class="row"><span><PixelIcon name="cr" />Kredyty</span><span><SignedNum :n="c.taxInc + c.trade - c.maint" /> <span class="small">(podatki {{ R(c.taxInc) }}<template v-if="c.trade">, handel {{ R(c.trade) }}</template>, utrzymanie −{{ c.maint }})</span></span></div>
     <div class="row">

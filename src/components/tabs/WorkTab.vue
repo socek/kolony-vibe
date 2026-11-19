@@ -26,7 +26,7 @@ const jobs = computed(() => JOBS.filter(k => k === 'build' || s.value.b[k]).map(
 
   <div class="card">
     <div class="row"><span class="t"><PixelIcon name="house" />Infrastruktura</span><span>{{ fmt(infra * c.E.house) }}/{{ fmt(infra) }}</span></div>
-    <div class="small">Mieszkania, magazyny, baterie i osłony są zawsze obsadzane jako pierwsze.</div>
+    <div class="small">Mieszkania, chłodnie, magazyny, baterie i osłony są zawsze obsadzane jako pierwsze.</div>
     <MeterBar :value="c.E.house" :max="1" :cls="c.E.house < 1 ? 'neg' : ''" />
   </div>
 

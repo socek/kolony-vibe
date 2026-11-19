@@ -21,9 +21,9 @@ const tiles = computed(() => {
   return [
     { icon: 'pop', label: 'Koloniści', v: fmt(s.pop), of: '/' + cc.cap, cur: s.pop, prev: p.pop, neg: false, bar: [s.pop, cc.cap, s.pop > cc.cap ? 'neg' : fill(s.pop, cc.cap)] },
     { icon: 'mor', label: 'Morale', v: Math.round(s.mor) + '%', cur: s.mor, prev: p.mor, neg: s.mor < 30, bar: [s.mor, 100, s.mor < 30 ? 'neg' : s.mor < 45 ? 'warn' : ''] },
-    { icon: 'food', label: 'Żywność', v: fmt(s.food), of: '/' + cc.stCap + ' t', cur: s.food, prev: p.food, neg: s.food < cc.foodCons, bar: [s.food, cc.stCap, s.food < cc.foodCons ? 'neg' : fill(s.food, cc.stCap)] },
+    { icon: 'food', label: 'Żywność', v: fmt(s.food), of: '/' + cc.foodCap + ' t', cur: s.food, prev: p.food, neg: s.food < cc.foodCons, bar: [s.food, cc.foodCap, s.food < cc.foodCons ? 'neg' : fill(s.food, cc.foodCap)] },
     { icon: 'energy', label: 'Energia', v: fmt(s.energy), of: '/' + cc.enCap + ' kWh', cur: s.energy, prev: p.energy, neg: cc.f < 1, bar: [s.energy, cc.enCap, cc.f < 1 ? 'neg' : fill(s.energy, cc.enCap)] },
-    { icon: 'min', label: 'Minerały', v: fmt(s.min), of: '/' + cc.stCap + ' t', cur: s.min, prev: p.min, neg: false, bar: [s.min, cc.stCap, fill(s.min, cc.stCap)], note: depNote },
+    { icon: 'min', label: 'Minerały', v: fmt(s.min), of: '/' + cc.minCap + ' t', cur: s.min, prev: p.min, neg: false, bar: [s.min, cc.minCap, fill(s.min, cc.minCap)], note: depNote },
     { icon: 'cr', label: 'Kredyty', v: fmt(s.cr), cur: s.cr, prev: p.cr, neg: s.cr < 0, bar: s.cr < 0 ? [-s.cr, 500, 'neg'] : null },
     { icon: 'res', label: 'Badania', v: s.rs ? Math.floor(techPct(s, s.rs)) + '%' : '—', extra: resPerDay, neg: !s.rs && s.b.lab > 0 && !!nextTech(s), bar: s.rs ? [techPct(s, s.rs), 100, ''] : null },
     { icon: 'work', label: 'Pracownicy', v: fmt(cc.workforce), of: '/' + fmt(cc.needed), neg: cc.e < 1, bar: [cc.workforce, cc.needed, cc.e < 1 ? 'neg' : ''] }

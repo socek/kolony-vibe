@@ -1,4 +1,4 @@
-import { BLD, TECH, RES, BATCAP, MORK, GOAL, DAYS, prioOf, jobName, stCapOf } from './constants.js'
+import { BLD, TECH, RES, BATCAP, MORK, GOAL, DAYS, prioOf, jobName, capOf } from './constants.js'
 import { calc, nextTech } from './calc.js'
 import { EVENTS, EVENT_BAD } from './events.js'
 import { mergeRep } from './report.js'
@@ -6,7 +6,7 @@ import { beep } from './audio.js'
 import { extract, tickExpeditions } from './expeditions.js'
 
 export function clampStore(s) {
-  const c = stCapOf(s), l = { food: Math.max(0, s.food - c), min: Math.max(0, s.min - c) }
+  const l = { food: Math.max(0, s.food - capOf(s, 'food')), min: Math.max(0, s.min - capOf(s, 'min')) }
   s.food -= l.food; s.min -= l.min
   return l
 }
