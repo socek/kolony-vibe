@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kolony Vibe 8,1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+<style>
+:root{--border:#6C5EB5;--screen:#352879;--text:#B3ADFF;--white:#fff;--yellow:#E3EA9A;--green:#A6E08F;--red:#FF9F90;--cyan:#9ADCE8;}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--border)}
+body{font-family:'VT323',monospace;font-size:21px;line-height:1.15;color:var(--text);padding:12px;min-height:100vh}
+.screen{background:var(--screen);max-width:780px;margin:0 auto;padding:14px 14px 0;min-height:calc(100vh - 24px);position:relative}
+h1{font-family:'Press Start 2P',monospace;font-size:17px;color:var(--white);margin:4px 0 6px;letter-spacing:1px}
+.sub{color:var(--cyan)}
+.res{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin:12px 0}
+@media(min-width:620px){.res{grid-template-columns:repeat(4,1fr)}}
+.tile{border:2px solid var(--text);padding:4px 7px}
+.tile .l{font-size:17px;color:var(--cyan);text-transform:uppercase}
+.tile .v{font-size:25px;color:var(--white)}
+.tile .v.neg{color:var(--red)}
+.d{font-size:17px;margin-left:4px}
+.pos{color:var(--green)}.neg{color:var(--red)}.warn{color:var(--yellow)}
+.tabs{display:flex;flex-wrap:wrap;gap:4px;margin:8px 0 10px}
+button{font-family:'VT323',monospace;font-size:21px;background:var(--text);color:var(--screen);border:0;padding:4px 10px;cursor:pointer;border-radius:0}
+button:hover{background:var(--white)}
+button:disabled{opacity:.35;cursor:not-allowed;background:var(--text)}
+.tabs button{background:transparent;color:var(--text);border:2px solid var(--text)}
+.tabs button.on{background:var(--text);color:var(--screen)}
+.panel{min-height:240px;padding-bottom:90px}
+.card{border-top:2px dashed var(--border);padding:8px 0}
+.card .t{color:var(--white);font-size:23px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.small{font-size:18px}
+.log p{margin:3px 0}
+.log p::before{content:"> ";color:var(--cyan)}
+.bar{position:sticky;bottom:0;background:var(--screen);padding:10px 0 14px;border-top:2px solid var(--border);display:flex;gap:6px;align-items:center}
+.bar .go{flex:1;font-size:26px;padding:8px;background:var(--yellow)}
+.bar .go:hover{background:var(--white)}
+input[type=range]{width:100%;accent-color:var(--yellow)}
+.qty button{min-width:52px}
+.qty button.on{background:var(--yellow)}
+.pr{display:flex;gap:4px;flex-wrap:wrap;margin-top:5px}.pr button{font-size:18px;padding:2px 8px}.pr button.on{background:var(--yellow)}
+.overlay{position:fixed;inset:0;background:var(--border);display:flex;align-items:center;justify-content:center;padding:12px;z-index:10}
+.overlay .box{background:var(--screen);max-width:620px;width:100%;padding:20px;max-height:92vh;overflow:auto}
+.cursor{display:inline-block;width:12px;height:20px;background:var(--text);vertical-align:-3px;animation:bl 1s steps(1) infinite}
+@keyframes bl{50%{opacity:0}}
+.hidden{display:none}
+.tw{position:fixed;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;background:var(--screen);animation:twf .9s linear forwards;pointer-events:none}
+.tw::before{content:'';position:absolute;inset:0;opacity:.55;background:repeating-linear-gradient(0deg,var(--border) 0 6px,var(--screen) 6px 12px,var(--cyan) 12px 15px,var(--screen) 15px 22px);animation:twr .12s steps(2) infinite}
+.tw .twb{position:relative;background:var(--screen);border:2px solid var(--text);padding:18px 22px;min-width:260px;text-align:center}
+.tw .twt{font-family:'Press Start 2P',monospace;font-size:15px;color:var(--white);line-height:1.8}
+.tw .meter i{width:0;background:var(--yellow);animation:twm .7s steps(10) forwards}
+@keyframes twf{0%{opacity:0}12%{opacity:1}80%{opacity:1}100%{opacity:0}}
+@keyframes twr{to{background-position:0 22px}}
+@keyframes twm{to{width:100%}}
+@media(prefers-reduced-motion:reduce){.tw::before{animation:none}}
+.ic{width:1em;height:1em;vertical-align:-.12em;margin-right:5px;shape-rendering:crispEdges}
+.tile .l .ic{width:1.15em;height:1.15em}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.meter{height:10px;background:#241b5e;border:1px solid var(--text);margin-top:3px}
+.meter i{display:block;height:100%;background:var(--green)}
+.meter i.warn{background:var(--yellow)}.meter i.neg{background:var(--red)}
+.tile .meter{height:6px;margin:2px 0 3px}
+.card .meter{margin-top:5px}
+</style>
+</head>
+<body>
+<div class="screen">
+  <h1>KOLONY VIBE<span class="sub"> 8,1</span></h1>
+  <div class="row small"><span id="date"></span><span id="goal" class="warn"></span></div>
+  <div class="meter" id="tbar"><i></i></div>
+  <div class="res" id="res"></div>
+  <div class="tabs" id="tabs"></div>
+  <div class="panel" id="panel"></div>
+  <div class="bar">
+    <button class="go" id="go">▶ KONIEC MIESIĄCA</button>
+    <button id="menu" title="Menu">≡</button>
+  </div>
+</div>
+
+<div class="overlay" id="ov"><div class="box" id="ovbox"></div></div>
+
+<script>
+const BLD={
+ farm:{n:'Farma hydroponiczna',cr:120,mi:40,w:10,en:4,d:'+25 t żywności'},
+ power:{n:'Elektrownia słoneczna',cr:150,mi:60,w:6,en:0,d:'+30 kWh energii'},
+ battery:{n:'Bateria',cr:130,mi:70,w:1,en:0,d:'+100 kWh pojemności magazynu energii'},
+ store:{n:'Magazyn',cr:110,mi:40,w:2,en:1,d:'+250 t miejsca na żywność i minerały'},
+ mine:{n:'Kopalnia',cr:140,mi:20,w:12,en:6,d:'+18 t minerałów'},
+ house:{n:'Moduł mieszkalny',cr:100,mi:50,w:2,en:3,d:'+60 miejsc'},
+ rec:{n:'Centrum rekreacji',cr:200,mi:60,w:6,en:4,d:'podnosi morale'},
+ lab:{n:'Laboratorium',cr:250,mi:80,w:8,en:6,d:'+6 pkt badań'},
+ port:{n:'Port kosmiczny',cr:600,mi:250,w:15,en:10,d:'+40 kr handlu, imigranci, lepsze ceny',max:1},
+ shield:{n:'Osłona orbitalna',cr:180,mi:90,w:0,en:2,d:'przechwytuje jeden deszcz meteorytów i ulega zniszczeniu',req:'shield'}
+};
+const TECH={
+ hydro:{n:'Ulepszona hydroponika',c:40,d:'Farmy +30%'},
+ graph:{n:'Panele grafenowe',c:50,d:'Elektrownie +30%'},
+ drill:{n:'Głębokie wiercenia',c:60,d:'Kopalnie +30%'},
+ med:{n:'Medycyna kosmiczna',c:80,d:'Przyrost +30%, słabsze epidemie'},
+ auto:{n:'Automatyzacja',c:90,d:'Budynki potrzebują o 25% mniej pracowników'},
+ shield:{n:'Osłony orbitalne',c:110,d:'Pozwala budować osłony orbitalne chroniące przed meteorytami'}
+};
+const RES={food:{n:'Żywność',base:4},min:{n:'Minerały',base:6}};
+// ikonki pikselowe 8x8: a biały, b żółty, c zielony, d czerwony, e cyjan, f fiolet
+const PAL={a:'#fff',b:'#E3EA9A',c:'#A6E08F',d:'#FF9F90',e:'#9ADCE8',f:'#B3ADFF'};
+const ICONS={
+ pop:['..aaaa..','..aaaa..','...aa...','.aaaaaa.','a.aaaa.a','..aaaa..','..a..a..','..a..a..'],
+ mor:['..bbbb..','.bbbbbb.','bb.bb.bb','bbbbbbbb','b.bbbb.b','bb....bb','.bbbbbb.','..bbbb..'],
+ food:['....c...','...c....','.dd.dd..','dddddddd','dddddddd','dddddddd','.dddddd.','..dddd..'],
+ energy:['....bb..','...bb...','..bb....','.bbbbbb.','....bb..','...bb...','..bb....','.b......'],
+ min:['..eeee..','.eaeeee.','eaeeeeee','eeeeeeee','.eeeeee.','..eeee..','...ee...','........'],
+ cr:['..bbbb..','.bbbbbb.','bbbaabbb','bbabbbbb','bbabbbbb','bbbaabbb','.bbbbbb.','..bbbb..'],
+ res:['..aaaa..','...aa...','...aa...','..acca..','.acccca.','acccccca','acccccca','.aaaaaa.'],
+ work:['.ff..ff.','.ff..ff.','.ffffff.','..ffff..','...ff...','...ff...','...ff...','...ff...'],
+ farm:['.cc..cc.','cccccccc','.cccccc.','...cc...','...cc...','.dddddd.','..dddd..','..dddd..'],
+ power:['eeeeeeee','eaeaeaea','eeeeeeee','eaeaeaea','eeeeeeee','...ff...','...ff...','.ffffff.'],
+ battery:['..aaaa..','.aaaaaa.','.a....a.','.acccca.','.acccca.','.acccca.','.acccca.','.aaaaaa.'],
+ store:['bbbbbbbb','bb....bb','b.b..b.b','b..bb..b','b..bb..b','b.b..b.b','bb....bb','bbbbbbbb'],
+ mine:['..ffff..','.f.bb.f.','f..bb..f','...bb...','...bb...','...bb...','...bb...','...bb...'],
+ house:['........','..aaaa..','.aaaaaa.','aabaabaa','aaaaaaaa','aaa..aaa','aaa..aaa','........'],
+ rec:['.dd..dd.','dddddddd','dddddddd','dddddddd','.dddddd.','..dddd..','...dd...','........'],
+ lab:['..aaaa..','...aa...','...aa...','..acca..','.acccca.','acccccca','acccccca','.aaaaaa.'],
+ shield:['eeeeeeee','eaaeeeee','eaeeeeee','eeeeeeee','eeeeeeee','.eeeeee.','..eeee..','...ee...'],
+ port:['...aa...','..aaaa..','..aeea..','..aaaa..','.aaaaaa.','aa.aa.aa','...dd...','..d..d..']
+};
+const _ic={};
+function ico(k){if(_ic[k])return _ic[k];const g=ICONS[k];if(!g)return'';let r='';
+ g.forEach((row,y)=>[...row].forEach((ch,x)=>{if(PAL[ch])r+='<rect x="'+x+'" y="'+y+'" width="1" height="1" fill="'+PAL[ch]+'"/>'}));
+ return _ic[k]='<svg class="ic" viewBox="0 0 8 8" aria-hidden="true">'+r+'</svg>'}
+
+const BATCAP=100,STBASE=150,STCAP=250;
+const stCapOf=s=>STBASE+(s.b.store||0)*STCAP;
+const GOAL=1000,MAXM=120,KEY='kolony-remake-v1';
+const INFRA=['battery','store','house','shield'],JOBS=['farm','power','mine','rec','lab','port'];
+const PRIO=[[0,'STOP'],[1,'NISKI'],[2,'ŚREDNI'],[3,'WYSOKI']];
+const prioOf=(s,k)=>INFRA.includes(k)?9:((s.prio||{})[k]??2);
+const TABS=[['raport','RAPORT'],['budowa','BUDOWA'],['praca','PRACA'],['rynek','RYNEK'],['polityka','POLITYKA'],['nauka','NAUKA']];
+const RATIONS=[[0.75,'Głodowe'],[1,'Normalne'],[1.25,'Obfite']];
+let S,tab='raport',qty=50,sound=true,actx=null;
+
+function newState(){return{m:1,pop:100,food:300,energy:100,min:200,cr:500,mor:60,rs:null,rp:{},
+ b:{farm:3,power:2,battery:1,store:1,mine:1,house:2,rec:0,lab:0,port:0,shield:0},tax:10,ration:1,tech:{},prio:{},
+ pr:{food:4,min:6},prev:null,over:null,
+ report:['Witaj, gubernatorze! Kolonia Nowa Nadzieja liczy 100 osadników.','Cel: '+GOAL+' kolonistów w ciągu '+(MAXM/12)+' lat.']}}
+
+function calc(s){
+ const t=s.tech,b=s.b,cap=b.house*60,workforce=s.pop*0.6,enCap=(b.battery||0)*BATCAP;
+ const af=t.auto?0.75:1,wNeed={},E={};let avail=workforce,nb=0;
+ for(const k in BLD){wNeed[k]=b[k]*BLD[k].w*af;nb+=b[k]}
+ // przydział pracowników: najpierw infrastruktura, potem wg priorytetów
+ const take=ks=>{const n=ks.reduce((a,k)=>a+wNeed[k],0),r=n>0?Math.min(1,avail/n):1;ks.forEach(k=>E[k]=r);avail-=Math.min(avail,n)};
+ take(INFRA);for(const L of[3,2,1])take(JOBS.filter(k=>prioOf(s,k)===L));
+ JOBS.filter(k=>prioOf(s,k)===0).forEach(k=>E[k]=0);
+ let needed=0,enNeed=s.pop*0.1;
+ for(const k in BLD){if(prioOf(s,k)>0)needed+=wNeed[k];enNeed+=b[k]*BLD[k].en*E[k]}
+ const e=needed>0?Math.min(1,workforce/needed):1;
+ const enProd=b.power*30*E.power*(t.graph?1.3:1);
+ const f=enNeed>0?Math.min(1,(s.energy+enProd)/enNeed):1;
+ const foodProd=b.farm*25*E.farm*f*(t.hydro?1.3:1),foodCons=s.pop*0.6*s.ration;
+ const minProd=b.mine*18*E.mine*f*(t.drill?1.3:1),resProd=b.lab*6*E.lab*f;
+ const taxInc=s.pop*s.tax*0.05,trade=b.port*40*E.port*f,maint=nb*3;
+ const unemp=avail;
+ const foodAfter=s.food+foodProd-foodCons;
+ const shortRatio=foodAfter<0&&foodCons>0?Math.min(1,-foodAfter/foodCons):0;
+ const recB=20*(1-Math.pow(0.75,b.rec*E.rec*f));
+ const crowd=s.pop>cap?Math.min(40,(s.pop-cap)/Math.max(cap,1)*60):0;
+ const unempPen=s.pop>0?unemp/s.pop*30:0,black=(1-f)*30,starv=shortRatio*40;
+ let mt=55-(s.tax-10)*1.5+(s.ration-1)*40+recB-crowd-unempPen-black-starv-(s.cr<0?10:0);
+ mt=Math.max(0,Math.min(100,mt));
+ const stCap=STBASE+(b.store||0)*STCAP,foodWaste=Math.max(0,foodAfter-stCap),minWaste=Math.max(0,s.min+minProd-stCap);
+ const enStore=Math.max(0,Math.min(enCap,s.energy+enProd-enNeed*f)),enWaste=Math.max(0,s.energy+enProd-enNeed*f-enCap);
+ return{E,wNeed,stCap,foodWaste,minWaste,enCap,enStore,enWaste,cap,workforce,needed,e,f,enProd,enNeed,foodProd,foodCons,minProd,resProd,taxInc,trade,maint,unemp,shortRatio,mt,crowd,unempPen,black,starv,recB};
+}
+
+const EVENTS=[
+ s=>{if(s.b.shield>0){s.b.shield--;return'Deszcz meteorytów! Osłona orbitalna przechwyciła uderzenie i uległa zniszczeniu. Pozostało osłon: '+s.b.shield+'.'}
+   const ks=Object.keys(BLD).filter(k=>s.b[k]>0);if(!ks.length)return null;
+   const k=ks[Math.floor(Math.random()*ks.length)];s.b[k]--;s.mor-=4;return'DESZCZ METEORYTÓW! Zniszczony budynek: '+BLD[k].n+'.'},
+ s=>{const d=s.pop*(s.tech.med?0.03:0.08);s.pop-=d;s.mor-=5;return'EPIDEMIA! Zmarło '+Math.round(d)+' kolonistów.'},
+ s=>{s.food+=100;s.min+=60;return'Statek zaopatrzeniowy z Ziemi: +100 t żywności, +60 t minerałów.'},
+ s=>{const l=Math.round(s.energy*0.5);if(l<5)return null;s.energy-=l;return'Rozbłysk słoneczny! Utracono '+l+' kWh energii.'},
+ s=>{s.min+=150;return'Geolodzy odkryli złoże kryształów: +150 t minerałów.'},
+ s=>{if(s.cr<=0)return null;const l=Math.min(s.cr,Math.max(50,Math.round(s.cr*0.15)));s.cr-=l;s.mor-=3;return'ATAK PIRATÓW! Zrabowano '+l+' kredytów.'},
+ s=>{s.mor+=8;return'Święto Założenia Kolonii – morale rośnie.'},
+ s=>{s.food+=120;return'Przechwycono lodową kometę: +120 t żywności.'},
+ s=>{const n=15+Math.floor(Math.random()*15);s.pop+=n;return'Przybyli uchodźcy z upadłej stacji: +'+n+' kolonistów.'},
+ s=>{s.energy=Math.max(0,s.energy-60);s.mor-=4;return'Awaria systemu podtrzymywania życia: −60 kWh energii.'}
+];
+
+function endTurn(){
+ if(S.over)return;
+ const s=S,c=calc(s),r=[];
+ s.prev={pop:s.pop,food:s.food,energy:s.energy,min:s.min,cr:s.cr,mor:s.mor};
+ s.energy=c.enStore;
+ if(c.enWaste>=1)r.push('<span class="warn">Baterie pełne – zmarnowano '+Math.round(c.enWaste)+' kWh energii.</span>');
+ s.food+=c.foodProd-c.foodCons;
+ let deaths=0;
+ if(s.food<0){deaths=s.pop*0.2*c.shortRatio;s.food=0;r.push('<span class="neg">GŁÓD! Zmarło '+Math.round(deaths)+' kolonistów.</span>')}
+ s.min+=c.minProd;s.cr+=c.taxInc+c.trade-c.maint;
+ s.mor+=(c.mt-s.mor)*0.3;
+ if(c.e<1){const miss=Math.ceil(c.needed-c.workforce),low=Object.keys(BLD).filter(k=>s.b[k]&&prioOf(s,k)>0&&c.E[k]<1).map(k=>BLD[k].n+' '+Math.round(c.E[k]*100)+'%');
+  r.push('<span class="warn">Brak rąk do pracy – brakuje '+miss+' '+(miss===1?'pracownika':'pracowników')+'. Niedoobsadzone: '+low.join(', ')+'. Priorytety ustawisz w zakładce PRACA.</span>')}
+ if(c.f<1)r.push('<span class="neg">BLACKOUT! Zasilanie pokrywa '+Math.round(c.f*100)+'% potrzeb.</span>');
+ if(c.crowd>0)r.push('<span class="warn">Przeludnienie – zbuduj moduły mieszkalne.</span>');
+ if(!deaths&&s.pop<c.cap){const g=Math.min(s.pop*0.025*(s.mor/60)*(s.tech.med?1.3:1),c.cap-s.pop);s.pop+=g;if(g>=1)r.push('Urodziło się '+Math.round(g)+' nowych kolonistów.')}
+ if(s.b.port&&s.mor>55&&s.pop<c.cap){const im=Math.min(5+Math.random()*10,c.cap-s.pop);s.pop+=im;if(im>=1)r.push('Port: przybyło '+Math.round(im)+' imigrantów.')}
+ if(s.mor<25){const em=s.pop*0.03;s.pop-=em;r.push('<span class="neg">Niezadowoleni koloniści odlatują: −'+Math.round(em)+'.</span>')}
+ s.pop-=deaths;
+ if(s.m>2&&Math.random()<0.3){const m=EVENTS[Math.floor(Math.random()*EVENTS.length)](s);if(m){r.unshift('<span class="cyan" style="color:var(--cyan)">★ '+m+'</span>');beep(220,.25)}}
+ for(const k in s.pr){const b=RES[k].base;s.pr[k]=Math.max(b*0.5,Math.min(b*2,s.pr[k]*(1+(Math.random()-0.5)*0.24)))}
+ if(s.cr<0)r.push('<span class="neg">Kolonia jest zadłużona! Morale spada.</span>');
+ s.mor=Math.max(0,Math.min(100,s.mor));s.pop=Math.max(0,s.pop);s.energy=Math.min(s.energy,(s.b.battery||0)*BATCAP);
+ {const l=clampStore(s);if(l.food>=1||l.min>=1)r.push('<span class="warn">Magazyny pełne – stracono'+(l.food>=1?' '+Math.round(l.food)+' t żywności':'')+(l.food>=1&&l.min>=1?' i':'')+(l.min>=1?' '+Math.round(l.min)+' t minerałów':'')+'.</span>')}
+ if(s.rs&&c.resProd>0){const k=s.rs,t=TECH[k];s.rp[k]=(s.rp[k]||0)+c.resProd;
+  if(s.rp[k]>=t.c){s.tech[k]=1;delete s.rp[k];s.rs=null;r.unshift('<span class="pos">★ Naukowcy ukończyli projekt: '+t.n+'! '+t.d+'. Wybierz kolejny w zakładce NAUKA.</span>');beep(990,.15)}}
+ else if(!s.rs&&c.resProd>0&&nextTech(s))r.push('<span class="warn">Laboratoria nie mają projektu – wybierz technologię w zakładce NAUKA.</span>');
+ s.m++;
+ if(!r.length)r.push('Spokojny miesiąc w kolonii.');
+ s.report=r;
+ if(s.pop>=GOAL)s.over={win:true,t:'ZWYCIĘSTWO!',d:'Kolonia osiągnęła '+GOAL+' mieszkańców. Rada Ziemi przyznaje ci order Pioniera.'};
+ else if(s.pop<10)s.over={win:false,t:'KOLONIA UPADŁA',d:'Zostało zbyt mało osadników, by przetrwać.'};
+ else if(s.mor<=5)s.over={win:false,t:'BUNT!',d:'Koloniści przejęli władzę i odesłali cię na Ziemię.'};
+ else if(s.cr<-500)s.over={win:false,t:'BANKRUCTWO',d:'Długi przekroczyły 500 kredytów. Korporacja przejmuje kolonię.'};
+ else if(s.m>MAXM)s.over={win:false,t:'KONIEC KADENCJI',d:'Minęło '+(MAXM/12)+' lat. Nie osiągnąłeś celu, ale kolonia przetrwała.'};
+ save();tab='raport';render();beep(660,.06);
+ if(s.over)showEnd();
+}
+
+function clampStore(s){const c=stCapOf(s),l={food:Math.max(0,s.food-c),min:Math.max(0,s.min-c)};s.food-=l.food;s.min-=l.min;return l}
+function score(s){return Math.round(s.pop+s.mor*5+Math.max(0,s.cr)/10+Object.keys(s.tech).length*50+(s.over&&s.over.win?(MAXM-s.m)*20:0))}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function load(){try{const v=localStorage.getItem(KEY);const o=v?JSON.parse(v):null;
+ if(o&&o.b&&o.b.battery==null){o.b.battery=1;o.energy=Math.min(o.energy,BATCAP);if(o.pr)delete o.pr.energy}
+ if(o&&o.b&&o.b.store==null){o.b.store=1;clampStore(o)}
+ if(o&&o.b&&o.b.shield==null)o.b.shield=0;
+ if(o&&!o.rp){o.rp={};o.rs=null;delete o.res}
+ if(o&&!o.prio)o.prio={};
+ return o}catch(e){return null}}
+
+const fmt=n=>Math.floor(n).toLocaleString('pl-PL');
+function delta(cur,prev){if(prev==null)return'';const d=Math.round(cur-prev);if(!d)return'';return'<span class="d '+(d>0?'pos':'neg')+'">'+(d>0?'+':'')+d+'</span>'}
+
+function render(){
+ const s=S,c=calc(s),p=s.prev||{};
+ const y=2150+Math.floor((s.m-1)/12),mo=((s.m-1)%12)+1;
+ date.textContent='ROK '+y+' · MIES. '+mo+' ('+Math.min(s.m,MAXM)+'/'+MAXM+')';
+ goal.textContent='CEL: '+GOAL+' OSÓB';
+ tbar.firstChild.style.width=Math.min(100,(Math.min(s.m,MAXM)-1)/(MAXM-1)*100)+'%';tbar.firstChild.className=s.m>MAXM*0.8?'warn':'';
+ const tiles=[
+  ['Koloniści',fmt(s.pop)+'<span class="small">/'+c.cap+'</span>',delta(s.pop,p.pop),false,bar(s.pop,c.cap,s.pop>c.cap?'neg':fillCls(s.pop,c.cap)),'pop'],
+  ['Morale',Math.round(s.mor)+'%',delta(s.mor,p.mor),s.mor<30,bar(s.mor,100,s.mor<30?'neg':s.mor<45?'warn':''),'mor'],
+  ['Żywność',fmt(s.food)+'<span class="small">/'+c.stCap+' t</span>',delta(s.food,p.food),s.food<c.foodCons,bar(s.food,c.stCap,s.food<c.foodCons?'neg':fillCls(s.food,c.stCap)),'food'],
+  ['Energia',fmt(s.energy)+'<span class="small">/'+c.enCap+' kWh</span>',delta(s.energy,p.energy),c.f<1,bar(s.energy,c.enCap,c.f<1?'neg':fillCls(s.energy,c.enCap)),'energy'],
+  ['Minerały',fmt(s.min)+'<span class="small">/'+c.stCap+' t</span>',delta(s.min,p.min),false,bar(s.min,c.stCap,fillCls(s.min,c.stCap)),'min'],
+  ['Kredyty',fmt(s.cr),delta(s.cr,p.cr),s.cr<0,s.cr<0?bar(-s.cr,500,'neg'):'','cr'],
+  ['Badania',s.rs?Math.floor(techPct(s,s.rs))+'%':'—',s.rs&&c.resProd>0?'<span class="d pos">+'+Math.round(c.resProd/TECH[s.rs].c*100)+'%</span>':'',!s.rs&&s.b.lab>0&&!!nextTech(s),s.rs?bar(techPct(s,s.rs),100):'','res'],
+  ['Pracownicy',fmt(c.workforce)+'<span class="small">/'+fmt(c.needed)+'</span>','',c.e<1,bar(c.workforce,c.needed,c.e<1?'neg':''),'work']
+ ];
+ res.innerHTML=tiles.map(t=>'<div class="tile"><div class="l">'+ico(t[5])+t[0]+'</div><div class="v'+(t[3]?' neg':'')+'">'+t[1]+t[2]+'</div>'+(t[4]||'')+'</div>').join('');
+ tabs.innerHTML=TABS.map(t=>'<button data-tab="'+t[0]+'" class="'+(tab===t[0]?'on':'')+'">'+t[1]+'</button>').join('');
+ panel.innerHTML=({raport:pRaport,budowa:pBudowa,praca:pPraca,rynek:pRynek,polityka:pPolityka,nauka:pNauka})[tab](s,c);
+ go.disabled=!!s.over;
+}
+
+function bar(v,max,cls){const p=max>0?Math.max(0,Math.min(100,v/max*100)):0;return'<div class="meter"><i class="'+(cls||'')+'" style="width:'+p+'%"></i></div>'}
+function fillCls(v,max){return v>=max?'warn':''}
+function sgn(n){n=Math.round(n);return'<span class="'+(n>=0?'pos':'neg')+'">'+(n>0?'+':'')+n+'</span>'}
+function pRaport(s,c){
+ const prog=Math.min(100,s.pop/GOAL*100),nextMor=Math.max(0,Math.min(100,s.mor+(c.mt-s.mor)*0.3));
+ return'<div class="t" style="color:var(--white)">RAPORT MIESIĘCZNY</div><div class="log">'+s.report.map(x=>'<p>'+x+'</p>').join('')+'</div>'+
+ '<div class="card"><div class="t">PROGNOZA NA NASTĘPNY MIESIĄC</div>'+
+ '<div class="row"><span>'+ico('food')+'Żywność</span><span>'+sgn(c.foodProd-c.foodCons)+' t <span class="small">('+Math.round(c.foodProd)+' prod. / '+Math.round(c.foodCons)+' zuż.)</span></span></div>'+
+ '<div class="row"><span>'+ico('energy')+'Energia</span><span>'+sgn(c.enProd-c.enNeed)+' kWh <span class="small">('+Math.round(c.enProd)+' prod. / '+Math.round(c.enNeed)+' zuż.)</span></span></div>'+
+ '<div class="row"><span>'+ico('battery')+'Magazyn energii</span><span>'+Math.round(c.enStore)+'/'+c.enCap+' kWh'+(c.enWaste>=1?' <span class="small warn">(strata '+Math.round(c.enWaste)+' kWh)</span>':'')+'</span></div>'+
+ '<div class="row"><span>'+ico('min')+'Minerały</span><span>'+sgn(c.minProd)+' t</span></div>'+
+ '<div class="row"><span>'+ico('store')+'Magazyny</span><span>'+c.stCap+' t na surowiec'+(c.foodWaste>=1||c.minWaste>=1?' <span class="small warn">(strata'+(c.foodWaste>=1?' '+Math.round(c.foodWaste)+' t żywn.':'')+(c.minWaste>=1?' '+Math.round(c.minWaste)+' t min.':'')+')</span>':'')+'</span></div>'+
+ '<div class="row"><span>'+ico('cr')+'Kredyty</span><span>'+sgn(c.taxInc+c.trade-c.maint)+' <span class="small">(podatki '+Math.round(c.taxInc)+(c.trade?', handel '+Math.round(c.trade):'')+', utrzymanie −'+c.maint+')</span></span></div>'+
+ '<div class="row"><span>'+ico('res')+'Badania</span><span>'+(s.rs?sgn(c.resProd/TECH[s.rs].c*100)+'% <span class="small">('+TECH[s.rs].n+': '+Math.floor(techPct(s,s.rs))+'%, '+techEta(s,s.rs,c)+')</span>':'<span class="warn">brak projektu</span>')+'</span></div>'+
+ '<div class="row"><span>'+ico('mor')+'Morale</span><span>'+sgn(nextMor-s.mor)+' <span class="small">('+Math.round(s.mor)+'% → '+Math.round(nextMor)+'%; przy obecnych warunkach ustali się na '+Math.round(c.mt)+'%)</span></span></div>'+
+ '<div class="row"><span>'+ico('work')+'Wydajność</span><span>'+Math.round(c.e*c.f*100)+'%</span></div>'+bar(c.e*c.f,1,c.e*c.f<1?'warn':'')+'</div>'+
+ '<div class="card"><div class="row"><span>'+ico('pop')+'Postęp do celu</span><span>'+Math.round(prog)+'%</span></div>'+bar(prog,100)+'</div>';
+}
+function pBudowa(s,c){
+ return'<div class="small">Utrzymanie: 3 kr/mies. za budynek. Budowa jest natychmiastowa.</div>'+Object.entries(BLD).map(([k,b])=>{
+  const lock=b.req&&!s.tech[b.req],can=!lock&&s.cr>=b.cr&&s.min>=b.mi&&!(b.max&&s.b[k]>=b.max);
+  return'<div class="card"><div class="row"><span class="t">'+ico(k)+b.n+' ×'+s.b[k]+'</span><span><button data-demo="'+k+'" '+(s.b[k]?'':'disabled')+' title="Rozbierz">−</button> <button data-build="'+k+'" '+(can?'':'disabled')+'>BUDUJ</button></span></div>'+
+  '<div class="small">'+b.d+' · koszt '+b.cr+' kr, '+b.mi+' t min. · '+b.w+' prac. · '+b.en+' kWh'+(b.max?' · maks. '+b.max:'')+(lock?' · <span class="neg">wymaga technologii: '+TECH[b.req].n+'</span>':'')+'</div>'+(can||lock||(b.max&&s.b[k]>=b.max)?'':bar(Math.min(s.cr/b.cr,s.min/b.mi),1,'warn'))+'</div>'}).join('');
+}
+function pPraca(s,c){
+ const emp=c.workforce-c.unemp,inf=INFRA.reduce((a,k)=>a+c.wNeed[k],0);
+ return'<div class="card" style="border-top:0"><div class="row"><span>'+ico('work')+'Zdolni do pracy (60% kolonistów)</span><span>'+fmt(c.workforce)+'</span></div>'+
+ '<div class="row"><span>Zatrudnieni</span><span>'+fmt(emp)+'</span></div>'+
+ '<div class="row"><span>Bezrobotni</span><span class="'+(c.unemp>=1?'warn':'')+'">'+fmt(c.unemp)+'</span></div>'+
+ '<div class="row"><span>Brakuje rąk do pracy</span><span class="'+(c.e<1?'neg':'')+'">'+fmt(Math.max(0,Math.ceil(c.needed-c.workforce)))+'</span></div>'+
+ '<div class="small" style="margin-top:4px">Pracownicy trafiają najpierw do budynków o wysokim priorytecie. Przy równym priorytecie dzielą się po równo. STOP wyłącza budynek: nie produkuje i nie zużywa energii, a jego ludzie zostają bez pracy.</div></div>'+
+ '<div class="card"><div class="row"><span class="t">'+ico('house')+'Infrastruktura</span><span>'+fmt(inf*c.E.house)+'/'+fmt(inf)+'</span></div><div class="small">Mieszkania, magazyny, baterie i osłony są zawsze obsadzane jako pierwsze.</div>'+bar(c.E.house,1,c.E.house<1?'neg':'')+'</div>'+
+ JOBS.filter(k=>s.b[k]).map(k=>{const p=prioOf(s,k),n=c.wNeed[k],w=n*c.E[k];
+  return'<div class="card"><div class="row"><span class="t">'+ico(k)+BLD[k].n+' ×'+s.b[k]+'</span><span>'+(p?fmt(w)+'/'+fmt(n)+' prac. ('+Math.round(c.E[k]*100)+'%)':'<span class="neg">ZATRZYMANY</span>')+'</span></div>'+
+  bar(c.E[k],1,p===0?'neg':c.E[k]<1?'warn':'')+
+  '<div class="pr">'+PRIO.map(([l,nm])=>'<button data-prio="'+k+':'+l+'" class="'+(p===l?'on':'')+'">'+nm+'</button>').join('')+'</div></div>'}).join('');
+}
+function prices(s,k){const p=s.pr[k];return{sell:p*(s.b.port?1.15:1),buy:p*1.3*(s.b.port?0.9:1)}}
+function pRynek(s){
+ return'<div class="row qty"><span>Ilość:</span><span>'+[10,50,100].map(q=>'<button data-qty="'+q+'" class="'+(qty===q?'on':'')+'">'+q+' t</button>').join(' ')+'</span></div>'+
+ (s.b.port?'<div class="small pos">Port kosmiczny daje lepsze ceny.</div>':'<div class="small">Port kosmiczny poprawiłby ceny.</div>')+
+ Object.entries(RES).map(([k,r])=>{const p=prices(s,k),sv=Math.round(p.sell*qty),bv=Math.round(p.buy*qty);
+ const cap=stCapOf(s),room=s[k]+qty<=cap;
+ return'<div class="card"><div class="row"><span class="t">'+ico(k)+r.n+'</span><span>masz '+fmt(s[k])+'/'+cap+' t</span></div>'+bar(s[k],cap,fillCls(s[k],cap))+
+ '<div class="row"><span class="small">sprzedaż '+p.sell.toFixed(1)+' · kupno '+p.buy.toFixed(1)+' kr/t</span><span>'+
+ '<button data-sell="'+k+'" '+(s[k]>=qty?'':'disabled')+'>SPRZEDAJ +'+sv+' kr</button> '+
+ '<button data-buy="'+k+'" '+(s.cr>=bv&&room?'':'disabled')+(room?'':' title="Brak miejsca w magazynach"')+'>KUP −'+bv+' kr</button></span></div></div>'}).join('');
+}
+function pPolityka(s,c){
+ return'<div class="card"><div class="row"><span class="t">Podatki</span><span class="t">'+s.tax+'%</span></div>'+
+ '<input type="range" min="0" max="30" value="'+s.tax+'" id="tax"><div class="small">Przychód: '+Math.round(c.taxInc)+' kr/mies. Każdy punkt powyżej 10% obniża morale.</div></div>'+
+ '<div class="card"><div class="t">Racje żywnościowe</div><div class="btns">'+RATIONS.map(r=>'<button data-ration="'+r[0]+'" style="'+(s.ration===r[0]?'background:var(--yellow)':'')+'">'+r[1]+'</button>').join('')+'</div>'+
+ '<div class="small" style="margin-top:6px">Zużycie: '+Math.round(c.foodCons)+' t żywności/mies. Obfite racje podnoszą morale, głodowe je obniżają.</div></div>'+
+ '<div class="card"><div class="t">Nastroje</div><div class="small">'+
+ [['Podatki',-(s.tax-10)*1.5],['Racje',(s.ration-1)*40],['Rekreacja',c.recB],['Przeludnienie',-c.crowd],['Bezrobocie',-c.unempPen],['Braki energii',-c.black],['Głód',-c.starv],['Dług',s.cr<0?-10:0]].filter(x=>Math.round(x[1])).map(x=>'<div class="row"><span>'+x[0]+'</span>'+sgn(x[1])+'</div>').join('')+
+ '<div class="row"><span>Bazowo</span>+55</div></div></div>';
+}
+function nextTech(s){return Object.entries(TECH).filter(([k])=>!s.tech[k]).map(e=>e[1]).sort((a,b)=>a.c-b.c)[0]}
+function techPct(s,k){return Math.min(100,(s.rp[k]||0)/TECH[k].c*100)}
+function techEta(s,k,c){if(c.resProd<=0)return'stoi – brak naukowców';const m=Math.ceil((TECH[k].c-(s.rp[k]||0))/c.resProd);return'jeszcze '+m+' mies.'}
+function pNauka(s,c){
+ return'<div class="small">Wybierz technologię, a naukowcy z laboratoriów będą nad nią pracować co miesiąc ('+fmt(c.resProd)+' pkt/mies.). Postęp nie przepada, gdy zmienisz projekt.'+(s.b.lab?'':' <span class="warn">Zbuduj laboratorium, żeby prowadzić badania.</span>')+'</div>'+Object.entries(TECH).map(([k,t])=>{const on=s.rs===k,pc=techPct(s,k);
+ return'<div class="card"><div class="row"><span class="t">'+t.n+'</span>'+(s.tech[k]?'<span class="pos">ODKRYTE</span>':on?'<span class="warn">BADANE · '+Math.floor(pc)+'%</span>':'<button data-tech="'+k+'">'+(pc>0?'WZNÓW ('+Math.floor(pc)+'%)':'BADAJ')+'</button>')+'</div>'+
+ '<div class="small">'+t.d+' · koszt '+t.c+' pkt'+(on?' · '+techEta(s,k,c):'')+'</div>'+(s.tech[k]?'':bar(pc,100,on?'':'warn'))+'</div>'}).join('');
+}
+
+document.addEventListener('click',e=>{
+ const b=e.target.closest('button');if(!b)return;initAudio();
+ const d=b.dataset,s=S;
+ if(d.tab){tab=d.tab;beep(880,.03)}
+ else if(d.build){const x=BLD[d.build];s.cr-=x.cr;s.min-=x.mi;s.b[d.build]++;beep(520,.08);save()}
+ else if(d.demo){s.b[d.demo]--;s.energy=Math.min(s.energy,(s.b.battery||0)*BATCAP);clampStore(s);beep(180,.08);save()}
+ else if(d.qty){qty=+d.qty}
+ else if(d.sell){s[d.sell]-=qty;s.cr+=prices(s,d.sell).sell*qty;beep(740,.05);save()}
+ else if(d.buy){s.cr-=prices(s,d.buy).buy*qty;s[d.buy]+=qty;beep(740,.05);save()}
+ else if(d.ration){s.ration=+d.ration;save()}
+ else if(d.prio){const[k,l]=d.prio.split(':');s.prio[k]=+l;beep(600,.03);save()}
+ else if(d.tech){s.rs=d.tech;beep(880,.08);save()}
+ else if(d.act){act(d.act);return}
+ else return;
+ render();
+});
+document.addEventListener('input',e=>{if(e.target.id==='tax'){S.tax=+e.target.value;const l=e.target.parentNode.querySelector('.row .t:last-child');if(l)l.textContent=S.tax+'%'}});
+document.addEventListener('change',e=>{if(e.target.id==='tax'){S.tax=+e.target.value;save();render()}});
+let busy=false;
+go.onclick=()=>{initAudio();if(busy||S.over)return;busy=true;go.disabled=true;
+ const n=S.m+1,el=document.createElement('div');el.className='tw';
+ el.innerHTML='<div class="twb"><div class="twt">ROK '+(2150+Math.floor((n-1)/12))+'<br>MIESIĄC '+(((n-1)%12)+1)+'</div><div class="meter"><i></i></div></div>';
+ document.body.appendChild(el);[330,440,550].forEach((f,i)=>setTimeout(()=>beep(f,.05),i*150));
+ setTimeout(endTurn,450);
+ setTimeout(()=>{el.remove();busy=false},900)};
+menu.onclick=()=>{initAudio();showMenu()};
+
+function act(a){
+ if(a==='new'){S=newState();tab='raport';save();hide();render()}
+ else if(a==='cont'){hide();render()}
+ else if(a==='help')showHelp();
+ else if(a==='about')showAbout();
+ else if(a==='close')hide();
+ else if(a==='sound'){sound=!sound;showMenu()}
+}
+function show(h){ovbox.innerHTML=h;ov.classList.remove('hidden')}
+function hide(){ov.classList.add('hidden')}
+function showMenu(){show('<h1>MENU</h1><div class="btns"><button data-act="close">WRÓĆ DO GRY</button><button data-act="help">ZASADY</button><button data-act="about">O GRZE</button><button data-act="sound">DŹWIĘK: '+(sound?'WŁ.':'WYŁ.')+'</button><button data-act="new">NOWA GRA</button></div>')}
+function showHelp(){show('<h1>ZASADY</h1><p>Jesteś gubernatorem kolonii na odległej planecie. Każda tura to miesiąc. Masz '+(MAXM/12)+' lat, żeby kolonia urosła do '+GOAL+' mieszkańców.</p>'+
+ '<p>• 60% kolonistów pracuje. Najpierw obsadzane są mieszkania, magazyny i baterie, potem reszta budynków wg priorytetów z zakładki PRACA. Zatrzymany budynek nie produkuje ani nie zużywa energii, a jego pracownicy są bezrobotni.<br>• Budynki zużywają energię. Gdy jej brakuje, produkcja spada, a ludzie są źli.<br>• Energii nie da się kupić ani sprzedać. Nadwyżkę zmagazynujesz tylko w bateriach (po '+BATCAP+' kWh każda), resztę tracisz.<br>• Żywność i minerały trzymasz w magazynach ('+STBASE+' t bazowo + '+STCAP+' t za każdy magazyn). Nadmiar przepada.<br>• Ludzie rosną w liczbie tylko, gdy mają gdzie mieszkać i co jeść.<br>• Wysokie podatki i głodowe racje obniżają morale. Przy morale 5% wybucha bunt.<br>• Laboratoria co miesiąc posuwają naprzód wybraną w zakładce NAUKA technologię.<br>• Dług powyżej 500 kr oznacza bankructwo.<br>• Nadwyżki żywności i minerałów sprzedawaj na rynku, ceny zmieniają się co miesiąc.</p>'+
+ '<div class="btns"><button data-act="'+(S?'close':'new')+'">'+(S?'WRÓĆ':'START')+'</button></div>')}
+function showAbout(){show('<h1>O GRZE</h1><p><span style="color:var(--white)">KOLONY VIBE 8,1</span><br>Wersja 0.1 Prototyp<br><br>Strategiczna gra ekonomiczna o zarządzaniu kolonią na odległej planecie, w klimacie 8-bitowych komputerów.</p>'+
+ '<p><span class="sub">POMYSŁ, PROJEKT I TESTY</span><br><span style="color:var(--white)">Dominik &quot;Socek&quot; Długajczyk</span></p>'+
+ '<p><span class="sub">IMPLEMENTACJA</span><br><span style="color:var(--white)">Claude</span> – model AI firmy Anthropic (Claude Opus 5.5, Claude Code). Cały kod gry napisał Claude według wskazówek autora.</p>'+
+ '<p class="small">(C) 2026</p><div class="btns"><button data-act="close">WRÓĆ</button></div>')}
+function showEnd(){const o=S.over;show('<h1 class="'+(o.win?'pos':'neg')+'">'+o.t+'</h1><p>'+o.d+'</p><p>Koloniści: '+fmt(S.pop)+' · Morale: '+Math.round(S.mor)+'%<br>Miesiąc: '+Math.min(S.m,MAXM)+' · Technologie: '+Object.keys(S.tech).length+'</p><p class="t" style="color:var(--yellow)">WYNIK: '+score(S)+'</p><div class="btns"><button data-act="new">NOWA GRA</button><button data-act="close">ZOBACZ KOLONIĘ</button></div>');beep(o.win?880:150,.4)}
+
+function initAudio(){if(actx||!sound)return;try{actx=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}}
+function beep(f,d){if(!sound||!actx)return;try{const o=actx.createOscillator(),g=actx.createGain();o.type='square';o.frequency.value=f;g.gain.value=0.04;o.connect(g);g.connect(actx.destination);o.start();g.gain.exponentialRampToValueAtTime(0.0001,actx.currentTime+d);o.stop(actx.currentTime+d+0.02)}catch(e){}}
+
+// ekran startowy
+(function boot(){
+ const saved=load();
+ const lines=['KOLONY VIBE 8,1','WERSJA 0.1 PROTOTYP · (C) 2026','','READY.','LOAD "KOLONY VIBE",8,1','SEARCHING FOR KOLONY VIBE','LOADING','READY.'];
+ let i=0;ovbox.innerHTML='<div id="bt"></div>';
+ const t=setInterval(()=>{
+  if(i<lines.length){bt.innerHTML+=lines[i]+'<br>';i++}
+  else{clearInterval(t);bt.innerHTML+='RUN<span class="cursor"></span><div class="btns">'+(saved&&!saved.over?'<button data-act="cont" id="contb">KONTYNUUJ (mies. '+saved.m+')</button>':'')+'<button data-act="new">NOWA GRA</button><button data-act="help">ZASADY</button><button data-act="about">O GRZE</button></div>';
+   if(saved&&!saved.over)S=saved;}
+ },220);
+ S=saved&&!saved.over?saved:newState();
+ render();
+})();
+</script>
+</body>
+</html>
