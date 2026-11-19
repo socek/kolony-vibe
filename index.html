@@ -70,6 +70,7 @@ input[type=range]{width:100%;accent-color:var(--yellow)}
 <div class="screen">
   <h1>KOLONY<span class="sub"> VIBE</span></h1>
   <div class="row small"><span id="date"></span><span id="goal" class="warn"></span></div>
+  <div class="row small" style="margin-top:6px"><span>KADENCJA GUBERNATORA</span><span id="tlab"></span></div>
   <div class="meter" id="tbar"><i></i></div>
   <div class="res" id="res"></div>
   <div class="tabs" id="tabs"></div>
@@ -249,6 +250,7 @@ function render(){
  date.textContent='ROK '+y+' · MIES. '+mo+' ('+Math.min(s.m,MAXM)+'/'+MAXM+')';
  goal.textContent='CEL: '+GOAL+' OSÓB';
  tbar.firstChild.style.width=Math.min(100,(Math.min(s.m,MAXM)-1)/(MAXM-1)*100)+'%';tbar.firstChild.className=s.m>MAXM*0.8?'warn':'';
+ {const left=Math.max(0,MAXM-s.m+1),ly=Math.floor(left/12),lm=left%12;tlab.textContent=left<=1?'OSTATNI MIESIĄC!':'ZOSTAŁO '+(ly?ly+' '+plYears(ly)+(lm?' ':''):'')+(lm?lm+' MIES.':'');tlab.className=s.m>MAXM*0.8?'warn':''}
  const tiles=[
   ['Koloniści',fmt(s.pop)+'<span class="small">/'+c.cap+'</span>',delta(s.pop,p.pop),false,bar(s.pop,c.cap,s.pop>c.cap?'neg':fillCls(s.pop,c.cap)),'pop'],
   ['Morale',Math.round(s.mor)+'%',delta(s.mor,p.mor),s.mor<30,bar(s.mor,100,s.mor<30?'neg':s.mor<45?'warn':''),'mor'],
@@ -265,6 +267,7 @@ function render(){
  go.disabled=!!s.over;
 }
 
+function plYears(n){return n===1?'ROK':(n%10>=2&&n%10<=4&&(n%100<12||n%100>14))?'LATA':'LAT'}
 function bar(v,max,cls){const p=max>0?Math.max(0,Math.min(100,v/max*100)):0;return'<div class="meter"><i class="'+(cls||'')+'" style="width:'+p+'%"></i></div>'}
 function fillCls(v,max){return v>=max?'warn':''}
 function sgn(n){n=Math.round(n);return'<span class="'+(n>=0?'pos':'neg')+'">'+(n>0?'+':'')+n+'</span>'}
