@@ -18,7 +18,7 @@ const rowOf = computed(() => Object.fromEntries(Object.entries(BLD).map(([k, b])
   <div class="small">Zapłacone budynki trafiają na plac budowy (lista na dole). Im więcej budowniczych, tym szybciej powstają – ich liczbę ustalasz priorytetem w zakładce PRACA. Wolni budowniczowie trafiają najpierw na pierwszy plac w kolejce. Utrzymanie: {{ MAINT }} kr/dzień za budynek.</div>
 
   <template v-for="g in BLD_GROUPS" :key="g.n">
-  <div class="grph"><PixelIcon :name="g.icon" />{{ g.n }}</div>
+  <div class="grph" :style="{ '--g': g.color }"><PixelIcon :name="g.icon" />{{ g.n }}</div>
   <div v-for="r in g.ks.map(k => rowOf[k])" :key="r.k" class="card">
     <div class="row">
       <span class="t"><PixelIcon :name="r.k" />{{ r.b.n }} ×{{ s.b[r.k] }}<span v-if="r.n" class="small warn"> +{{ r.n }} w budowie</span></span>

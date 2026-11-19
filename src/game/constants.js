@@ -16,10 +16,10 @@ export const BLD = {
 
 // Grupy budynków na liście budowy
 export const BLD_GROUPS = [
-  { n: 'ŻYWNOŚĆ', icon: 'food', ks: ['farm', 'fridge'] },
-  { n: 'PRZEMYSŁ I NAUKA', icon: 'mine', ks: ['power', 'battery', 'mine', 'store', 'lab'] },
-  { n: 'LUDNOŚĆ', icon: 'pop', ks: ['house', 'rec', 'port'] },
-  { n: 'OBRONA', icon: 'shield', ks: ['shield'] }
+  { n: 'ŻYWNOŚĆ', icon: 'food', color: 'var(--green)', ks: ['farm', 'fridge'] },
+  { n: 'PRZEMYSŁ I NAUKA', icon: 'mine', color: 'var(--yellow)', ks: ['power', 'battery', 'mine', 'store', 'lab'] },
+  { n: 'LUDNOŚĆ', icon: 'pop', color: 'var(--red)', ks: ['house', 'rec', 'port'] },
+  { n: 'OBRONA', icon: 'shield', color: 'var(--cyan)', ks: ['shield'] }
 ]
 
 export const TECH = {
