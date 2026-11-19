@@ -1,23 +1,25 @@
 <script setup>
 import { computed } from 'vue'
 import { game, c, build, demolish, cancelSite, siteFirst } from '../../store.js'
-import { BLD, TECH, MAINT } from '../../game/constants.js'
+import { BLD, BLD_GROUPS, TECH, MAINT } from '../../game/constants.js'
 import { fmt, num, daysTxt } from '../../game/format.js'
 import PixelIcon from '../PixelIcon.vue'
 import MeterBar from '../MeterBar.vue'
 
 const s = computed(() => game.s)
-const rows = computed(() => Object.entries(BLD).map(([k, b]) => {
+const rowOf = computed(() => Object.fromEntries(Object.entries(BLD).map(([k, b]) => {
   const st = s.value, n = st.q.filter(x => x.k === k).length
   const full = !!b.max && st.b[k] + n >= b.max, lock = !!b.req && !st.tech[b.req]
-  return { k, b, n, lock, can: !lock && !full && st.cr >= b.cr && st.min >= b.mi }
-}))
+  return [k, { k, b, n, lock, can: !lock && !full && st.cr >= b.cr && st.min >= b.mi }]
+})))
 </script>
 
 <template>
   <div class="small">Zapłacone budynki trafiają na plac budowy (lista na dole). Im więcej budowniczych, tym szybciej powstają – ich liczbę ustalasz priorytetem w zakładce PRACA. Wolni budowniczowie trafiają najpierw na pierwszy plac w kolejce. Utrzymanie: {{ MAINT }} kr/dzień za budynek.</div>
 
-  <div v-for="r in rows" :key="r.k" class="card">
+  <template v-for="g in BLD_GROUPS" :key="g.n">
+  <div class="grph"><PixelIcon :name="g.icon" />{{ g.n }}</div>
+  <div v-for="r in g.ks.map(k => rowOf[k])" :key="r.k" class="card">
     <div class="row">
       <span class="t"><PixelIcon :name="r.k" />{{ r.b.n }} ×{{ s.b[r.k] }}<span v-if="r.n" class="small warn"> +{{ r.n }} w budowie</span></span>
       <span>
@@ -40,6 +42,8 @@ const rows = computed(() => Object.entries(BLD).map(([k, b]) => {
       </div>
     </div>
   </div>
+
+  </template>
 
   <div v-if="s.q.length" class="card" style="border-top:2px solid var(--text)">
     <div class="t"><PixelIcon name="build" />PLACE BUDOWY</div>

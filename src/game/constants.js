@@ -14,6 +14,14 @@ export const BLD = {
   shield: { n: 'Osłona orbitalna', cr: 180, mi: 90, w: 0, en: 0.5, crew: 6, bt: 60, d: 'przechwytuje jeden deszcz meteorytów i ulega zniszczeniu', req: 'shield' }
 }
 
+// Grupy budynków na liście budowy
+export const BLD_GROUPS = [
+  { n: 'ŻYWNOŚĆ', icon: 'food', ks: ['farm', 'fridge'] },
+  { n: 'PRZEMYSŁ I NAUKA', icon: 'mine', ks: ['power', 'battery', 'mine', 'store', 'lab'] },
+  { n: 'LUDNOŚĆ', icon: 'pop', ks: ['house', 'rec', 'port'] },
+  { n: 'OBRONA', icon: 'shield', ks: ['shield'] }
+]
+
 export const TECH = {
   hydro: { n: 'Ulepszona hydroponika', c: 40, d: 'Farmy +30%' },
   graph: { n: 'Panele grafenowe', c: 50, d: 'Elektrownie +30%' },

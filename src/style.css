@@ -76,3 +76,5 @@ input[type=range]{width:100%;accent-color:var(--yellow)}
 .menuscr h1{text-align:center}
 .vmenu{display:flex;flex-direction:column;gap:8px;max-width:320px;margin:14px auto 0}
 .vmenu button{padding:6px 12px}
+.grph{color:var(--cyan);font-size:22px;margin:14px 0 2px;border-bottom:2px solid var(--text);padding-bottom:2px}
+.grph + .card{border-top:0}
