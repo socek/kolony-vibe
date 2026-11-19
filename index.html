@@ -49,6 +49,7 @@ input[type=range]{width:100%;accent-color:var(--yellow)}
 .cursor{display:inline-block;width:12px;height:20px;background:var(--text);vertical-align:-3px;animation:bl 1s steps(1) infinite}
 @keyframes bl{50%{opacity:0}}
 .hidden{display:none}
+.cost2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:4px}
 .dev{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:3px 14px;margin:4px 0 10px}
 .dev label{display:flex;justify-content:space-between;align-items:center;gap:6px;font-size:18px}
 .dev input[type=number]{font-family:'VT323',monospace;font-size:18px;width:80px;background:#241b5e;color:var(--white);border:1px solid var(--text);padding:0 4px}
@@ -349,7 +350,7 @@ function pBudowa(s,c){
  Object.entries(BLD).map(([k,b])=>{
   const n=inQ(k),full=b.max&&s.b[k]+n>=b.max,lock=b.req&&!s.tech[b.req],can=!lock&&!full&&s.cr>=b.cr&&s.min>=b.mi;
   return'<div class="card"><div class="row"><span class="t">'+ico(k)+b.n+' ×'+s.b[k]+(n?' <span class="small warn">+'+n+' w budowie</span>':'')+'</span><span><button data-demo="'+k+'" '+(s.b[k]?'':'disabled')+' title="Rozbierz">−</button> <button data-build="'+k+'" '+(can?'':'disabled')+'>BUDUJ</button></span></div>'+
-  '<div class="small">'+b.d+' · koszt '+b.cr+' kr, '+b.mi+' t min. · '+b.w+' prac. · '+num(b.en)+' kWh/dzień · budowa '+daysTxt(Math.ceil(b.bt/b.crew))+' przy '+b.crew+' budowniczych'+(b.max?' · maks. '+b.max:'')+(lock?' · <span class="neg">wymaga technologii: '+TECH[b.req].n+'</span>':'')+'</div>'+(can||lock||full?'':bar(Math.min(s.cr/b.cr,s.min/b.mi),1,'warn'))+'</div>'}).join('');
+  '<div class="small">'+b.d+' · koszt '+b.cr+' kr, '+b.mi+' t min. · '+b.w+' prac. · '+num(b.en)+' kWh/dzień · budowa '+daysTxt(Math.ceil(b.bt/b.crew))+' przy '+b.crew+' budowniczych'+(b.max?' · maks. '+b.max:'')+(lock?' · <span class="neg">wymaga technologii: '+TECH[b.req].n+'</span>':'')+'</div>'+(can||lock||full?'':'<div class="cost2"><div><div class="small">'+ico('cr')+'kredyty '+fmt(Math.min(Math.max(s.cr,0),b.cr))+'/'+b.cr+'</div>'+bar(s.cr,b.cr,s.cr>=b.cr?'':'warn')+'</div><div><div class="small">'+ico('min')+'minerały '+fmt(Math.min(s.min,b.mi))+'/'+b.mi+' t</div>'+bar(s.min,b.mi,s.min>=b.mi?'':'warn')+'</div></div>')+'</div>'}).join('');
 }
 function pPraca(s,c){
  const emp=c.workforce-c.unemp,inf=INFRA.reduce((a,k)=>a+c.wNeed[k],0);
