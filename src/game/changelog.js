@@ -12,7 +12,8 @@ export const CHANGELOG = [
       'Wydajność na górze prognozy, opis paska kadencji.',
       'Paski kosztu budowy (kredyty i minerały) – przyciski nie skaczą przy klikaniu.',
       'Gra nazywa się Kolony Vibe (bez „8,1”).',
-      'Lista zmian w menu.'
+      'Lista zmian w menu.',
+      'Komunikat „Przewijanie zatrzymane” jest czerwony i mruga, żeby nie dało się go przeoczyć.'
     ]
   },
   {

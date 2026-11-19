@@ -66,3 +66,7 @@ input[type=range]{width:100%;accent-color:var(--yellow)}
 .tile .meter{height:6px;margin:2px 0 3px}
 .card .meter{margin-top:5px}
 .row button + button{margin-left:4px}
+/* komunikat o zatrzymaniu przewijania: czerwony, mruga kilka razy */
+.stop{color:var(--red);background:#241b5e;padding:0 4px;animation:blink .4s steps(1) 6}
+@keyframes blink{50%{color:var(--screen);background:var(--red)}}
+@media(prefers-reduced-motion:reduce){.stop{animation:none}}

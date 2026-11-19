@@ -85,7 +85,7 @@ export function advance(n) {
   const finish = () => {
     if (n > 1) {
       game.s.prev = p0
-      if (i < n && !game.s.over) game.s.report.unshift({ k: 'txt', t: 'Przewijanie zatrzymane po ' + i + ' ' + (i === 1 ? 'dniu' : 'dniach') + ' – ważne wydarzenie.', c: 'sub', top: 1 })
+      if (i < n && !game.s.over) game.s.report.unshift({ k: 'txt', t: 'Przewijanie zatrzymane po ' + i + ' ' + (i === 1 ? 'dniu' : 'dniach') + ' – ważne wydarzenie.', c: 'stop', top: 1 })
     }
     beep(660, 0.06)
     setTimeout(() => {
