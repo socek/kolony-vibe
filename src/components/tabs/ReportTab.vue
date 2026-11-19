@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { game, c } from '../../store.js'
-import { BLD, TECH, GOAL, MORK } from '../../game/constants.js'
+import { BLD, TECH, GOAL, MORK, HUNGER_MAX } from '../../game/constants.js'
 import { num, fmt, daysTxt } from '../../game/format.js'
 import { techPct, techEta } from '../../game/calc.js'
 import { repLines } from '../../game/report.js'
@@ -37,6 +37,12 @@ const depDays = computed(() => c.value.minProd > 0 ? Math.floor(c.value.deps / c
       <span>{{ site.name }} {{ Math.floor(site.st.pct) }}%
         <span class="small">(<span v-if="site.st.eta === Infinity" class="neg">stoi</span><template v-else>jeszcze {{ daysTxt(site.st.eta) }}</template><template v-if="s.q.length > 1">; placów budowy: {{ s.q.length }}</template>)</span>
       </span>
+    </div>
+    <div v-if="c.hungerNext || s.hungerDays" class="row">
+      <span class="neg"><PixelIcon name="food" />GŁÓD</span>
+      <span v-if="c.hungerDeaths" class="neg">dzień {{ c.hungerNext }}/{{ HUNGER_MAX }} – zginie ok. {{ R(c.hungerDeaths) }} {{ R(c.hungerDeaths) === 1 ? 'osoba' : 'osób' }}</span>
+      <span v-else-if="!c.hungerNext" class="pos">jutro się skończy</span>
+      <span v-else class="warn">wstrzymany racjami głodowymi (dzień {{ c.hungerNext }}/{{ HUNGER_MAX }})</span>
     </div>
     <div class="row"><span><PixelIcon name="food" />Żywność</span><span><SignedNum :n="c.foodProd - c.foodCons" /> t <span class="small">({{ R(c.foodProd) }} prod. / {{ R(c.foodCons) }} zuż.)</span></span></div>
     <div class="row"><span><PixelIcon name="energy" />Energia</span><span><SignedNum :n="c.enProd - c.enNeed" /> kWh <span class="small">({{ R(c.enProd) }} prod. / {{ R(c.enNeed) }} zuż.)</span></span></div>

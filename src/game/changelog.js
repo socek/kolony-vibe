@@ -3,6 +3,7 @@ export const VERSION = '0.2', CODENAME = 'Tukohama'
 export const CHANGELOG = [
   {
     v: '0.2 „Tukohama”', d: '19.11.2026', items: [
+      'Głód trwa najwyżej 12 dni – z każdym dniem umiera więcej osób, a 12. dnia giną wszyscy. Kończy go dzień pełnego jedzenia; racje głodowe tylko wstrzymują umieranie.',
       'Złoża minerałów się wyczerpują – kopalnie wydobywają z nich kolejno. Nowe złoża znajdują wyprawy w nowej zakładce WYPRAWY (cel, liczebność ekipy, koszt, szansa, ryzyko).',
       'Osiem celów wypraw – od bezpiecznej bliskiej okolicy po ryzykowny pas wulkaniczny i odległe pole meteorytowe.',
       'Osobne magazyny: chłodnie na żywność i magazyny minerałów na minerały.',

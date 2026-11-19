@@ -26,6 +26,7 @@ export const TECH = {
 export const RES = { food: { n: 'Żywność', base: 4 }, min: { n: 'Minerały', base: 6 } }
 
 export const BATCAP = 100, STBASE = 150, STCAP = 250, MAINT = 1, MORK = 0.11
+export const HUNGER_MAX = 12 // po tylu dniach głodu kolonia wymiera
 export const GOAL = 1000, DAYS = 365, YEAR = 2150, KEY = 'kolony-vibe-v2'
 
 export const INFRA = ['battery', 'fridge', 'store', 'house', 'shield']

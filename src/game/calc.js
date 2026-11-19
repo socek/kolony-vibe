@@ -1,4 +1,4 @@
-import { BLD, TECH, BATCAP, MAINT, INFRA, JOBS, prioOf, capOf } from './constants.js'
+import { BLD, TECH, BATCAP, MAINT, INFRA, JOBS, HUNGER_MAX, prioOf, capOf } from './constants.js'
 import { daysTxt } from './format.js'
 import { depTotal } from './expeditions.js'
 
@@ -41,6 +41,11 @@ export function calc(s) {
   const unemp = avail
   const foodAfter = s.food + foodProd - foodCons
   const shortRatio = foodAfter < 0 && foodCons > 0 ? Math.min(1, -foodAfter / foodCons) : 0
+  // głód: każdy dzień niedoboru wydłuża okres głodu i zabija coraz więcej osób; dnia HUNGER_MAX giną wszyscy.
+  // Dzień pełnego jedzenia kończy głód, ale przy racjach głodowych tylko wstrzymuje umieranie.
+  const hd = s.hungerDays || 0, starving = shortRatio > 0
+  const hungerNext = starving ? hd + 1 : (s.ration >= 1 ? 0 : hd)
+  const hungerDeaths = !starving ? 0 : hungerNext >= HUNGER_MAX ? s.pop : s.pop * 0.012 * hungerNext * (0.5 + 0.5 * shortRatio)
   const recB = 20 * (1 - Math.pow(0.75, b.rec * E.rec * f))
   const crowd = s.pop > cap ? Math.min(40, (s.pop - cap) / Math.max(cap, 1) * 60) : 0
   const unempPen = s.pop > 0 ? unemp / s.pop * 30 : 0, black = (1 - f) * 30, starv = shortRatio * 40
@@ -48,7 +53,7 @@ export function calc(s) {
   mt = Math.max(0, Math.min(100, mt))
   const foodCap = capOf(s, 'food'), minCap = capOf(s, 'min'), foodWaste = Math.max(0, foodAfter - foodCap), minWaste = Math.max(0, s.min + minProd - minCap)
   const enStore = Math.max(0, Math.min(enCap, s.energy + enProd - enNeed * f)), enWaste = Math.max(0, s.energy + enProd - enNeed * f - enCap)
-  return { E, wNeed, builders, sites, foodCap, minCap, foodWaste, minWaste, enCap, enStore, enWaste, cap, workforce, needed, e, f, enProd, enNeed, foodProd, foodCons, minPot, deps, minProd, resProd, taxInc, trade, maint, unemp, shortRatio, mt, crowd, unempPen, black, starv, recB }
+  return { E, wNeed, builders, sites, foodCap, minCap, foodWaste, minWaste, enCap, enStore, enWaste, cap, workforce, needed, e, f, enProd, enNeed, foodProd, foodCons, minPot, deps, minProd, resProd, taxInc, trade, maint, unemp, shortRatio, hungerNext, hungerDeaths, mt, crowd, unempPen, black, starv, recB }
 }
 
 export const nextTech = s => Object.entries(TECH).filter(([k]) => !s.tech[k]).map(e => e[1]).sort((a, b) => a.c - b.c)[0]

@@ -1,4 +1,5 @@
 import { daysTxt } from './format.js'
+import { HUNGER_MAX } from './constants.js'
 
 // Raport przechowuje dane zamiast gotowych zdań, żeby przy wielu dniach liczby się sumowały.
 // Pola zaczynające się od "_" nie są sumowane – zostaje wartość z ostatniego dnia.
@@ -6,7 +7,8 @@ const R = Math.round, ws = d => d > 1 ? 'w sumie ' : '', dd = d => d > 1 ? ' (pr
 
 export const REP = {
   waste: { c: 'warn', f: (v, d) => R(v.a) < 1 ? null : 'Baterie pełne – zmarnowano ' + ws(d) + R(v.a) + ' kWh energii' + dd(d) + '.' },
-  hunger: { c: 'neg', f: (v, d) => 'GŁÓD! ' + (R(v.a) === 1 ? 'Zmarł ' + ws(d) + '1 kolonista' : 'Zmarło ' + ws(d) + R(v.a) + ' kolonistów') + dd(d) + '.' },
+  hunger: { c: 'neg', f: (v, d) => 'GŁÓD – dzień ' + v._day + '/' + HUNGER_MAX + '! ' + (R(v.a) === 1 ? 'Zmarł ' + ws(d) + '1 kolonista' : 'Zmarło ' + ws(d) + R(v.a) + ' kolonistów') + dd(d) + '. Dzień pełnego jedzenia (bez racji głodowych) kończy głód.' },
+  hungerHold: { c: 'warn', f: (v, d) => 'Racje głodowe' + dd(d) + ' – nikt nie umiera, ale głód trwa (dzień ' + v._day + '/' + HUNGER_MAX + '). Przywróć co najmniej normalne racje, żeby go zakończyć.' },
   stall: { c: 'warn', f: (v, d) => 'Budowa stoi' + dd(d) + ' – nikt nie pracuje na placach budowy. Zmień priorytet budowniczych w zakładce PRACA.' },
   short: { c: 'warn', f: (v, d) => 'Brak rąk do pracy' + dd(d) + ' – brakuje ' + v._miss + ' ' + (v._miss === 1 ? 'pracownika' : 'pracowników') + '. Niedoobsadzone: ' + v._low + '. Priorytety ustawisz w zakładce PRACA.' },
   black: { c: 'neg', f: (v, d) => 'BLACKOUT' + dd(d) + '! Zasilanie pokrywa ' + (d > 1 ? 'średnio ' : '') + R(v.p / d) + '% potrzeb.' },

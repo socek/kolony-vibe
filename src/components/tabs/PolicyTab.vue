@@ -23,7 +23,7 @@ const moods = computed(() => {
     <div class="btns">
       <button v-for="[v, nm] in RATIONS" :key="v" :style="s.ration === v ? 'background:var(--yellow)' : ''" @click="setRation(v)">{{ nm }}</button>
     </div>
-    <div class="small" style="margin-top:6px">Zużycie: {{ Math.round(c.foodCons) }} t żywności/dzień. Obfite racje podnoszą morale, głodowe je obniżają.</div>
+    <div class="small" style="margin-top:6px">Zużycie: {{ Math.round(c.foodCons) }} t żywności/dzień. Obfite racje podnoszą morale, głodowe je obniżają. Podczas głodu racje głodowe wstrzymują umieranie, ale nie kończą głodu.</div>
   </div>
   <div class="card">
     <div class="t">Nastroje</div>

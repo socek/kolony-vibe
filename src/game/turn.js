@@ -1,4 +1,4 @@
-import { BLD, TECH, RES, BATCAP, MORK, GOAL, DAYS, prioOf, jobName, capOf } from './constants.js'
+import { BLD, TECH, RES, BATCAP, MORK, GOAL, DAYS, HUNGER_MAX, prioOf, jobName, capOf } from './constants.js'
 import { calc, nextTech } from './calc.js'
 import { EVENTS, EVENT_BAD } from './events.js'
 import { mergeRep } from './report.js'
@@ -27,11 +27,12 @@ export function endTurn(s, acc) {
   s.energy = c.enStore
   if (c.enWaste > 0.01) add('waste', { a: c.enWaste })
   s.food += c.foodProd - c.foodCons
-  let deaths = 0
-  if (s.food < 0) {
-    deaths = s.pop * 0.066 * c.shortRatio; s.food = 0
-    add('hunger', { a: deaths })
-  }
+  if (s.food < 0) s.food = 0
+  const deaths = c.hungerDeaths, hdPrev = s.hungerDays || 0
+  s.hungerDays = c.hungerNext
+  if (deaths > 0) add('hunger', { a: deaths, _day: c.hungerNext })
+  else if (hdPrev > 0 && c.hungerNext === 0) note('Koniec głodu – koloniści znów jedzą do syta.', 'pos')
+  else if (hdPrev > 0) add('hungerHold', { _day: c.hungerNext })
   s.min += c.minProd
   for (const n of extract(s, c.minProd)) { note('Wyczerpano: ' + n + '.', 'warn'); stops.add('depleted') }
   edge('nodep', s.b.mine > 0 && !s.dep.length)
@@ -62,7 +63,7 @@ export function endTurn(s, acc) {
   if (c.f < 1) add('black', { p: c.f * 100 })
   edge('crowd', c.crowd > 0)
   if (c.crowd > 0) add('crowd')
-  if (!deaths && s.pop < c.cap) {
+  if (!deaths && !s.hungerDays && s.pop < c.cap) {
     const g = Math.min(s.pop * 0.0082 * (s.mor / 60) * (s.tech.med ? 1.3 : 1), c.cap - s.pop)
     s.pop += g
     if (g > 0) add('born', { a: g })
@@ -105,7 +106,8 @@ export function endTurn(s, acc) {
   if (acc && Array.isArray(s.report)) { mergeRep(s.report, r); s.repDays = (s.repDays || 1) + 1 }
   else { s.report = r; s.repDays = 1 }
 
-  if (s.pop >= GOAL) s.over = { win: true, t: 'ZWYCIĘSTWO!', d: 'Kolonia osiągnęła ' + GOAL + ' mieszkańców. Rada Ziemi przyznaje ci order Pioniera.' }
+  if (s.hungerDays >= HUNGER_MAX) s.over = { win: false, t: 'ŚMIERĆ GŁODOWA', d: 'Kolonia głodowała przez ' + HUNGER_MAX + ' dni. Nie przeżył nikt.' }
+  else if (s.pop >= GOAL) s.over = { win: true, t: 'ZWYCIĘSTWO!', d: 'Kolonia osiągnęła ' + GOAL + ' mieszkańców. Rada Ziemi przyznaje ci order Pioniera.' }
   else if (s.pop < 10) s.over = { win: false, t: 'KOLONIA UPADŁA', d: 'Zostało zbyt mało osadników, by przetrwać.' }
   else if (s.mor <= 5) s.over = { win: false, t: 'BUNT!', d: 'Koloniści przejęli władzę i odesłali cię na Ziemię.' }
   else if (s.cr < -500) s.over = { win: false, t: 'BANKRUCTWO', d: 'Długi przekroczyły 500 kredytów. Korporacja przejmuje kolonię.' }

@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { game, c } from '../store.js'
-import { TECH } from '../game/constants.js'
+import { TECH, HUNGER_MAX } from '../game/constants.js'
 import { fmt, num, daysTxt } from '../game/format.js'
 import { nextTech, techPct } from '../game/calc.js'
 import PixelIcon from './PixelIcon.vue'
@@ -17,11 +17,13 @@ const tiles = computed(() => {
   const depNote = !s.dep.length
     ? { text: 'złoża: brak', cls: s.b.mine ? 'neg' : '' }
     : { text: 'złoża: ' + fmt(cc.deps) + ' t' + (depDays !== null ? ' · ' + daysTxt(depDays) : ''), cls: depDays !== null && depDays < 30 ? 'warn' : '' }
+  const hd = s.hungerDays || 0
+  const foodNote = hd ? { text: 'głód: dzień ' + hd + '/' + HUNGER_MAX, cls: 'neg' } : cc.hungerNext ? { text: 'jutro zacznie się głód', cls: 'neg' } : null
   const resPerDay = s.rs && cc.resProd > 0 ? '+' + num(cc.resProd / TECH[s.rs].c * 100) + '%' : ''
   return [
     { icon: 'pop', label: 'Koloniści', v: fmt(s.pop), of: '/' + cc.cap, cur: s.pop, prev: p.pop, neg: false, bar: [s.pop, cc.cap, s.pop > cc.cap ? 'neg' : fill(s.pop, cc.cap)] },
     { icon: 'mor', label: 'Morale', v: Math.round(s.mor) + '%', cur: s.mor, prev: p.mor, neg: s.mor < 30, bar: [s.mor, 100, s.mor < 30 ? 'neg' : s.mor < 45 ? 'warn' : ''] },
-    { icon: 'food', label: 'Żywność', v: fmt(s.food), of: '/' + cc.foodCap + ' t', cur: s.food, prev: p.food, neg: s.food < cc.foodCons, bar: [s.food, cc.foodCap, s.food < cc.foodCons ? 'neg' : fill(s.food, cc.foodCap)] },
+    { icon: 'food', label: 'Żywność', v: fmt(s.food), of: '/' + cc.foodCap + ' t', cur: s.food, prev: p.food, neg: s.food < cc.foodCons, bar: [s.food, cc.foodCap, s.food < cc.foodCons ? 'neg' : fill(s.food, cc.foodCap)], note: foodNote },
     { icon: 'energy', label: 'Energia', v: fmt(s.energy), of: '/' + cc.enCap + ' kWh', cur: s.energy, prev: p.energy, neg: cc.f < 1, bar: [s.energy, cc.enCap, cc.f < 1 ? 'neg' : fill(s.energy, cc.enCap)] },
     { icon: 'min', label: 'Minerały', v: fmt(s.min), of: '/' + cc.minCap + ' t', cur: s.min, prev: p.min, neg: false, bar: [s.min, cc.minCap, fill(s.min, cc.minCap)], note: depNote },
     { icon: 'cr', label: 'Kredyty', v: fmt(s.cr), cur: s.cr, prev: p.cr, neg: s.cr < 0, bar: s.cr < 0 ? [-s.cr, 500, 'neg'] : null },
