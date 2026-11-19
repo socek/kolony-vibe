@@ -49,6 +49,12 @@ input[type=range]{width:100%;accent-color:var(--yellow)}
 .cursor{display:inline-block;width:12px;height:20px;background:var(--text);vertical-align:-3px;animation:bl 1s steps(1) infinite}
 @keyframes bl{50%{opacity:0}}
 .hidden{display:none}
+.dev{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:3px 14px;margin:4px 0 10px}
+.dev label{display:flex;justify-content:space-between;align-items:center;gap:6px;font-size:18px}
+.dev input[type=number]{font-family:'VT323',monospace;font-size:18px;width:80px;background:#241b5e;color:var(--white);border:1px solid var(--text);padding:0 4px}
+.dev input[type=checkbox]{accent-color:var(--yellow);width:18px;height:18px}
+.devh{color:var(--cyan);margin-top:10px}
+#ovbox .btns button{font-size:18px}
 .tw{position:fixed;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;background:var(--screen);animation:twin .08s linear forwards;pointer-events:none}
 .tw.out{animation:twout .2s linear forwards}
 .tw::before{content:'';position:absolute;inset:0;opacity:.55;background:repeating-linear-gradient(0deg,var(--border) 0 6px,var(--screen) 6px 12px,var(--cyan) 12px 15px,var(--screen) 15px 22px);animation:twr .12s steps(2) infinite}
@@ -81,6 +87,7 @@ input[type=range]{width:100%;accent-color:var(--yellow)}
   <div class="bar">
     <button class="go" id="go">▶ KONIEC DNIA</button>
     <button id="go7" title="Przewiń do 7 dni – zatrzymuje się przy ważnych wydarzeniach">▶▶ 7 DNI</button>
+    <button id="dev" class="hidden" title="Menu deweloperskie">DEV</button>
     <button id="menu" title="Menu">≡</button>
   </div>
 </div>
@@ -401,11 +408,15 @@ document.addEventListener('click',e=>{
  else if(d.prio){const[k,l]=d.prio.split(':');s.prio[k]=+l;beep(600,.03);save()}
  else if(d.tech){s.rs=d.tech;beep(880,.08);save()}
  else if(d.act){act(d.act);return}
+ else if(d.dv){devAct(d.dv);return}
  else return;
  render();
 });
 document.addEventListener('input',e=>{if(e.target.id==='tax'){S.tax=+e.target.value;const l=e.target.parentNode.querySelector('.row .t:last-child');if(l)l.textContent=S.tax+'%'}});
-document.addEventListener('change',e=>{if(e.target.id==='tax'){S.tax=+e.target.value;save();render()}});
+document.addEventListener('change',e=>{if(e.target.id==='tax'){S.tax=+e.target.value;save();render()}
+ const t=e.target;
+ if(t.dataset.dev){const ps=t.dataset.dev.split('.');let o=S;while(ps.length>1)o=o[ps.shift()];o[ps[0]]=+t.value||0;save();render()}
+ if(t.dataset.devtech){if(t.checked){S.tech[t.dataset.devtech]=1;if(S.rs===t.dataset.devtech)S.rs=null}else delete S.tech[t.dataset.devtech];save();render()}});
 let busy=false;
 function advance(n){initAudio();if(busy||S.over)return;busy=true;go.disabled=go7.disabled=true;
  const el=document.createElement('div'),p0={pop:S.pop,food:S.food,energy:S.energy,min:S.min,cr:S.cr,mor:S.mor};el.className='tw';
@@ -422,6 +433,36 @@ function advance(n){initAudio();if(busy||S.over)return;busy=true;go.disabled=go7
 go.onclick=()=>advance(1);
 go7.onclick=()=>advance(7);
 menu.onclick=()=>{initAudio();showMenu()};
+
+// menu deweloperskie – widoczne tylko z #iddqd w adresie
+const EVNAMES=['Deszcz meteorytów','Epidemia','Statek zaopatrzeniowy','Rozbłysk słoneczny','Złoże kryształów','Atak piratów','Święto Założenia','Lodowa kometa','Uchodźcy','Awaria zasilania'];
+function devCheck(){dev.classList.toggle('hidden',location.hash!=='#iddqd')}
+window.addEventListener('hashchange',devCheck);devCheck();
+dev.onclick=()=>{initAudio();showDev()};
+let devMsg='';
+function showDev(){const s=S,c=calc(s);
+ const num=(lab,path,v)=>'<label>'+lab+'<input type="number" data-dev="'+path+'" value="'+Math.round(v*100)/100+'"></label>';
+ show('<h1>DEV · IDDQD</h1>'+(devMsg?'<p class="sub">'+devMsg+'</p>':'')+
+  '<div class="devh">STAN</div><div class="dev">'+num('Dzień','m',s.m)+num('Koloniści','pop',s.pop)+num('Morale %','mor',s.mor)+num('Żywność t','food',s.food)+num('Energia kWh','energy',s.energy)+num('Minerały t','min',s.min)+num('Kredyty','cr',s.cr)+num('Podatki %','tax',s.tax)+num('Cena żywn.','pr.food',s.pr.food)+num('Cena min.','pr.min',s.pr.min)+'</div>'+
+  '<div class="devh">BUDYNKI</div><div class="dev">'+Object.keys(BLD).map(k=>num(BLD[k].n,'b.'+k,s.b[k])).join('')+'</div>'+
+  (s.q.length?'<div class="devh">PLACE BUDOWY (wykonana praca)</div><div class="dev">'+s.q.map((x,i)=>num(BLD[x.k].n+' /'+BLD[x.k].bt,'q.'+i+'.d',x.d)).join('')+'</div>':'')+
+  '<div class="devh">TECHNOLOGIE (odkryta · postęp w pkt)</div><div class="dev" style="grid-template-columns:repeat(auto-fill,minmax(270px,1fr))">'+Object.keys(TECH).map(k=>'<label>'+TECH[k].n+'<span><input type="checkbox" data-devtech="'+k+'"'+(s.tech[k]?' checked':'')+'> <input type="number" data-dev="rp.'+k+'" value="'+Math.round(s.rp[k]||0)+'" title="postęp /'+TECH[k].c+'"></span></label>').join('')+'</div>'+
+  '<div class="devh">AKCJE</div><div class="btns" style="margin-top:4px">'+
+  '<button data-dv="finish">UKOŃCZ BUDOWY</button><button data-dv="fill">NAPEŁNIJ MAGAZYNY</button><button data-dv="cash">+1000 KR</button><button data-dv="alltech">WSZYSTKIE TECHNOLOGIE</button>'+
+  '<button data-dv="skip7">+7 DNI</button><button data-dv="skip30">+30 DNI</button><button data-dv="revive">WZNÓW GRĘ PO KOŃCU</button></div>'+
+  '<div class="devh">WYWOŁAJ ZDARZENIE</div><div class="btns" style="margin-top:4px">'+EVNAMES.map((n,i)=>'<button data-dv="ev'+i+'">'+n+'</button>').join('')+'</div>'+
+  '<div class="btns"><button data-act="close">ZAMKNIJ</button></div>')}
+function devAct(a){const s=S;devMsg='';
+ if(a==='finish'){s.q.forEach(x=>s.b[x.k]++);devMsg='Ukończono budów: '+s.q.length+'.';s.q=[]}
+ else if(a==='fill'){const c=calc(s);s.food=s.min=c.stCap;s.energy=c.enCap;devMsg='Magazyny pełne.'}
+ else if(a==='cash'){s.cr+=1000;devMsg='+1000 kr.'}
+ else if(a==='alltech'){for(const k in TECH)s.tech[k]=1;s.rs=null;s.rp={};devMsg='Odkryto wszystkie technologie.'}
+ else if(a==='revive'){s.over=null;devMsg='Gra wznowiona.'}
+ else if(a==='skip7'||a==='skip30'){const n=a==='skip7'?7:30;let i=0;const p0={pop:s.pop,food:s.food,energy:s.energy,min:s.min,cr:s.cr,mor:s.mor};
+  while(i<n&&!S.over){endTurn(true,i>0);i++}S.prev=p0;devMsg='Przewinięto '+i+' dni bez zatrzymywania.';if(S.over)return}
+ else if(a.startsWith('ev')){const m=EVENTS[+a.slice(2)](s);devMsg=m?'★ '+m:'Zdarzenie nie miało zastosowania.';
+  if(m){if(!Array.isArray(s.report))s.report=[];s.report.unshift({k:'txt',t:'★ '+m,c:'sub',day:s.m,top:1})}}
+ s.mor=Math.max(0,Math.min(100,s.mor));save();render();showDev()}
 
 function act(a){
  if(a==='new'){S=newState();tab='raport';save();hide();render()}
