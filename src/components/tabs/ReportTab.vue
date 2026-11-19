@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import { game, c } from '../../store.js'
 import { BLD, TECH, GOAL, MORK } from '../../game/constants.js'
-import { num, daysTxt } from '../../game/format.js'
+import { num, fmt, daysTxt } from '../../game/format.js'
 import { techPct, techEta } from '../../game/calc.js'
 import { repLines } from '../../game/report.js'
 import PixelIcon from '../PixelIcon.vue'
@@ -20,6 +20,7 @@ const nextMor = computed(() => Math.max(0, Math.min(100, s.value.mor + (c.value.
 const prog = computed(() => Math.min(100, s.value.pop / GOAL * 100))
 const site = computed(() => s.value.q.length ? { name: BLD[s.value.q[0].k].n, st: c.value.sites[0] } : null)
 const R = Math.round
+const depDays = computed(() => c.value.minProd > 0 ? Math.floor(c.value.deps / c.value.minProd) : null)
 </script>
 
 <template>
@@ -40,7 +41,11 @@ const R = Math.round
     <div class="row"><span><PixelIcon name="food" />Żywność</span><span><SignedNum :n="c.foodProd - c.foodCons" /> t <span class="small">({{ R(c.foodProd) }} prod. / {{ R(c.foodCons) }} zuż.)</span></span></div>
     <div class="row"><span><PixelIcon name="energy" />Energia</span><span><SignedNum :n="c.enProd - c.enNeed" /> kWh <span class="small">({{ R(c.enProd) }} prod. / {{ R(c.enNeed) }} zuż.)</span></span></div>
     <div class="row"><span><PixelIcon name="battery" />Magazyn energii</span><span>{{ R(c.enStore) }}/{{ c.enCap }} kWh<span v-if="c.enWaste >= 1" class="small warn"> (strata {{ R(c.enWaste) }} kWh)</span></span></div>
-    <div class="row"><span><PixelIcon name="min" />Minerały</span><span><SignedNum :n="c.minProd" /> t</span></div>
+    <div class="row">
+      <span><PixelIcon name="min" />Minerały</span>
+      <span><SignedNum :n="c.minProd" /> t <span class="small" :class="{ neg: !s.dep.length && s.b.mine, warn: depDays !== null && depDays < 30 }">({{ s.dep.length ? 'w złożach ' + fmt(c.deps) + ' t' + (depDays !== null ? ', na ' + daysTxt(depDays) : '') : 'brak złóż' }})</span></span>
+    </div>
+    <div v-if="s.exp.length" class="row"><span><PixelIcon name="exp" />Wyprawy</span><span>{{ s.exp.length }} w terenie <span class="small">(najbliższy powrót za {{ daysTxt(Math.min(...s.exp.map(x => x.left))) }})</span></span></div>
     <div class="row">
       <span><PixelIcon name="store" />Magazyny</span>
       <span>{{ c.stCap }} t na surowiec<span v-if="c.foodWaste >= 1 || c.minWaste >= 1" class="small warn"> (strata<template v-if="c.foodWaste >= 1"> {{ R(c.foodWaste) }} t żywn.</template><template v-if="c.minWaste >= 1"> {{ R(c.minWaste) }} t min.</template>)</span></span>

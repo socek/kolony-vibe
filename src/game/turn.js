@@ -3,6 +3,7 @@ import { calc, nextTech } from './calc.js'
 import { EVENTS, EVENT_BAD } from './events.js'
 import { mergeRep } from './report.js'
 import { beep } from './audio.js'
+import { extract, tickExpeditions } from './expeditions.js'
 
 export function clampStore(s) {
   const c = stCapOf(s), l = { food: Math.max(0, s.food - c), min: Math.max(0, s.min - c) }
@@ -32,6 +33,9 @@ export function endTurn(s, acc) {
     add('hunger', { a: deaths })
   }
   s.min += c.minProd
+  for (const n of extract(s, c.minProd)) { note('Wyczerpano: ' + n + '.', 'warn'); stops.add('depleted') }
+  edge('nodep', s.b.mine > 0 && !s.dep.length)
+  if (s.b.mine > 0 && !s.dep.length) add('nodep')
   s.cr += c.taxInc + c.trade - c.maint
   s.mor += (c.mt - s.mor) * MORK
 
@@ -75,6 +79,7 @@ export function endTurn(s, acc) {
     add('emig', { a: em })
   }
   s.pop -= deaths
+  if (tickExpeditions(s, note)) stops.add('exp')
   if (s.m > 10 && Math.random() < 0.1) {
     const ei = Math.floor(Math.random() * EVENTS.length), m = EVENTS[ei](s)
     if (m) { stops.add(EVENT_BAD[ei] ? 'evBad' : 'evGood'); note('★ ' + m, 'sub'); beep(220, 0.25) }

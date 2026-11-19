@@ -11,6 +11,7 @@ export const ICONS = {
   res: ['..aaaa..', '...aa...', '...aa...', '..acca..', '.acccca.', 'acccccca', 'acccccca', '.aaaaaa.'],
   work: ['.ff..ff.', '.ff..ff.', '.ffffff.', '..ffff..', '...ff...', '...ff...', '...ff...', '...ff...'],
   build: ['bbbbbb..', 'bbbbbbf.', 'bbbbbb.f', '...ff...', '...ff...', '...ff...', '...ff...', '...ff...'],
+  exp: ['.f......', '.fbbbb..', '.fbbbbbb', '.fbbbb..', '.f......', '.f......', '.f......', 'fff.....'],
   farm: ['.cc..cc.', 'cccccccc', '.cccccc.', '...cc...', '...cc...', '.dddddd.', '..dddd..', '..dddd..'],
   power: ['eeeeeeee', 'eaeaeaea', 'eeeeeeee', 'eaeaeaea', 'eeeeeeee', '...ff...', '...ff...', '.ffffff.'],
   battery: ['..aaaa..', '.aaaaaa.', '.a....a.', '.acccca.', '.acccca.', '.acccca.', '.acccca.', '.aaaaaa.'],

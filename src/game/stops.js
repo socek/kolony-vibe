@@ -5,6 +5,9 @@ import { reactive, watch } from 'vue'
 export const STOPS = [
   { k: 'build', n: 'Ukończenie budowy', why: 'ukończono budowę', def: true },
   { k: 'research', n: 'Ukończenie badań', why: 'ukończono badania', def: true },
+  { k: 'exp', n: 'Powrót wyprawy', why: 'wróciła wyprawa', def: true },
+  { k: 'depleted', n: 'Wyczerpanie złoża', why: 'wyczerpano złoże', def: true },
+  { k: 'nodep', n: 'Kopalnie stanęły (brak złóż)', why: 'kopalnie stanęły', def: true },
   { k: 'evBad', n: 'Złe zdarzenia losowe (meteoryty, epidemia, piraci, rozbłysk, awaria)', why: 'groźne zdarzenie', def: true },
   { k: 'evGood', n: 'Dobre zdarzenia losowe (dostawy, złoże, kometa, uchodźcy, święto)', why: 'zdarzenie losowe', def: true },
   { k: 'hunger', n: 'Początek głodu', why: 'zaczął się głód', def: true },

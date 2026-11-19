@@ -7,6 +7,7 @@ import { EVENTS } from './game/events.js'
 import { dateOf } from './game/format.js'
 import { beep } from './game/audio.js'
 import { settings, stopWhy } from './game/stops.js'
+import { sendExpedition, addDeposit } from './game/expeditions.js'
 
 const saved = load()
 const resumable = saved && !saved.over ? saved : null
@@ -14,7 +15,7 @@ const resumable = saved && !saved.over ? saved : null
 // game.s – stan gry (zapisywany), ui – stan interfejsu
 export const game = reactive({ s: resumable || newState() })
 export const ui = reactive({
-  tab: 'raport', qty: 50, screen: 'boot', busy: false, turn: null, devMsg: '',
+  tab: 'raport', qty: 50, expRange: 'near', expTeam: 5, screen: 'boot', busy: false, turn: null, devMsg: '',
   savedDay: resumable ? resumable.m : null
 })
 export const c = computed(() => calc(game.s))
@@ -59,6 +60,7 @@ export function setRation(r) { game.s.ration = r; persist() }
 export function setTax(v) { game.s.tax = v }
 export const saveNow = persist
 export function setPrio(k, l) { game.s.prio[k] = l; beep(600, 0.03); persist() }
+export function sendExp() { if (sendExpedition(game.s, ui.expRange, ui.expTeam)) { beep(440, 0.12); persist() } }
 export function research(k) { game.s.rs = k; beep(880, 0.08); persist() }
 
 function afterTurns() {
@@ -105,6 +107,8 @@ export function devAct(a) {
   else if (a === 'fill') { const cc = calc(s); s.food = s.min = cc.stCap; s.energy = cc.enCap; ui.devMsg = 'Magazyny pełne.' }
   else if (a === 'cash') { s.cr += 1000; ui.devMsg = '+1000 kr.' }
   else if (a === 'alltech') { for (const k in TECH) s.tech[k] = 1; s.rs = null; s.rp = {}; ui.devMsg = 'Odkryto wszystkie technologie.' }
+  else if (a === 'dep') { addDeposit(s, 'Złoże deweloperskie', 1000); ui.devMsg = 'Dodano złoże 1000 t.' }
+  else if (a === 'expback') { s.exp.forEach(x => x.left = 1); ui.devMsg = 'Wyprawy wrócą na koniec dnia.' }
   else if (a === 'revive') { s.over = null; ui.devMsg = 'Gra wznowiona.' }
   else if (a === 'skip7' || a === 'skip30') {
     const n = a === 'skip7' ? 7 : 30, p0 = snapshot(s)

@@ -1,4 +1,5 @@
 import { BLD } from './constants.js'
+import { addDeposit, depositName } from './expeditions.js'
 
 // Zdarzenia losowe – zmieniają stan i zwracają opis albo null, gdy nie mają zastosowania.
 export const EVENTS = [
@@ -13,7 +14,7 @@ export const EVENTS = [
   s => { const d = s.pop * (s.tech.med ? 0.03 : 0.08); s.pop -= d; s.mor -= 5; return 'EPIDEMIA! Zmarło ' + Math.round(d) + ' kolonistów.' },
   s => { s.food += 100; s.min += 60; return 'Statek zaopatrzeniowy z Ziemi: +100 t żywności, +60 t minerałów.' },
   s => { const l = Math.round(s.energy * 0.5); if (l < 5) return null; s.energy -= l; return 'Rozbłysk słoneczny! Utracono ' + l + ' kWh energii.' },
-  s => { s.min += 150; return 'Geolodzy odkryli złoże kryształów: +150 t minerałów.' },
+  s => { const n = depositName('tuż obok kolonii'), t = addDeposit(s, n, 150 + Math.random() * 250); return 'Geolodzy przypadkiem odkryli nowe złoże: ' + n + ' – ' + t + ' t.' },
   s => {
     if (s.cr <= 0) return null
     const l = Math.min(s.cr, Math.max(50, Math.round(s.cr * 0.15)))
@@ -35,4 +36,4 @@ export const EVENTS = [
 // które zdarzenia są złe (do ustawień zatrzymywania przewijania)
 export const EVENT_BAD = [true, true, false, true, false, true, false, false, false, true]
 
-export const EVNAMES = ['Deszcz meteorytów', 'Epidemia', 'Statek zaopatrzeniowy', 'Rozbłysk słoneczny', 'Złoże kryształów', 'Atak piratów', 'Święto Założenia', 'Lodowa kometa', 'Uchodźcy', 'Awaria zasilania']
+export const EVNAMES = ['Deszcz meteorytów', 'Epidemia', 'Statek zaopatrzeniowy', 'Rozbłysk słoneczny', 'Nowe złoże', 'Atak piratów', 'Święto Założenia', 'Lodowa kometa', 'Uchodźcy', 'Awaria zasilania']

@@ -1,5 +1,6 @@
 import { BLD, TECH, BATCAP, STBASE, STCAP, MAINT, INFRA, JOBS, prioOf } from './constants.js'
 import { daysTxt } from './format.js'
+import { depTotal } from './expeditions.js'
 
 // Wylicza wszystko, co dzieje się w ciągu jednego dnia, bez zmieniania stanu.
 export function calc(s) {
@@ -35,7 +36,7 @@ export function calc(s) {
   const enProd = b.power * BLD.power.p * E.power * (t.graph ? 1.3 : 1)
   const f = enNeed > 0 ? Math.min(1, (s.energy + enProd) / enNeed) : 1
   const foodProd = b.farm * BLD.farm.p * E.farm * f * (t.hydro ? 1.3 : 1), foodCons = s.pop * 0.2 * s.ration
-  const minProd = b.mine * BLD.mine.p * E.mine * f * (t.drill ? 1.3 : 1), resProd = b.lab * BLD.lab.p * E.lab * f
+  const minPot = b.mine * BLD.mine.p * E.mine * f * (t.drill ? 1.3 : 1), deps = depTotal(s), minProd = Math.min(minPot, deps), resProd = b.lab * BLD.lab.p * E.lab * f
   const taxInc = s.pop * s.tax * 0.0167, trade = b.port * BLD.port.p * E.port * f, maint = nb * MAINT
   const unemp = avail
   const foodAfter = s.food + foodProd - foodCons
@@ -47,7 +48,7 @@ export function calc(s) {
   mt = Math.max(0, Math.min(100, mt))
   const stCap = STBASE + (b.store || 0) * STCAP, foodWaste = Math.max(0, foodAfter - stCap), minWaste = Math.max(0, s.min + minProd - stCap)
   const enStore = Math.max(0, Math.min(enCap, s.energy + enProd - enNeed * f)), enWaste = Math.max(0, s.energy + enProd - enNeed * f - enCap)
-  return { E, wNeed, builders, sites, stCap, foodWaste, minWaste, enCap, enStore, enWaste, cap, workforce, needed, e, f, enProd, enNeed, foodProd, foodCons, minProd, resProd, taxInc, trade, maint, unemp, shortRatio, mt, crowd, unempPen, black, starv, recB }
+  return { E, wNeed, builders, sites, stCap, foodWaste, minWaste, enCap, enStore, enWaste, cap, workforce, needed, e, f, enProd, enNeed, foodProd, foodCons, minPot, deps, minProd, resProd, taxInc, trade, maint, unemp, shortRatio, mt, crowd, unempPen, black, starv, recB }
 }
 
 export const nextTech = s => Object.entries(TECH).filter(([k]) => !s.tech[k]).map(e => e[1]).sort((a, b) => a.c - b.c)[0]

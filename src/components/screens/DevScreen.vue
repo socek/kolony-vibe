@@ -8,7 +8,7 @@ import { EVNAMES } from '../../game/events.js'
 const s = computed(() => game.s)
 const r2 = v => Math.round((v || 0) * 100) / 100
 const stateFields = [['Dzień', 'm'], ['Koloniści', 'pop'], ['Morale %', 'mor'], ['Żywność t', 'food'], ['Energia kWh', 'energy'], ['Minerały t', 'min'], ['Kredyty', 'cr'], ['Podatki %', 'tax']]
-const ACTIONS = [['finish', 'UKOŃCZ BUDOWY'], ['fill', 'NAPEŁNIJ MAGAZYNY'], ['cash', '+1000 KR'], ['alltech', 'WSZYSTKIE TECHNOLOGIE'], ['skip7', '+7 DNI'], ['skip30', '+30 DNI'], ['revive', 'WZNÓW GRĘ PO KOŃCU']]
+const ACTIONS = [['finish', 'UKOŃCZ BUDOWY'], ['fill', 'NAPEŁNIJ MAGAZYNY'], ['cash', '+1000 KR'], ['alltech', 'WSZYSTKIE TECHNOLOGIE'], ['skip7', '+7 DNI'], ['skip30', '+30 DNI'], ['dep', '+ZŁOŻE 1000 T'], ['expback', 'WYPRAWY WRACAJĄ'], ['revive', 'WZNÓW GRĘ PO KOŃCU']]
 </script>
 
 <template>
@@ -31,6 +31,13 @@ const ACTIONS = [['finish', 'UKOŃCZ BUDOWY'], ['fill', 'NAPEŁNIJ MAGAZYNY'], [
     <div class="devh">PLACE BUDOWY (wykonana praca)</div>
     <div class="dev">
       <label v-for="(x, i) in s.q" :key="i">{{ BLD[x.k].n }} /{{ BLD[x.k].bt }}<input type="number" :value="r2(x.d)" @change="devSet(x, 'd', $event.target.value)"></label>
+    </div>
+  </template>
+
+  <template v-if="s.dep.length">
+    <div class="devh">ZŁOŻA (pozostało t)</div>
+    <div class="dev">
+      <label v-for="(d, i) in s.dep" :key="i">{{ d.n }}<input type="number" :value="Math.round(d.t)" @change="devSet(d, 't', $event.target.value)"></label>
     </div>
   </template>
 
