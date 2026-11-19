@@ -275,6 +275,7 @@ function pRaport(s,c){
  const prog=Math.min(100,s.pop/GOAL*100),nextMor=Math.max(0,Math.min(100,s.mor+(c.mt-s.mor)*0.3));
  return'<div class="t" style="color:var(--white)">RAPORT MIESIĘCZNY</div><div class="log">'+s.report.map(x=>'<p>'+x+'</p>').join('')+'</div>'+
  '<div class="card"><div class="t">PROGNOZA NA NASTĘPNY MIESIĄC</div>'+
+ '<div class="row"><span>'+ico('work')+'Wydajność</span><span>'+Math.round(c.e*c.f*100)+'%</span></div>'+bar(c.e*c.f,1,c.e*c.f<1?'warn':'')+'<div style="height:6px"></div>'+
  '<div class="row"><span>'+ico('food')+'Żywność</span><span>'+sgn(c.foodProd-c.foodCons)+' t <span class="small">('+Math.round(c.foodProd)+' prod. / '+Math.round(c.foodCons)+' zuż.)</span></span></div>'+
  '<div class="row"><span>'+ico('energy')+'Energia</span><span>'+sgn(c.enProd-c.enNeed)+' kWh <span class="small">('+Math.round(c.enProd)+' prod. / '+Math.round(c.enNeed)+' zuż.)</span></span></div>'+
  '<div class="row"><span>'+ico('battery')+'Magazyn energii</span><span>'+Math.round(c.enStore)+'/'+c.enCap+' kWh'+(c.enWaste>=1?' <span class="small warn">(strata '+Math.round(c.enWaste)+' kWh)</span>':'')+'</span></div>'+
@@ -283,7 +284,7 @@ function pRaport(s,c){
  '<div class="row"><span>'+ico('cr')+'Kredyty</span><span>'+sgn(c.taxInc+c.trade-c.maint)+' <span class="small">(podatki '+Math.round(c.taxInc)+(c.trade?', handel '+Math.round(c.trade):'')+', utrzymanie −'+c.maint+')</span></span></div>'+
  '<div class="row"><span>'+ico('res')+'Badania</span><span>'+(s.rs?sgn(c.resProd/TECH[s.rs].c*100)+'% <span class="small">('+TECH[s.rs].n+': '+Math.floor(techPct(s,s.rs))+'%, '+techEta(s,s.rs,c)+')</span>':'<span class="warn">brak projektu</span>')+'</span></div>'+
  '<div class="row"><span>'+ico('mor')+'Morale</span><span>'+sgn(nextMor-s.mor)+' <span class="small">('+Math.round(s.mor)+'% → '+Math.round(nextMor)+'%; przy obecnych warunkach ustali się na '+Math.round(c.mt)+'%)</span></span></div>'+
- '<div class="row"><span>'+ico('work')+'Wydajność</span><span>'+Math.round(c.e*c.f*100)+'%</span></div>'+bar(c.e*c.f,1,c.e*c.f<1?'warn':'')+'</div>'+
+ '</div>'+
  '<div class="card"><div class="row"><span>'+ico('pop')+'Postęp do celu</span><span>'+Math.round(prog)+'%</span></div>'+bar(prog,100)+'</div>';
 }
 function pBudowa(s,c){
