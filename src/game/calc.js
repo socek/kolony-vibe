@@ -47,13 +47,15 @@ export function calc(s) {
   const hungerNext = starving ? hd + 1 : (s.ration >= 1 ? 0 : hd)
   const hungerDeaths = !starving ? 0 : hungerNext >= HUNGER_MAX ? s.pop : s.pop * 0.012 * hungerNext * (0.5 + 0.5 * shortRatio)
   const recB = 20 * (1 - Math.pow(0.75, b.rec * E.rec * f))
+  // obrona: obsadzone i zasilone działa; każde kolejne daje coraz mniej
+  const def = (b.gun || 0) * E.gun * f, defRed = 1 - Math.pow(0.75, def)
   const crowd = s.pop > cap ? Math.min(40, (s.pop - cap) / Math.max(cap, 1) * 60) : 0
   const unempPen = s.pop > 0 ? unemp / s.pop * 30 : 0, black = (1 - f) * 30, starv = shortRatio * 40
   let mt = 55 - (s.tax - 10) * 1.5 + (s.ration - 1) * 40 + recB - crowd - unempPen - black - starv - (s.cr < 0 ? 10 : 0)
   mt = Math.max(0, Math.min(100, mt))
   const foodCap = capOf(s, 'food'), minCap = capOf(s, 'min'), foodWaste = Math.max(0, foodAfter - foodCap), minWaste = Math.max(0, s.min + minProd - minCap)
   const enStore = Math.max(0, Math.min(enCap, s.energy + enProd - enNeed * f)), enWaste = Math.max(0, s.energy + enProd - enNeed * f - enCap)
-  return { E, wNeed, builders, sites, foodCap, minCap, foodWaste, minWaste, enCap, enStore, enWaste, cap, workforce, needed, e, f, enProd, enNeed, foodProd, foodCons, minPot, deps, minProd, resProd, taxInc, trade, maint, unemp, shortRatio, hungerNext, hungerDeaths, mt, crowd, unempPen, black, starv, recB }
+  return { E, wNeed, builders, sites, foodCap, minCap, foodWaste, minWaste, enCap, enStore, enWaste, cap, workforce, needed, e, f, enProd, enNeed, foodProd, foodCons, minPot, deps, minProd, resProd, taxInc, trade, maint, unemp, shortRatio, hungerNext, hungerDeaths, mt, crowd, unempPen, black, starv, recB, def, defRed }
 }
 
 export const nextTech = s => Object.entries(TECH).filter(([k]) => !s.tech[k]).map(e => e[1]).sort((a, b) => a.c - b.c)[0]

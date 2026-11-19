@@ -3,6 +3,7 @@ export const VERSION = '0.2', CODENAME = 'Tukohama'
 export const CHANGELOG = [
   {
     v: '0.2 „Tukohama”', d: '19.11.2026', items: [
+      'Działa magnetyczne (nowa technologia i budynek obronny) – zmniejszają straty od piratów i meteorytów, ale tylko obsadzone; atak może część z nich zniszczyć.',
       'Budynki na liście budowy pogrupowane: żywność, przemysł i nauka, ludność, obrona.',
       'Menu ułożone pionowo.',
       'Kampanie reklamowe w zakładce POLITYKA – kosztują kredyty i trwają określony czas, w którym mogą przybyć nowi koloniści. Skuteczność każdej kampanii jest ukryta.',

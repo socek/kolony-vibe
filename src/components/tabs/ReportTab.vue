@@ -66,6 +66,10 @@ const depDays = computed(() => c.value.minProd > 0 ? Math.floor(c.value.deps / c
       <span v-if="s.rs"><span class="pos">+{{ num(c.resProd / TECH[s.rs].c * 100) }}%</span> <span class="small">({{ TECH[s.rs].n }}: {{ Math.floor(techPct(s, s.rs)) }}%, {{ techEta(s, s.rs, c) }})</span></span>
       <span v-else class="warn">brak projektu</span>
     </div>
+    <div v-if="s.b.gun" class="row">
+      <span><PixelIcon name="gun" />Obrona</span>
+      <span :class="c.defRed > 0 ? '' : 'neg'">{{ c.defRed > 0 ? 'straty od piratów i meteorytów −' + R(c.defRed * 100) + '%' : 'działa nieobsadzone – nie działają' }} <span class="small">(sprawne działa: {{ num(c.def) }}/{{ s.b.gun }})</span></span>
+    </div>
     <div class="row"><span><PixelIcon name="mor" />Morale</span><span><SignedNum :n="nextMor - s.mor" /> <span class="small">({{ R(s.mor) }}% → {{ R(nextMor) }}%; przy obecnych warunkach ustali się na {{ R(c.mt) }}%)</span></span></div>
   </div>
 

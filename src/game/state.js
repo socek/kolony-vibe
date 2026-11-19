@@ -1,4 +1,4 @@
-import { GOAL, DAYS, KEY } from './constants.js'
+import { GOAL, DAYS, KEY, BLD } from './constants.js'
 import { START_DEPOSIT } from './expeditions.js'
 
 const startDeposit = () => ({ n: 'Złoże macierzyste', t: START_DEPOSIT, max: START_DEPOSIT })
@@ -6,7 +6,7 @@ const startDeposit = () => ({ n: 'Złoże macierzyste', t: START_DEPOSIT, max: S
 export function newState() {
   return {
     m: 1, pop: 100, food: 300, energy: 100, min: 200, cr: 500, mor: 60, rs: null, rp: {}, q: [], dep: [startDeposit()], exp: [], camp: [],
-    b: { farm: 3, power: 2, battery: 1, fridge: 1, store: 1, mine: 1, house: 2, rec: 0, lab: 0, port: 0, shield: 0 },
+    b: { farm: 3, power: 2, battery: 1, fridge: 1, store: 1, mine: 1, house: 2, rec: 0, lab: 0, port: 0, shield: 0, gun: 0 },
     tax: 10, ration: 1, tech: {}, prio: {},
     pr: { food: 4, min: 6 }, prev: null, over: null,
     report: [
@@ -27,6 +27,8 @@ export function load() {
     if (o && !o.camp) o.camp = []
     // zapisy sprzed rozdzielenia magazynów: dotychczasowe magazyny trzymały oba surowce
     if (o && o.b && o.b.fridge == null) o.b.fridge = o.b.store || 0
+    // brakujące budynki w starych zapisach
+    if (o && o.b) for (const k in BLD) if (o.b[k] == null) o.b[k] = 0
     return o
   } catch (e) { return null }
 }

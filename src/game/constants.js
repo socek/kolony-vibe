@@ -11,7 +11,8 @@ export const BLD = {
   rec: { n: 'Centrum rekreacji', cr: 200, mi: 60, w: 6, en: 1.5, crew: 6, bt: 50, d: 'podnosi morale' },
   lab: { n: 'Laboratorium', cr: 250, mi: 80, w: 8, en: 2, p: 2, crew: 8, bt: 80, d: '+2 pkt badań dziennie' },
   port: { n: 'Port kosmiczny', cr: 600, mi: 250, w: 15, en: 3.5, p: 13, crew: 15, bt: 300, d: '+13 kr handlu dziennie, imigranci, lepsze ceny', max: 1 },
-  shield: { n: 'Osłona orbitalna', cr: 180, mi: 90, w: 0, en: 0.5, crew: 6, bt: 60, d: 'przechwytuje jeden deszcz meteorytów i ulega zniszczeniu', req: 'shield' }
+  shield: { n: 'Osłona orbitalna', cr: 180, mi: 90, w: 0, en: 0.5, crew: 6, bt: 60, d: 'przechwytuje jeden deszcz meteorytów i ulega zniszczeniu', req: 'shield' },
+  gun: { n: 'Działo magnetyczne', cr: 220, mi: 100, w: 4, en: 1, crew: 5, bt: 40, d: 'zmniejsza straty od piratów i meteorytów, gdy jest obsadzone', req: 'cannon' }
 }
 
 // Grupy budynków na liście budowy
@@ -19,7 +20,7 @@ export const BLD_GROUPS = [
   { n: 'ŻYWNOŚĆ', icon: 'food', color: 'var(--green)', ks: ['farm', 'fridge'] },
   { n: 'PRZEMYSŁ I NAUKA', icon: 'mine', color: 'var(--yellow)', ks: ['power', 'battery', 'mine', 'store', 'lab'] },
   { n: 'LUDNOŚĆ', icon: 'pop', color: 'var(--red)', ks: ['house', 'rec', 'port'] },
-  { n: 'OBRONA', icon: 'shield', color: 'var(--cyan)', ks: ['shield'] }
+  { n: 'OBRONA', icon: 'shield', color: 'var(--cyan)', ks: ['shield', 'gun'] }
 ]
 
 export const TECH = {
@@ -28,6 +29,7 @@ export const TECH = {
   drill: { n: 'Głębokie wiercenia', c: 60, d: 'Kopalnie +30%' },
   med: { n: 'Medycyna kosmiczna', c: 80, d: 'Przyrost +30%, słabsze epidemie' },
   auto: { n: 'Automatyzacja', c: 90, d: 'Budynki i budowy potrzebują o 25% mniej pracowników' },
+  cannon: { n: 'Działa magnetyczne', c: 70, d: 'Pozwala budować działa magnetyczne, które zmniejszają straty od piratów i meteorytów' },
   shield: { n: 'Osłony orbitalne', c: 110, d: 'Pozwala budować osłony orbitalne chroniące przed meteorytami' }
 }
 
@@ -38,7 +40,7 @@ export const HUNGER_MAX = 12 // po tylu dniach głodu kolonia wymiera
 export const GOAL = 1000, DAYS = 365, YEAR = 2150, KEY = 'kolony-vibe-v2'
 
 export const INFRA = ['battery', 'fridge', 'store', 'house', 'shield']
-export const JOBS = ['build', 'farm', 'power', 'mine', 'rec', 'lab', 'port']
+export const JOBS = ['build', 'farm', 'power', 'mine', 'rec', 'lab', 'port', 'gun']
 export const PRIO = [[0, 'STOP'], [1, 'NISKI'], [2, 'ŚREDNI'], [3, 'WYSOKI']]
 export const TABS = [['raport', 'RAPORT'], ['budowa', 'BUDOWA'], ['praca', 'PRACA'], ['wyprawy', 'WYPRAWY'], ['rynek', 'RYNEK'], ['polityka', 'POLITYKA'], ['nauka', 'NAUKA']]
 export const RATIONS = [[0.75, 'Głodowe'], [1, 'Normalne'], [1.25, 'Obfite']]
