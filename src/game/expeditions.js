@@ -6,8 +6,13 @@ export const MIN_POP_LEFT = 20 // tylu kolonistów musi zostać w kolonii
 // Cele wypraw: czas, bazowa szansa na znalezisko, wielkość złoża [min, max] i ryzyko strat
 export const RANGES = [
   { k: 'near', n: 'Bliska okolica', days: 5, chance: 0.45, size: [200, 500], risk: 0, places: ['w pobliskim kraterze', 'przy starym kanionie', 'pod Równiną Lądowania'] },
+  { k: 'caves', n: 'Jaskinie lawowe', days: 7, chance: 0.5, size: [300, 700], risk: 0.03, places: ['w Tunelach Bazaltowych', 'w Grocie Szeptów', 'pod Kopułą Lawy'] },
   { k: 'mid', n: 'Dalsze wzgórza', days: 10, chance: 0.6, size: [400, 1000], risk: 0.05, places: ['na Rdzawych Wzgórzach', 'w Dolinie Echa', 'pod Grzbietem Burz'] },
-  { k: 'far', n: 'Odległe pustkowia', days: 20, chance: 0.75, size: [800, 2000], risk: 0.12, places: ['na Pustkowiach Szkła', 'za Morzem Pyłu', 'w Górach Cienia'] }
+  { k: 'canyon', n: 'Wielki Kanion', days: 12, chance: 0.55, size: [600, 1400], risk: 0.08, places: ['na dnie Wielkiego Kanionu', 'w Rozpadlinie Wiatrów', 'na Półce Pionierów'] },
+  { k: 'ice', n: 'Czapa polarna', days: 15, chance: 0.5, size: [900, 1800], risk: 0.1, places: ['pod Lodowcem Północnym', 'w Szczelinie Mrozu', 'na Białym Płaskowyżu'] },
+  { k: 'volcano', n: 'Pas wulkaniczny', days: 18, chance: 0.7, size: [1200, 2500], risk: 0.2, places: ['u stóp Ognistej Góry', 'w Polu Gejzerów', 'na Siarkowych Stokach'] },
+  { k: 'far', n: 'Odległe pustkowia', days: 20, chance: 0.75, size: [800, 2000], risk: 0.12, places: ['na Pustkowiach Szkła', 'za Morzem Pyłu', 'w Górach Cienia'] },
+  { k: 'meteor', n: 'Pole meteorytowe', days: 25, chance: 0.85, size: [1500, 3000], risk: 0.15, places: ['w Kraterze Upadłej Gwiazdy', 'na Żelaznym Polu', 'w Dolinie Odłamków'] }
 ]
 // Liczebność ekipy: premia do szansy i mnożnik wielkości złoża
 export const TEAMS = [{ n: 5, bonus: 0, mult: 1 }, { n: 10, bonus: 0.1, mult: 1.2 }, { n: 20, bonus: 0.2, mult: 1.5 }]
