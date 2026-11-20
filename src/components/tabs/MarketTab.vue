@@ -16,7 +16,7 @@ const rows = computed(() => Object.entries(RES).map(([k, r]) => {
 <template>
   <div class="row qty">
     <span>Ilość:</span>
-    <span><button v-for="q in [10, 50, 100]" :key="q" :class="{ on: ui.qty === q }" @click="ui.qty = q">{{ q }} t</button></span>
+    <span><button v-for="q in (s.tech.exchange ? [10, 50, 100, 500] : [10, 50, 100])" :key="q" :class="{ on: ui.qty === q }" @click="ui.qty = q">{{ q }} t</button></span>
   </div>
   <div v-if="s.b.port" class="small pos">Port kosmiczny daje lepsze ceny.</div>
   <div v-else class="small">Port kosmiczny poprawiłby ceny.</div>

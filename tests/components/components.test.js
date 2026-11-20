@@ -112,11 +112,23 @@ describe('polityka', () => {
 })
 
 describe('technologie', () => {
-  it('BADAJ wybiera projekt', async () => {
+  const block = (w, k) => w.find('[data-tech="' + k + '"]')
+  const btn = (w, t) => w.findAll('button').find(b => b.text() === t)
+
+  it('kliknięcie bloku pokazuje szczegóły i pozwala dodać do kolejki', async () => {
     const w = mount(ResearchTab)
-    await w.findAll('button').find(b => b.text() === 'BADAJ').trigger('click')
-    expect(game.s.rs).toBe('hydro')
-    expect(w.text()).toContain('BADANE')
+    await block(w, 'graph').trigger('click')
+    expect(w.find('.tdetail').text()).toContain('Ogniwa grafenowe')
+    await btn(w, 'DODAJ DO KOLEJKI').trigger('click')
+    expect(game.s.rs).toBe('graph')
+    expect(block(w, 'graph').classes()).toContain('active')
+  })
+
+  it('technologia z nieodkrytymi wymaganiami jest zablokowana', async () => {
+    const w = mount(ResearchTab)
+    expect(block(w, 'rover').classes()).toContain('locked')
+    await block(w, 'rover').trigger('click')
+    expect(btn(w, 'DODAJ DO KOLEJKI')).toBeUndefined()
   })
 })
 

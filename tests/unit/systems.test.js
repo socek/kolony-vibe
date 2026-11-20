@@ -53,7 +53,7 @@ describe('kampanie reklamowe', () => {
 
   it('przybysze zostają tylko, gdy jest miejsce', () => {
     fixRandom(0.01)
-    const s = newState(); s.cr = 2000; s.pop = 115
+    const s = newState(); s.cr = 2000; s.pop = 115; s.tech.propa = 1
     startCampaign(s, 'lottery')
     const { out, note } = notes()
     tickCampaigns(s, note)

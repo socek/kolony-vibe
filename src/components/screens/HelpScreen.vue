@@ -18,7 +18,7 @@ import { BATCAP, STBASE, STCAP, DAYS, GOAL } from '../../game/constants.js'
     • Działa magnetyczne (po zbadaniu technologii) zmniejszają straty od piratów i meteorytów – tylko obsadzone i zasilone. Mogą zostać zniszczone w czasie ataku.<br>
     • Kampanie reklamowe (zakładka POLITYKA) mogą przyciągnąć nowych kolonistów. Znasz tylko ich koszt i czas trwania – skuteczność trzeba sprawdzić samemu.<br>
     • Wysokie podatki i głodowe racje obniżają morale. Przy morale 5% wybucha bunt.<br>
-    • Laboratoria codziennie posuwają naprzód wybraną w zakładce TECHNOLOGIE technologię. Część technologii odblokowuje nowe, wydajniejsze budynki.<br>
+    • Laboratoria codziennie posuwają naprzód badania. W zakładce TECHNOLOGIE dodajesz technologie do kolejki – naukowcy badają je po kolei. Technologie tworzą drzewo: niektóre wymagają odkrycia innych. Dają nowe budynki, premie i nowe możliwości (cele wypraw, kampanie, handel).<br>
     • Dług powyżej 500 kr oznacza bankructwo.<br>
     • Przycisk ▶▶ 7 DNI przewija tydzień i zatrzymuje się przy ważnych wydarzeniach – które to są, ustawisz w menu (≡) → USTAWIENIA.<br>
     • Nadwyżki żywności i minerałów sprzedawaj na rynku, ceny zmieniają się codziennie.

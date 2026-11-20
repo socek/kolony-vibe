@@ -1,13 +1,15 @@
-import { BLD, TECH, BATCAP, MAINT, INFRA, JOBS, HUNGER_MAX, prioOf, capOf } from './constants.js'
+import { BLD, TECH, MAINT, INFRA, JOBS, HUNGER_MAX, prioOf, capOf, batCapOf, houseCapOf } from './constants.js'
 import { daysTxt } from './format.js'
 import { depTotal } from './expeditions.js'
 
 // Wylicza wszystko, co dzieje się w ciągu jednego dnia, bez zmieniania stanu.
 export function calc(s) {
-  const t = s.tech, b = s.b, cap = b.house * 60, workforce = s.pop * 0.6, enCap = (b.battery || 0) * BATCAP
+  const t = s.tech, b = s.b, cap = houseCapOf(s), workforce = s.pop * 0.6, enCap = batCapOf(s)
   const af = t.auto ? 0.75 : 1, wNeed = {}, E = {}
   let avail = workforce, nb = 0
-  for (const k in BLD) { wNeed[k] = b[k] * BLD[k].w * af; nb += b[k] }
+  // systemy celownicze: działa potrzebują połowy obsady
+  const wMul = k => k === 'gun' && t.targeting ? 0.5 : 1
+  for (const k in BLD) { wNeed[k] = b[k] * BLD[k].w * af * wMul(k); nb += b[k] }
   wNeed.build = s.q.reduce((a, x) => a + BLD[x.k].crew * af, 0)
 
   // przydział pracowników: najpierw infrastruktura, potem wg priorytetów
@@ -37,7 +39,7 @@ export function calc(s) {
   const out = k => (b[k] || 0) * BLD[k].p * E[k]
   const enProd = out('power') + out('power2')
   const f = enNeed > 0 ? Math.min(1, (s.energy + enProd) / enNeed) : 1
-  const foodProd = (out('farm') + out('farm2')) * f, foodCons = s.pop * 0.2 * s.ration
+  const foodProd = (out('farm') + out('farm2') + out('synth')) * f, foodCons = s.pop * 0.2 * s.ration
   const minPot = (out('mine') + out('mine2')) * f, deps = depTotal(s), minProd = Math.min(minPot, deps), resProd = b.lab * BLD.lab.p * E.lab * f
   const taxInc = s.pop * s.tax * 0.0167, trade = b.port * BLD.port.p * E.port * f, maint = nb * MAINT
   const unemp = avail
@@ -48,9 +50,9 @@ export function calc(s) {
   const hd = s.hungerDays || 0, starving = shortRatio > 0
   const hungerNext = starving ? hd + 1 : (s.ration >= 1 ? 0 : hd)
   const hungerDeaths = !starving ? 0 : hungerNext >= HUNGER_MAX ? s.pop : s.pop * 0.012 * hungerNext * (0.5 + 0.5 * shortRatio)
-  const recB = 20 * (1 - Math.pow(0.75, b.rec * E.rec * f))
+  const recB = 20 * (1 - Math.pow(0.75, b.rec * E.rec * f * (t.holo ? 2 : 1)))
   // obrona: obsadzone i zasilone działa; każde kolejne daje coraz mniej
-  const def = (b.gun || 0) * E.gun * f, defRed = 1 - Math.pow(0.75, def)
+  const def = (b.gun || 0) * E.gun * f * (t.targeting ? 1.5 : 1), defRed = 1 - Math.pow(0.75, def)
   const crowd = s.pop > cap ? Math.min(40, (s.pop - cap) / Math.max(cap, 1) * 60) : 0
   const unempPen = s.pop > 0 ? unemp / s.pop * 30 : 0, black = (1 - f) * 30, starv = shortRatio * 40
   let mt = 55 - (s.tax - 10) * 1.5 + (s.ration - 1) * 40 + recB - crowd - unempPen - black - starv - (s.cr < 0 ? 10 : 0)

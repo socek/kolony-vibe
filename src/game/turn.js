@@ -1,10 +1,11 @@
-import { BLD, TECH, RES, BATCAP, MORK, GOAL, DAYS, HUNGER_MAX, prioOf, jobName, capOf } from './constants.js'
+import { BLD, TECH, RES, MORK, GOAL, DAYS, HUNGER_MAX, prioOf, jobName, capOf, batCapOf } from './constants.js'
 import { calc, nextTech } from './calc.js'
 import { EVENTS, EVENT_BAD } from './events.js'
 import { mergeRep } from './report.js'
 import { beep } from './audio.js'
 import { extract, tickExpeditions } from './expeditions.js'
 import { tickCampaigns } from './campaigns.js'
+import { nextResearch } from './research.js'
 
 export function clampStore(s) {
   const l = { food: Math.max(0, s.food - capOf(s, 'food')), min: Math.max(0, s.min - capOf(s, 'min')) }
@@ -90,14 +91,15 @@ export function endTurn(s, acc) {
   for (const k in s.pr) { const b = RES[k].base; s.pr[k] = Math.max(b * 0.5, Math.min(b * 2, s.pr[k] * (1 + (Math.random() - 0.5) * 0.14))) }
   edge('debt', s.cr < 0)
   if (s.cr < 0) add('debt')
-  s.mor = Math.max(0, Math.min(100, s.mor)); s.pop = Math.max(0, s.pop); s.energy = Math.min(s.energy, (s.b.battery || 0) * BATCAP)
+  s.mor = Math.max(0, Math.min(100, s.mor)); s.pop = Math.max(0, s.pop); s.energy = Math.min(s.energy, batCapOf(s))
   { const l = clampStore(s); edge('loss', l.food >= 1 || l.min >= 1); if (l.food > 0 || l.min > 0) add('loss', { f: l.food, m: l.min }) }
   if (s.rs && c.resProd > 0) {
     const k = s.rs, t = TECH[k]
     s.rp[k] = (s.rp[k] || 0) + c.resProd
     if (s.rp[k] >= t.c) {
       stops.add('research'); s.tech[k] = 1; delete s.rp[k]; s.rs = null
-      note('★ Naukowcy ukończyli projekt: ' + t.n + '! ' + t.d + '. Wybierz kolejny w zakładce TECHNOLOGIE.', 'pos'); beep(990, 0.15)
+      nextResearch(s)
+      note('★ Naukowcy ukończyli projekt: ' + t.n + '! ' + t.d + '.' + (s.rs ? ' Teraz badają: ' + TECH[s.rs].n + '.' : ' Kolejka badań jest pusta – wybierz kolejny projekt w zakładce TECHNOLOGIE.'), 'pos'); beep(990, 0.15)
     }
   } else if (!s.rs && c.resProd > 0 && nextTech(s)) add('nores')
   edge('nores', !s.rs && c.resProd > 0 && nextTech(s))

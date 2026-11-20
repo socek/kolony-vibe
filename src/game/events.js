@@ -1,4 +1,4 @@
-import { BLD } from './constants.js'
+import { BLD, houseCapOf } from './constants.js'
 import { calc } from './calc.js'
 import { addDeposit, depositName } from './expeditions.js'
 
@@ -38,7 +38,7 @@ export const EVENTS = [
   s => { s.mor += 8; return 'Święto Założenia Kolonii – morale rośnie.' },
   s => { s.food += 120; return 'Przechwycono lodową kometę: +120 t żywności.' },
   s => {
-    const free = Math.floor(s.b.house * 60 - s.pop)
+    const free = Math.floor(houseCapOf(s) - s.pop)
     if (free < 1) return null
     const w = 15 + Math.floor(Math.random() * 15), n = Math.min(w, free)
     s.pop += n

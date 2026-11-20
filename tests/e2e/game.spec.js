@@ -93,3 +93,15 @@ test('na telefonie dolny pasek mieści się w jednym rzędzie', async ({ page })
   const boxes = await page.locator('.bar button').evaluateAll(bs => bs.map(b => { const r = b.getBoundingClientRect(); return [r.top, r.bottom] }))
   expect(Math.max(...boxes.map(b => b[0]))).toBeLessThan(Math.min(...boxes.map(b => b[1])))
 })
+
+test('kolejka badań w zakładce TECHNOLOGIE', async ({ page }) => {
+  await newGame(page)
+  await tab(page, 'TECHNOLOGIE')
+  for (const k of ['graph', 'auto']) {
+    await page.locator('[data-tech="' + k + '"]').click()
+    await page.getByRole('button', { name: 'DODAJ DO KOLEJKI' }).click()
+  }
+  await expect(page.locator('[data-tech="graph"]')).toHaveClass(/active/)
+  await expect(page.locator('[data-tech="auto"]')).toContainText('KOLEJKA #1')
+  await expect(page.locator('.tarrow').first()).toBeAttached()
+})

@@ -5,7 +5,7 @@ const startDeposit = () => ({ n: 'Złoże macierzyste', t: START_DEPOSIT, max: S
 
 export function newState() {
   return {
-    m: 1, pop: 100, food: 300, energy: 100, min: 200, cr: 500, mor: 60, rs: null, rp: {}, q: [], dep: [startDeposit()], exp: [], camp: [],
+    m: 1, pop: 100, food: 300, energy: 100, min: 200, cr: 500, mor: 60, rs: null, rp: {}, rq: [], q: [], dep: [startDeposit()], exp: [], camp: [],
     // każdy budynek z listy ma licznik (0, jeśli nie ma go na starcie)
     b: { ...Object.fromEntries(Object.keys(BLD).map(k => [k, 0])), farm: 3, power: 2, battery: 1, fridge: 1, store: 1, mine: 1, house: 2 },
     tax: 10, ration: 1, tech: {}, prio: {},
@@ -26,6 +26,7 @@ export function load() {
     if (o && !o.dep) o.dep = [startDeposit()]
     if (o && !o.exp) o.exp = []
     if (o && !o.camp) o.camp = []
+    if (o && !o.rq) o.rq = []
     // zapisy sprzed rozdzielenia magazynów: dotychczasowe magazyny trzymały oba surowce
     if (o && o.b && o.b.fridge == null) o.b.fridge = o.b.store || 0
     // brakujące budynki w starych zapisach

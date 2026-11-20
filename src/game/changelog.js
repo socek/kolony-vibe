@@ -3,6 +3,10 @@ export const VERSION = '0.3', CODENAME = 'Merveil'
 export const CHANGELOG = [
   {
     v: '0.3 „Merveil”', d: 'w przygotowaniu', items: [
+      'Nowe drzewo technologii: 17 technologii w 6 gałęziach, z wymaganiami, pokazane jako schemat blokowy (na telefonie jako lista).',
+      'Kolejka badań – naukowcy badają kolejne technologie po sobie.',
+      'Nowe technologie: krioprzechowalnictwo, synteza białka (syntezator żywności), superkondensatory, moduły piętrowe, holorozrywka, systemy celownicze, sonary geologiczne, łaziki terenowe, giełda międzygwiezdna, propaganda holograficzna.',
+      'Pas wulkaniczny, Pole meteorytowe i Loteria biletów kolonijnych wymagają teraz technologii.',
       'Ikonka gry w karcie przeglądarki.',
       'Gra zapisuje się od razu po każdym dniu, a nie dopiero po animacji.',
       'Gra jest otwartoźródłowa (licencja GNU AGPL v3) – link do kodu na ekranie „O grze”.',

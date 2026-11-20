@@ -1,5 +1,5 @@
 import { reactive, computed } from 'vue'
-import { BLD, TECH, BATCAP, DAYS } from './game/constants.js'
+import { BLD, TECH, DAYS, batCapOf } from './game/constants.js'
 import { calc } from './game/calc.js'
 import { newState, save, load } from './game/state.js'
 import { endTurn, clampStore, snapshot } from './game/turn.js'
@@ -9,6 +9,7 @@ import { beep } from './game/audio.js'
 import { settings, stopWhy } from './game/stops.js'
 import { sendExpedition, addDeposit } from './game/expeditions.js'
 import { startCampaign } from './game/campaigns.js'
+import { queueTech, unqueueTech, researchNow, nextResearch } from './game/research.js'
 
 const saved = load()
 const resumable = saved && !saved.over ? saved : null
@@ -46,13 +47,14 @@ export function siteFirst(i) {
 }
 export function demolish(k) {
   const s = game.s
-  s.b[k]--; s.energy = Math.min(s.energy, (s.b.battery || 0) * BATCAP); clampStore(s)
+  s.b[k]--; s.energy = Math.min(s.energy, batCapOf(s)); clampStore(s)
   beep(180, 0.08); persist()
 }
 
 export function prices(k) {
   const s = game.s, p = s.pr[k]
-  return { sell: p * (s.b.port ? 1.15 : 1), buy: p * 1.3 * (s.b.port ? 0.9 : 1) }
+  const ex = s.tech.exchange
+  return { sell: p * (s.b.port ? 1.15 : 1) * (ex ? 1.1 : 1), buy: p * 1.3 * (s.b.port ? 0.9 : 1) * (ex ? 0.9 : 1) }
 }
 export function sell(k) { const s = game.s; s[k] -= ui.qty; s.cr += prices(k).sell * ui.qty; beep(740, 0.05); persist() }
 export function buy(k) { const s = game.s; s.cr -= prices(k).buy * ui.qty; s[k] += ui.qty; beep(740, 0.05); persist() }
@@ -63,7 +65,9 @@ export const saveNow = persist
 export function setPrio(k, l) { game.s.prio[k] = l; beep(600, 0.03); persist() }
 export function sendExp() { if (sendExpedition(game.s, ui.expRange, ui.expTeam)) { beep(440, 0.12); persist() } }
 export function campaign(k) { if (startCampaign(game.s, k)) { beep(700, 0.1); persist() } }
-export function research(k) { game.s.rs = k; beep(880, 0.08); persist() }
+export function research(k) { if (queueTech(game.s, k)) { beep(880, 0.08); persist() } }
+export function unresearch(k) { unqueueTech(game.s, k); beep(300, 0.05); persist() }
+export function researchFirst(k) { if (researchNow(game.s, k)) { beep(990, 0.08); persist() } }
 
 function afterTurns() {
   persist(); ui.tab = 'raport'
@@ -109,7 +113,7 @@ export function devAct(a) {
   if (a === 'finish') { s.q.forEach(x => s.b[x.k]++); ui.devMsg = 'Ukończono budów: ' + s.q.length + '.'; s.q = [] }
   else if (a === 'fill') { const cc = calc(s); s.food = cc.foodCap; s.min = cc.minCap; s.energy = cc.enCap; ui.devMsg = 'Magazyny pełne.' }
   else if (a === 'cash') { s.cr += 1000; ui.devMsg = '+1000 kr.' }
-  else if (a === 'alltech') { for (const k in TECH) s.tech[k] = 1; s.rs = null; s.rp = {}; ui.devMsg = 'Odkryto wszystkie technologie.' }
+  else if (a === 'alltech') { for (const k in TECH) s.tech[k] = 1; s.rs = null; s.rp = {}; s.rq = []; ui.devMsg = 'Odkryto wszystkie technologie.' }
   else if (a === 'dep') { addDeposit(s, 'Złoże deweloperskie', 1000); ui.devMsg = 'Dodano złoże 1000 t.' }
   else if (a === 'expback') { s.exp.forEach(x => x.left = 1); ui.devMsg = 'Wyprawy wrócą na koniec dnia.' }
   else if (a === 'revive') { s.over = null; ui.devMsg = 'Gra wznowiona.' }
@@ -131,6 +135,6 @@ export function devAct(a) {
 export function devSet(obj, key, value) { obj[key] = +value || 0; persist() }
 export function devTech(k, on) {
   const s = game.s
-  if (on) { s.tech[k] = 1; if (s.rs === k) s.rs = null } else delete s.tech[k]
+  if (on) { s.tech[k] = 1; s.rq = (s.rq || []).filter(q => q !== k); if (s.rs === k) { s.rs = null; nextResearch(s) } } else delete s.tech[k]
   persist()
 }

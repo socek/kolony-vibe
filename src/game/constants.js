@@ -3,6 +3,7 @@
 export const BLD = {
   farm: { n: 'Farma hydroponiczna', cr: 120, mi: 40, w: 10, en: 1.5, p: 8, crew: 5, bt: 30, d: '+8 t żywności dziennie' },
   farm2: { n: 'Farma aeroponiczna', cr: 200, mi: 70, w: 10, en: 2.5, p: 12, crew: 6, bt: 45, d: '+12 t żywności dziennie – uprawy w mgle odżywczej', req: 'hydro' },
+  synth: { n: 'Syntezator żywności', cr: 300, mi: 120, w: 2, en: 8, p: 14, crew: 6, bt: 60, d: '+14 t żywności dziennie z syntezy białka – tylko 2 pracowników, ale 8 kWh prądu', req: 'synth' },
   power: { n: 'Elektrownia słoneczna', cr: 150, mi: 60, w: 6, en: 0, p: 10, crew: 5, bt: 35, d: '+10 kWh energii dziennie' },
   power2: { n: 'Elektrownia grafenowa', cr: 240, mi: 90, w: 6, en: 0, p: 16, crew: 6, bt: 50, d: '+16 kWh energii dziennie – wydajne ogniwa grafenowe', req: 'graph' },
   battery: { n: 'Bateria', cr: 130, mi: 70, w: 1, en: 0, crew: 3, bt: 15, d: '+100 kWh pojemności magazynu energii' },
@@ -20,20 +21,41 @@ export const BLD = {
 
 // Grupy budynków na liście budowy
 export const BLD_GROUPS = [
-  { n: 'ŻYWNOŚĆ', icon: 'food', color: 'var(--green)', ks: ['farm', 'farm2', 'fridge'] },
+  { n: 'ŻYWNOŚĆ', icon: 'food', color: 'var(--green)', ks: ['farm', 'farm2', 'synth', 'fridge'] },
   { n: 'PRZEMYSŁ I NAUKA', icon: 'mine', color: 'var(--yellow)', ks: ['power', 'power2', 'battery', 'mine', 'mine2', 'store', 'lab'] },
   { n: 'LUDNOŚĆ', icon: 'pop', color: 'var(--red)', ks: ['house', 'rec', 'port'] },
   { n: 'OBRONA', icon: 'shield', color: 'var(--cyan)', ks: ['shield', 'gun'] }
 ]
 
+// Gałęzie drzewa technologii (kolumny schematu)
+export const TECH_BRANCHES = [
+  { k: 'food', n: 'ŻYWNOŚĆ', color: 'var(--green)' },
+  { k: 'ind', n: 'PRZEMYSŁ I ENERGIA', color: 'var(--yellow)' },
+  { k: 'pop', n: 'LUDNOŚĆ', color: 'var(--red)' },
+  { k: 'def', n: 'OBRONA', color: 'var(--cyan)' },
+  { k: 'exp', n: 'WYPRAWY', color: 'var(--white)' },
+  { k: 'trade', n: 'HANDEL I POLITYKA', color: 'var(--text)' }
+]
+
+// Technologie: g – gałąź, c – koszt w punktach badań, req – wymagane technologie, d – efekt
 export const TECH = {
-  hydro: { n: 'Aeroponika', c: 40, d: 'Pozwala budować farmy aeroponiczne (+12 t żywności zamiast +8)' },
-  graph: { n: 'Ogniwa grafenowe', c: 50, d: 'Pozwala budować elektrownie grafenowe (+16 kWh zamiast +10)' },
-  drill: { n: 'Wiertła głębinowe', c: 60, d: 'Pozwala budować kopalnie głębinowe (+10 t minerałów zamiast +6)' },
-  med: { n: 'Medycyna kosmiczna', c: 80, d: 'Przyrost +30%, słabsze epidemie' },
-  auto: { n: 'Automatyzacja', c: 90, d: 'Budynki i budowy potrzebują o 25% mniej pracowników' },
-  cannon: { n: 'Działa magnetyczne', c: 70, d: 'Pozwala budować działa magnetyczne, które zmniejszają straty od piratów i meteorytów' },
-  shield: { n: 'Osłony orbitalne', c: 110, d: 'Pozwala budować osłony orbitalne chroniące przed meteorytami' }
+  hydro: { g: 'food', n: 'Aeroponika', c: 40, req: [], d: 'Pozwala budować farmy aeroponiczne (+12 t żywności zamiast +8)' },
+  cryo: { g: 'food', n: 'Krio\u00adprzecho\u00adwalnictwo', c: 50, req: [], d: 'Chłodnie mieszczą o 50% więcej żywności' },
+  synth: { g: 'food', n: 'Synteza białka', c: 120, req: ['hydro', 'graph'], d: 'Pozwala budować syntezatory żywności – dużo żywności przy 2 pracownikach, ale za dużo prądu' },
+  graph: { g: 'ind', n: 'Ogniwa grafenowe', c: 50, req: [], d: 'Pozwala budować elektrownie grafenowe (+16 kWh zamiast +10)' },
+  drill: { g: 'ind', n: 'Wiertła głębinowe', c: 60, req: [], d: 'Pozwala budować kopalnie głębinowe (+10 t minerałów zamiast +6)' },
+  supercap: { g: 'ind', n: 'Super\u00adkondensatory', c: 70, req: ['graph'], d: 'Baterie mieszczą dwa razy więcej energii' },
+  auto: { g: 'ind', n: 'Automatyzacja', c: 90, req: ['graph'], d: 'Budynki i budowy potrzebują o 25% mniej pracowników' },
+  med: { g: 'pop', n: 'Medycyna kosmiczna', c: 80, req: [], d: 'Przyrost +30%, słabsze epidemie' },
+  stack: { g: 'pop', n: 'Moduły piętrowe', c: 70, req: [], d: 'Moduł mieszkalny mieści 90 osób zamiast 60' },
+  holo: { g: 'pop', n: 'Holorozrywka', c: 100, req: ['graph'], d: 'Centra rekreacji są dwa razy skuteczniejsze' },
+  cannon: { g: 'def', n: 'Działa magnetyczne', c: 70, req: [], d: 'Pozwala budować działa magnetyczne, które zmniejszają straty od piratów i meteorytów' },
+  shield: { g: 'def', n: 'Osłony orbitalne', c: 110, req: ['graph'], d: 'Pozwala budować osłony orbitalne chroniące przed meteorytami' },
+  targeting: { g: 'def', n: 'Systemy celownicze', c: 100, req: ['cannon', 'auto'], d: 'Działa potrzebują 2 pracowników zamiast 4 i są o 50% silniejsze' },
+  sonar: { g: 'exp', n: 'Sonary geologiczne', c: 60, req: ['drill'], d: 'Wyprawy mają o 15 punktów procentowych większą szansę na znalezienie złoża' },
+  rover: { g: 'exp', n: 'Łaziki terenowe', c: 90, req: ['sonar', 'auto'], d: 'Wyprawy są o 30% krótsze, a ryzyko strat o połowę mniejsze. Odblokowuje cele: Pas wulkaniczny i Pole meteorytowe' },
+  exchange: { g: 'trade', n: 'Giełda między\u00adgwiezdna', c: 60, req: [], d: 'Ceny na rynku lepsze o 10% i handel partiami po 500 t' },
+  propa: { g: 'trade', n: 'Propaganda holo\u00adgraficzna', c: 80, req: ['exchange', 'holo'], d: 'Kampanie reklamowe są o 30% tańsze. Odblokowuje kampanię: Loteria biletów kolonijnych' }
 }
 
 export const RES = { food: { n: 'Żywność', base: 4 }, min: { n: 'Minerały', base: 6 } }
@@ -43,7 +65,7 @@ export const HUNGER_MAX = 12 // po tylu dniach głodu kolonia wymiera
 export const GOAL = 1000, DAYS = 365, YEAR = 2150, KEY = 'kolony-vibe-v2'
 
 export const INFRA = ['battery', 'fridge', 'store', 'house', 'shield']
-export const JOBS = ['build', 'farm', 'farm2', 'power', 'power2', 'mine', 'mine2', 'rec', 'lab', 'port', 'gun']
+export const JOBS = ['build', 'farm', 'farm2', 'synth', 'power', 'power2', 'mine', 'mine2', 'rec', 'lab', 'port', 'gun']
 export const PRIO = [[0, 'STOP'], [1, 'NISKI'], [2, 'ŚREDNI'], [3, 'WYSOKI']]
 export const TABS = [['raport', 'RAPORT'], ['budowa', 'BUDOWA'], ['praca', 'PRACA'], ['wyprawy', 'WYPRAWY'], ['rynek', 'RYNEK'], ['polityka', 'POLITYKA'], ['nauka', 'TECHNOLOGIE']]
 export const RATIONS = [[0.75, 'Głodowe'], [1, 'Normalne'], [1.25, 'Obfite']]
@@ -53,4 +75,12 @@ export const MNAMES = ['STY', 'LUT', 'MAR', 'KWI', 'MAJ', 'CZE', 'LIP', 'SIE', '
 export const prioOf = (s, k) => INFRA.includes(k) ? 9 : ((s.prio || {})[k] ?? 2)
 export const jobName = k => k === 'build' ? 'Budowniczowie' : BLD[k].n
 // pojemność magazynu danego surowca: żywność w chłodniach, minerały w magazynach minerałów
-export const capOf = (s, k) => STBASE + (s.b[k === 'food' ? 'fridge' : 'store'] || 0) * STCAP
+export const capOf = (s, k) => k === 'food'
+  ? STBASE + (s.b.fridge || 0) * STCAP * (s.tech.cryo ? 1.5 : 1)
+  : STBASE + (s.b.store || 0) * STCAP
+// pojemność baterii i liczba miejsc w modułach mieszkalnych (zależą od technologii)
+export const batCapOf = s => (s.b.battery || 0) * BATCAP * (s.tech.supercap ? 2 : 1)
+export const HOUSE_CAP = 60
+export const houseCapOf = s => (s.b.house || 0) * HOUSE_CAP * (s.tech.stack ? 1.5 : 1)
+// czy wszystkie wymagania technologii są odkryte
+export const techReady = (s, k) => TECH[k].req.every(r => s.tech[r])

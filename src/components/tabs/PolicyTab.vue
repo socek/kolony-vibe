@@ -1,7 +1,8 @@
 <script setup>
 import { computed } from 'vue'
 import { game, c, setRation, saveNow, campaign } from '../../store.js'
-import { CAMPAIGNS, running, canStart } from '../../game/campaigns.js'
+import { CAMPAIGNS, running, canStart, campCost } from '../../game/campaigns.js'
+import { TECH } from '../../game/constants.js'
 import { daysTxt } from '../../game/format.js'
 import MeterBar from '../MeterBar.vue'
 import { RATIONS } from '../../game/constants.js'
@@ -35,9 +36,10 @@ const moods = computed(() => {
       <div class="row">
         <span>{{ x.n }}</span>
         <span v-if="running(s, x.k)" class="warn">trwa · jeszcze {{ daysTxt(running(s, x.k).left) }}</span>
-        <button v-else :disabled="!!canStart(s, x.k)" @click="campaign(x.k)">URUCHOM −{{ x.cr }} kr</button>
+        <button v-else :disabled="!!canStart(s, x.k)" @click="campaign(x.k)">URUCHOM −{{ campCost(s, x.k) }} kr</button>
       </div>
-      <div class="small">{{ x.d }} · {{ x.cr }} kr · {{ daysTxt(x.days) }}<template v-if="running(s, x.k)"> · przybyło dotąd: {{ running(s, x.k).got }}</template></div>
+      <div v-if="x.req && !s.tech[x.req]" class="small neg">Wymaga technologii: {{ TECH[x.req].n }}</div>
+      <div class="small">{{ x.d }} · {{ campCost(s, x.k) }} kr · {{ daysTxt(x.days) }}<template v-if="running(s, x.k)"> · przybyło dotąd: {{ running(s, x.k).got }}</template></div>
       <MeterBar v-if="running(s, x.k)" :value="x.days - running(s, x.k).left" :max="x.days" />
     </div>
   </div>
