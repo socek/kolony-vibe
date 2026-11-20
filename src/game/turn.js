@@ -7,6 +7,7 @@ import { extract, tickExpeditions } from './expeditions.js'
 import { tickCampaigns } from './campaigns.js'
 import { nextResearch } from './research.js'
 import { scenarioOf } from './scenarios.js'
+import { trainPick } from './specialists.js'
 
 import { CHOICES, CHOICE_KEYS, resolveChoice } from './choices.js'
 import { record } from './history.js'
@@ -96,11 +97,13 @@ export function endTurn(s, acc, auto = {}) {
   }
   s.pop -= deaths
   // szkoły kształcą specjalistów spośród zwykłych pracowników
-  s.trainProg = (s.trainProg || 0) + c.train
-  while (s.trainProg >= 1 && s.pop * c.workRate - specCount(s) >= 1) { s.trainProg -= 1; s.spec[s.train || 'sci']++; add('trained', { a: 1, _k: s.train || 'sci' }) }
+  // – zawsze tę specjalizację, której najbardziej brakuje do celu; gdy cele są osiągnięte, szkoły nie zabierają ludzi
+  if (trainPick(s, c)) s.trainProg = (s.trainProg || 0) + c.train
+  let T
+  while (s.trainProg >= 1 && s.pop * c.workRate - specCount(s) >= 1 && (T = trainPick(s, c))) { s.trainProg -= 1; s.spec[T]++; add('trained', { a: 1, _k: T }) }
   if (s.trainProg > 1) s.trainProg = 1
   // gdy ludzi ubywa, specjalistów ubywa proporcjonalnie
-  { const tot = specCount(s), max = s.pop * 0.6; if (tot > max && tot > 0) for (const T in s.spec) s.spec[T] = Math.floor(s.spec[T] * max / tot) }
+  { const tot = specCount(s), max = s.pop * c.workRate; if (tot > max && tot > 0) for (const T in s.spec) s.spec[T] = Math.floor(s.spec[T] * max / tot) }
   if (c.sciMissing > 0.5) add('nosci', { _n: Math.ceil(c.sciMissing) })
   if (tickExpeditions(s, note)) stops.add('exp')
   if (tickCampaigns(s, note)) stops.add('camp')

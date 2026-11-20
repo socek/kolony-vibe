@@ -14,6 +14,7 @@ import { queueTech, unqueueTech, researchNow, nextResearch } from './game/resear
 import { resolveChoice } from './game/choices.js'
 import { syncCond } from './game/wear.js'
 import { pickHint } from './game/hints.js'
+import { specTargets, setSpecTarget, dismissSpec } from './game/specialists.js'
 import { playTheme, themeFor } from './game/music.js'
 import { buildBlock } from './game/scenarios.js'
 import { BADGES, newBadges } from './game/badges.js'
@@ -75,6 +76,14 @@ export function buy(k) { const s = game.s; s.cr -= prices(k).buy * ui.qty; s[k] 
 export function setRation(r) { game.s.ration = r; persist() }
 export function setTax(v) { game.s.tax = v }
 export const saveNow = persist
+// cele specjalistów: d = +1/−1 zmienia cel (z AUTO przechodzi na cel ręczny), null wraca do AUTO
+export function specTarget(T, d) {
+  const s = game.s
+  if (d == null) setSpecTarget(s, T, null)
+  else setSpecTarget(s, T, specTargets(s, c.value)[T] + d)
+  beep(600, 0.03); persist()
+}
+export function dismiss(T) { if (dismissSpec(game.s, T)) { beep(300, 0.06); persist() } }
 export function setPrio(k, l) { game.s.prio[k] = l; beep(600, 0.03); persist() }
 export function sendExp() { if (sendExpedition(game.s, ui.expRange, ui.expTeam, ui.expGoal, ui.expSol, ui.expEng)) { ui.expSol = 0; ui.expEng = 0; beep(440, 0.12); persist() } }
 export function neighborTrade(k) { if (nbTrade(game.s, k)) { beep(740, 0.05); persist() } }

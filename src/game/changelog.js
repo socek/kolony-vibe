@@ -9,6 +9,7 @@ export const versionLabel = (upper = false) => {
 export const CHANGELOG = [
   {
     v: '0.3 „Merveil” (in development)', d: 'w przygotowaniu', items: [
+      'Specjaliści według celów: zamiast wybierać, kogo szkolą szkoły, każda specjalizacja ma docelową liczbę – AUTO (tyle, ile stanowisk w budynkach) albo ręczną. Szkoły kształcą tych, których najbardziej brakuje, a po osiągnięciu celów nie zabierają ludzi. Nowe: zwalnianie specjalistów i ostrzeżenie, gdy szkoły nie nadążają.',
       'Nowe przyciski na ekranie startowym i w menu: ZGŁOŚ BŁĄD (formularz zgłoszenia na GitHubie) i WESPRZYJ (wsparcie autora).',
       'Przycisk WRÓĆ w zasadach, „O grze” i zmianach wraca tam, skąd je otwarto (ekran startowy albo menu), a nie od razu do gry.',
       'Zdolni do pracy: odsetek nie jest już stały (60%). Zmieniają go morale (±10 pkt proc.), szpitale (do +5), nowa technologia Zautomatyzowane żłobki (+5) i epidemie (chorzy przez kilka dni nie pracują). Zakładka PRACA pokazuje, z czego wynika.',

@@ -137,3 +137,5 @@ a{color:var(--cyan)}
 .order{border-top:1px dashed var(--border);margin-top:6px;padding-top:4px}
 .order.offer{opacity:.9}
 .order.offer > .row:first-child{color:var(--cyan)}
+
+.spec{margin-top:6px;padding-top:4px;border-top:1px dashed var(--border)}

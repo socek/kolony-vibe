@@ -1,10 +1,9 @@
 <script setup>
 import { computed } from 'vue'
-import { game, c, setPrio } from '../../store.js'
+import { game, c, setPrio, specTarget, dismiss } from '../../store.js'
+import { specDeficit, specPosts, trainPick, isAuto } from '../../game/specialists.js'
 import { INFRA, JOBS, PRIO, SPEC, prioOf, jobName } from '../../game/constants.js'
-import { saveNow } from '../../store.js'
 import { scenarioOf } from '../../game/scenarios.js'
-const setTrain = T => { game.s.train = T; saveNow() }
 import { fmt } from '../../game/format.js'
 import PixelIcon from '../PixelIcon.vue'
 import MeterBar from '../MeterBar.vue'
@@ -14,6 +13,14 @@ const pct = v => Math.round(v * 100)
 const sgn = x => x.k === 'base' ? pct(x.v) + '%' : (x.v > 0 ? '+' : '−') + Math.abs(Math.round(x.v * 1000) / 10) + ' pkt proc.'
 
 const s = computed(() => game.s)
+const def = computed(() => specDeficit(s.value, c.value))
+const posts = computed(() => specPosts(s.value, c.value))
+const pick = computed(() => trainPick(s.value, c.value))
+// ile dni szkoły będą nadrabiać brak przy obecnym tempie
+const catchUp = computed(() => c.value.train > 0 ? Math.ceil(def.value.total / c.value.train) : Infinity)
+// ostrzeżenie: stoją laboratoria/szpitale albo szkoły nie nadążają z celem ustawionym ręcznie (ponad 30 dni nadrabiania).
+// Brak inżynierów/żołnierzy w AUTO to tylko utracona premia – wtedy wystarczy spokojna informacja.
+const warnSpec = computed(() => def.value.by.sci > 0 || (Object.keys(SPEC).some(T => !isAuto(s.value, T) && def.value.by[T] > 0) && (c.value.train <= 0 || catchUp.value > 30)))
 const infra = computed(() => INFRA.reduce((a, k) => a + c.value.wNeed[k], 0))
 const missing = computed(() => Math.max(0, Math.ceil(c.value.needed - c.value.workforce)))
 const jobs = computed(() => JOBS.filter(k => k === 'build' || k === 'repair' || (k === 'hunt' ? scenarioOf(s.value).hunt : s.value.b[k])).map(k => {
@@ -37,10 +44,21 @@ const jobs = computed(() => JOBS.filter(k => k === 'build' || k === 'repair' || 
 
   <div class="card">
     <div class="t">SPECJALIŚCI</div>
-    <div class="small">Specjalista na swoim stanowisku pracuje o 50% wydajniej. Laboratoria i szpitale obsadzają tylko naukowcy. Szkoły kształcą wybraną specjalizację.</div>
-    <div v-for="(x, T) in SPEC" :key="T" class="row small"><span>{{ x.n }}: {{ (s.spec || {})[T] || 0 }}</span><span>{{ x.jobs.map(j => jobName(j)).join(', ') }}</span></div>
-    <div class="small" style="margin-top:4px">Szkoły kształcą ({{ c.train > 0 ? '1 osoba co ' + Math.ceil(1 / c.train) + ' dni' : 'brak obsadzonej szkoły' }}):</div>
-    <div class="pr"><button v-for="(x, T) in SPEC" :key="T" :class="{ on: (s.train || 'sci') === T }" @click="setTrain(T)">{{ x.n.toUpperCase() }}</button></div>
+    <div class="small">Specjalista na swoim stanowisku pracuje o 50% wydajniej. Laboratoria i szpitale obsadzają tylko naukowcy. Szkoły same kształcą specjalizację, której najbardziej brakuje do celu, a gdy wszystkie cele są osiągnięte – nie zabierają ludzi z pracy. AUTO: cel równy liczbie stanowisk w budynkach.</div>
+    <div v-for="(x, T) in SPEC" :key="T" class="spec">
+      <div class="row"><span>{{ x.n }}: {{ (s.spec || {})[T] || 0 }} / cel {{ def.tg[T] }} <span class="small" :class="isAuto(s, T) ? 'sub' : 'warn'">({{ isAuto(s, T) ? 'AUTO' : 'ręcznie' }}, stanowisk: {{ posts[T] }})</span></span>
+        <span v-if="def.by[T] > 0" class="small" :class="T === 'sci' ? 'neg' : 'warn'">brakuje {{ def.by[T] }}</span></div>
+      <div class="small">{{ x.jobs.map(j => jobName(j)).join(', ') }}</div>
+      <div class="pr">
+        <button title="Obniż cel" @click="specTarget(T, -1)">−</button>
+        <button title="Podnieś cel" @click="specTarget(T, 1)">+</button>
+        <button :class="{ on: isAuto(s, T) }" @click="specTarget(T, null)">AUTO</button>
+        <button :disabled="!((s.spec || {})[T] > 0)" :title="'Zwolnij jednego specjalistę (' + x.one + ' wraca do zwykłej pracy)'" @click="dismiss(T)">ZWOLNIJ 1</button>
+      </div>
+    </div>
+    <div class="small" style="margin-top:6px">Szkoły: {{ c.train > 0 ? '1 osoba co ' + Math.ceil(1 / c.train) + ' dni' : 'brak obsadzonej szkoły' }}<template v-if="pick && c.train > 0">, teraz kształcą: {{ SPEC[pick].n.toLowerCase() }}</template><template v-else-if="c.train > 0"> – cele osiągnięte, szkolenie wstrzymane</template>.</div>
+    <div v-if="warnSpec" class="warn small">⚠ Brakuje specjalistów: {{ def.total }}<template v-if="def.by.sci > 0"> (w tym {{ def.by.sci }} naukowców – bez nich laboratoria i szpitale nie działają w pełni)</template>. {{ c.train > 0 ? 'Przy obecnym tempie szkoły nadrobią to za ok. ' + catchUp + ' dni – zbuduj kolejną szkołę albo podnieś jej priorytet.' : 'Zbuduj szkołę (albo obsadź istniejącą), żeby kształcić specjalistów.' }}</div>
+    <div v-else-if="def.total > 0" class="small">Do celu brakuje {{ def.total }} specjalistów{{ c.train > 0 ? ' – szkoły nadrobią to za ok. ' + catchUp + ' dni.' : ' – szkoła pozwoli ich wykształcić.' }}</div>
   </div>
 
   <div class="card">
