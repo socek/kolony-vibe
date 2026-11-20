@@ -26,10 +26,13 @@ import ConsentBar from './components/ConsentBar.vue'
     <h1>KOLONY<span class="sub"> VIBE</span></h1>
     <TopStatus />
     <ResourceTiles />
-    <div class="tabs">
-      <button v-for="[k, l] in TABS" :key="k" :class="{ on: ui.tab === k }" @click="setTab(k)">{{ l }}</button>
+    <!-- zakładki: na szerokim ekranie menu boczne po lewej, na telefonie rząd przycisków nad treścią -->
+    <div class="main">
+      <nav class="tabs" aria-label="Zakładki">
+        <button v-for="[k, l] in TABS" :key="k" :class="{ on: ui.tab === k }" @click="setTab(k)">{{ l }}</button>
+      </nav>
+      <div class="panel"><component :is="PANELS[ui.tab]" /></div>
     </div>
-    <div class="panel"><component :is="PANELS[ui.tab]" /></div>
     <BottomBar />
   </div>
   <ScreenOverlay />

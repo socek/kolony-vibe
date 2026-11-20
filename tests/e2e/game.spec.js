@@ -331,3 +331,12 @@ test('opis wybranej technologii otwiera się w okienku na wierzchu drzewa', asyn
   await expect(pop).toBeHidden()
   await expect(page.locator('.card', { hasText: 'Badana:' })).toContainText('Działa magnetyczne')
 })
+
+test('na szerokim ekranie zakładki są menu bocznym po lewej', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 })
+  await newGame(page)
+  const nav = await page.locator('.tabs').boundingBox(), panel = await page.locator('.panel').boundingBox()
+  expect(nav.x + nav.width).toBeLessThanOrEqual(panel.x)
+  const b = page.locator('.tabs button')
+  expect((await b.nth(1).boundingBox()).y).toBeGreaterThan((await b.nth(0).boundingBox()).y)
+})
