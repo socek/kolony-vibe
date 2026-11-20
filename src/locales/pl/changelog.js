@@ -3,6 +3,7 @@ export default {
   'log.wip': 'w przygotowaniu',
   'log.v.0.4': '0.4 (in development)',
   'log.items.0.4': [
+    'Przeludnienie mocniej obniża morale: −2 od razu, a do tego 0,7 pkt za każdy 1% mieszkańców ponad pojemność modułów (najwyżej −45).',
     'Do jednego miejsca może naraz iść tylko jedna wyprawa – kolejną wyślesz tam po powrocie poprzedniej.',
     'Gdy nie ma już nic do zbadania, raport nie ostrzega „laboratoria nie mają projektu” (wcześniej technologie z innych scenariuszy liczyły się jako niezbadane), a prognoza i zakładka TECHNOLOGIE piszą „wszystko zbadane”.',
     'W rozbiciu „zdolnych do pracy” (PRACOWNICY) pod morale widać, ile punktów zabiera syntetyczne jedzenie.',

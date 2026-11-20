@@ -3,6 +3,7 @@ export default {
   'log.wip': 'in preparation',
   'log.v.0.4': '0.4 (in development)',
   'log.items.0.4': [
+    'Overcrowding lowers morale a bit more: −2 straight away, plus 0.7 points for every 1% of residents above housing capacity (at most −45).',
     'Only one expedition at a time can head to the same destination – send the next one after the previous one returns.',
     'When there is nothing left to research, the report no longer warns that the labs have no project (technologies from other scenarios used to count as unresearched), and the forecast and TECHNOLOGIES tab say “everything researched”.',
     'The able-to-work breakdown (WORKERS) shows under morale how many points synthetic food takes away.',

@@ -117,7 +117,8 @@ export function calc(s) {
   const faunaRed = 1 - Math.pow(0.7, (b.fence || 0) * (M.fence || 0) * f), tameRate = (b.pen || 0) * (E.pen || 0) * 0.2
   const tameMor = Math.min(10, (s.tamed || 0) * 0.2), iceProd = out('icefac') * f
   const def = (b.gun || 0) * M.gun * f * (t.targeting ? 1.5 : 1) * (1 + lawFx(s, 'def')), defRed = 1 - Math.pow(0.75, def)
-  const crowd = s.pop > cap ? Math.min(40, (s.pop - cap) / Math.max(cap, 1) * 60) : 0
+  // przeludnienie: −2 morale od razu, do tego 0,7 pkt za każdy 1% ponad pojemność modułów (najwyżej −45)
+  const crowd = s.pop > cap + 0.5 ? Math.min(45, 2 + (s.pop - cap) / Math.max(cap, 1) * 70) : 0
   const unempPen = s.pop > 0 ? unemp / s.pop * 30 : 0, black = (1 - f) * 30, starv = shortRatio * 40
   // syntetyczne jedzenie nie smakuje: kara proporcjonalna do jego udziału w diecie (do −15, gdy całe jest z syntezatorów)
   const synthMor = foodCons > 0 ? SYNTH_MOR * Math.min(1, synthFood / foodCons) : 0

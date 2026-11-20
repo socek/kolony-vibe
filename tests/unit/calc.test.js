@@ -139,3 +139,14 @@ describe('calc – syntezator żywności', () => {
     expect(c.synthMor).toBeGreaterThan(0)
   })
 })
+
+describe('calc – przeludnienie', () => {
+  it('obniża morale: −2 od razu i 0,7 pkt za każdy 1% ponad pojemność', () => {
+    const s = newState(); s.b.house = 2; s.pop = 120
+    expect(calc(s).crowd).toBe(0)
+    s.pop = 132
+    expect(calc(s).crowd).toBeCloseTo(2 + 7)
+    s.pop = 1000
+    expect(calc(s).crowd).toBe(45)
+  })
+})
