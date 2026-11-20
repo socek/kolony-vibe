@@ -3,6 +3,7 @@ export default {
   'log.wip': 'w przygotowaniu',
   'log.v.0.4': '0.4 (in development)',
   'log.items.0.4': [
+    'Prognoza w raporcie pokazuje braki ludzi: ilu brakuje rąk do pracy i ilu specjalistów każdego rodzaju brakuje do celu.',
     'Nowa zakładka KOLONIA: pikselowa mapa kolonii – budynki w strefach, place budowy z postępem, migające awarie i spacerujący koloniści. Wszystkie budynki mają teraz własne ikonki.',
     'Udostępnianie wyniku po końcu gry: systemowe okno udostępniania (na komputerze – kopiowanie do schowka) i obrazek z wynikiem w stylu C64.',
     'Zapisy gry (menu → ZAPISY GRY): 3 sloty na ręczne zapisy oraz przenoszenie gry między urządzeniami kodem albo plikiem (WCZYTAJ GRĘ na ekranie startowym).',

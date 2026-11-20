@@ -3,6 +3,7 @@ export default {
   'log.wip': 'in preparation',
   'log.v.0.4': '0.4 (in development)',
   'log.items.0.4': [
+    'The report forecast shows people shortages: how many workers are missing and how many specialists of each type are below target.',
     'New COLONY tab: a pixel map of the colony – buildings in zones, construction sites with progress, blinking breakdowns and colonists walking around. All buildings now have their own icons.',
     'Sharing the result after the game: the system share sheet (copying to the clipboard on computers) and a C64-style image with your result.',
     'Saved games (menu → SAVED GAMES): 3 slots for manual saves and moving a game between devices with a code or a file (LOAD GAME on the start screen).',

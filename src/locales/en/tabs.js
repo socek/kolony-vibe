@@ -3,6 +3,8 @@ import { enForm } from '../../plural.js'
 // Tabs: report (forecast)
 export default {
   'rp.title': p => !p.d ? 'REPORT' : p.d === 1 ? 'REPORT FOR THE LAST DAY' : 'REPORT FOR THE LAST ' + p.d + ' DAYS',
+  'rp.lackWork': p => p.n + ' ' + enForm(p.n, 'worker', 'workers') + ' short', 'rp.workOf': 'able {a} / needed {b}', 'rp.enoughWork': 'enough', 'rp.free': 'free: {n}',
+  'rp.toTarget': 'below target', 'rp.specOk': 'no shortages',
   'rp.forecast': 'FORECAST FOR THE NEXT DAY', 'rp.eff': 'Efficiency', 'rp.build': 'Construction', 'rp.stalled': 'stalled',
   'rp.eta': '{d} to go', 'rp.sites': 'construction sites: {n}',
   'rp.famine': 'FAMINE', 'rp.famineDeaths': p => 'day ' + p.d + '/' + p.max + ' – about ' + p.n + ' ' + enForm(p.n, 'person', 'people') + ' will die',

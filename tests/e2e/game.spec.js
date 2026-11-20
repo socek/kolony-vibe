@@ -505,3 +505,10 @@ test('zakładka KOLONIA: mapa z budynkami i placem budowy', async ({ page }) => 
   await expect(page.locator('.mtile.site')).toHaveCount(1)
   await expect(page.getByText('budynki: 14 · place budowy: 1 · awarie: 0')).toBeVisible()
 })
+
+test('prognoza pokazuje braki pracowników i specjalistów', async ({ page }) => {
+  await newGame(page)
+  const f = page.locator('.card', { hasText: 'PROGNOZA' })
+  await expect(f.locator('.row', { hasText: 'Pracownicy' })).toContainText('brakuje 1 pracownika')
+  await expect(f.locator('.row', { hasText: 'Specjaliści' })).toContainText('inżynierowie −20')
+})

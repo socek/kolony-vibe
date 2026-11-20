@@ -9,6 +9,8 @@ import { num, fmt, daysTxt } from '../../game/format.js'
 import { techPct, techEta } from '../../game/calc.js'
 import { repLines } from '../../game/report.js'
 import { settings } from '../../game/stops.js'
+import { SPEC } from '../../game/constants.js'
+import { specDeficit } from '../../game/specialists.js'
 import PixelIcon from '../PixelIcon.vue'
 import MeterBar from '../MeterBar.vue'
 import SignedNum from '../SignedNum.vue'
@@ -24,6 +26,9 @@ const nextMor = computed(() => Math.max(0, Math.min(100, s.value.mor + (c.value.
 const prog = computed(() => scenarioOf(s.value).goal.progress(s.value))
 const site = computed(() => s.value.q.length ? { name: BLD[s.value.q[0].k].n, st: c.value.sites[0] } : null)
 const R = Math.round
+// braki ludzi: pracownicy (rąk do pracy) i specjaliści względem celów (zakładka PRACOWNICY)
+const missing = computed(() => Math.max(0, Math.ceil(c.value.needed - c.value.workforce)))
+const specLack = computed(() => { const d = specDeficit(s.value, c.value); return Object.keys(SPEC).filter(T => d.by[T] > 0).map(T => ({ T, n: d.by[T] })) })
 const depDays = computed(() => c.value.minProd > 0 ? Math.floor(c.value.deps / c.value.minProd) : null)
 </script>
 
@@ -35,6 +40,15 @@ const depDays = computed(() => c.value.minProd > 0 ? Math.floor(c.value.deps / c
     <div class="t">{{ t('rp.forecast') }}</div>
     <div class="row"><span><PixelIcon name="work" />{{ t('rp.eff') }}</span><span>{{ R(eff * 100) }}%</span></div>
     <MeterBar :value="eff" :max="1" :cls="eff < 1 ? 'warn' : ''" />
+    <div style="height:6px"></div>
+    <div class="row"><span><PixelIcon name="pop" />{{ t('tile.work') }}</span>
+      <span v-if="missing" class="neg">{{ t('rp.lackWork', { n: missing }) }} <span class="small">({{ t('rp.workOf', { a: fmt(c.workforce), b: fmt(Math.ceil(c.needed)) }) }})</span></span>
+      <span v-else class="pos">{{ t('rp.enoughWork') }} <span class="small">({{ t('rp.free', { n: fmt(c.unemp) }) }})</span></span>
+    </div>
+    <div class="row"><span><PixelIcon name="lab" />{{ t('wt.spec').charAt(0) + t('wt.spec').slice(1).toLowerCase() }}</span>
+      <span v-if="specLack.length"><template v-for="(x, i) in specLack" :key="x.T"><span :class="x.T === 'sci' ? 'neg' : 'warn'">{{ SPEC[x.T].n.toLowerCase() }} −{{ x.n }}</span>{{ i < specLack.length - 1 ? ', ' : '' }}</template> <span class="small">({{ t('rp.toTarget') }})</span></span>
+      <span v-else class="pos">{{ t('rp.specOk') }}</span>
+    </div>
     <div style="height:6px"></div>
     <div v-if="site" class="row">
       <span><PixelIcon name="build" />{{ t('rp.build') }}</span>

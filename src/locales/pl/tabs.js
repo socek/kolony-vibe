@@ -3,6 +3,8 @@ import { plForm } from '../../plural.js'
 // Zakładki: raport (prognoza)
 export default {
   'rp.title': p => !p.d ? 'RAPORT' : p.d === 1 ? 'RAPORT Z OSTATNIEGO DNIA' : 'RAPORT Z OSTATNICH ' + p.d + ' DNI',
+  'rp.lackWork': p => 'brakuje ' + p.n + ' ' + plForm(p.n, 'pracownika', 'pracowników', 'pracowników'), 'rp.workOf': 'zdolnych {a} / potrzeba {b}', 'rp.enoughWork': 'wystarcza', 'rp.free': 'wolnych: {n}',
+  'rp.toTarget': 'do celu', 'rp.specOk': 'bez braków',
   'rp.forecast': 'PROGNOZA NA NASTĘPNY DZIEŃ', 'rp.eff': 'Wydajność', 'rp.build': 'Budowa', 'rp.stalled': 'stoi',
   'rp.eta': 'jeszcze {d}', 'rp.sites': 'placów budowy: {n}',
   'rp.famine': 'GŁÓD', 'rp.famineDeaths': p => 'dzień ' + p.d + '/' + p.max + ' – zginie ok. ' + p.n + ' ' + plForm(p.n, 'osoba', 'osoby', 'osób'),
