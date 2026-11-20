@@ -16,6 +16,7 @@ h1{font-family:'Press Start 2P',monospace;font-size:17px;color:var(--white);marg
 .tabs{display:flex;flex-wrap:wrap;gap:4px;margin:8px 0 10px}
 button{font-family:'VT323',monospace;font-size:21px;background:var(--text);color:var(--screen);border:0;padding:4px 10px;cursor:pointer;border-radius:0}
 button:hover{background:var(--white)}
+button.bug{background:var(--red)}button.support{background:var(--green)}button.bug:hover,button.support:hover{background:var(--white)}
 button:disabled{opacity:.35;cursor:not-allowed;background:var(--text)}
 .tabs button{background:transparent;color:var(--text);border:2px solid var(--text)}
 .tabs button.on{background:var(--text);color:var(--screen)}

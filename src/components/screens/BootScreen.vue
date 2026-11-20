@@ -9,6 +9,7 @@ const shown = ref(0)
 let timer
 onMounted(() => { timer = setInterval(() => { shown.value++; if (shown.value > LINES.length) clearInterval(timer) }, 220) })
 onUnmounted(() => clearInterval(timer))
+import LinkButtons from '../LinkButtons.vue'
 </script>
 
 <template>
@@ -23,6 +24,7 @@ onUnmounted(() => clearInterval(timer))
         <button @click="showScreen('help')">ZASADY</button>
         <button @click="showScreen('about')">O GRZE</button>
         <button @click="showScreen('log')">ZMIANY</button>
+        <LinkButtons />
       </div>
     </template>
   </div>

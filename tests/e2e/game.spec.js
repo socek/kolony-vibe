@@ -248,3 +248,12 @@ test('WRÓĆ z zasad, o grze i zmian wraca tam, skąd je otwarto', async ({ page
   await page.getByRole('button', { name: 'WRÓĆ', exact: true }).click()
   await expect(page.getByRole('button', { name: 'WRÓĆ DO GRY' })).toBeVisible()
 })
+
+test('przyciski ZGŁOŚ BŁĄD i WESPRZYJ otwierają strony w nowej karcie', async ({ page }) => {
+  await page.goto('/')
+  await page.evaluate(() => { window.opened = []; window.open = u => { window.opened.push(u) } })
+  await page.getByRole('button', { name: 'ZGŁOŚ BŁĄD' }).click()
+  await page.getByRole('button', { name: 'WESPRZYJ' }).click()
+  expect(await page.evaluate(() => window.opened)).toEqual(['https://github.com/socek/kolony-vibe/issues/new', 'https://cuplink.to/socek'])
+  await page.screenshot({ path: process.env.SHOT || 'test-results/links.png' })
+})

@@ -2,6 +2,7 @@
 import { newGame, closeScreen, showScreen } from '../../store.js'
 import { audio } from '../../game/audio.js'
 import { settings } from '../../game/stops.js'
+import LinkButtons from '../LinkButtons.vue'
 </script>
 
 <template>
@@ -16,6 +17,7 @@ import { settings } from '../../game/stops.js'
     <button @click="showScreen('help')">ZASADY</button>
     <button @click="showScreen('about')">O GRZE</button>
     <button @click="showScreen('log')">ZMIANY</button>
+    <LinkButtons />
     <button @click="newGame">NOWA GRA</button>
   </div>
   </div>
