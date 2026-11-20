@@ -41,7 +41,8 @@ describe('endTurn – podstawy', () => {
     const s = newState()
     endTurn(s); endTurn(s, true); endTurn(s, true)
     expect(s.repDays).toBe(3)
-    expect(texts(s)).toMatch(/Baterie naładowane \(przez 3 dni\)\./)
+    expect(texts(s)).toMatch(/Baterie naładowane\. /)
+    expect(texts(s)).toMatch(/Brak rąk do pracy \(przez 3 dni\)/)
   })
 })
 

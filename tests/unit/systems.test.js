@@ -148,6 +148,13 @@ describe('komunikaty o bateriach', async () => {
     expect(keys(s)).not.toContain('waste')
     expect(REP.batFull.f({}, 1)).toBe('Baterie naładowane.')
   })
+  it('„Baterie naładowane” tylko w pierwszym dniu pełnych baterii', () => {
+    const s = newState('moon'); s.energy = 1e6; s.b.power = 20
+    endTurn(s); expect(keys(s)).toContain('batFull')
+    endTurn(s); expect(keys(s)).not.toContain('batFull')
+    s.energy = 0; s.b.power = 0; endTurn(s); expect(keys(s)).not.toContain('batFull')
+    s.energy = 1e6; s.b.power = 20; endTurn(s); expect(keys(s)).toContain('batFull')
+  })
 })
 
 describe('skrócone komunikaty', async () => {

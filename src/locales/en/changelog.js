@@ -3,6 +3,7 @@ export default {
   'log.wip': 'in preparation',
   'log.v.0.4': '0.4 (in development)',
   'log.items.0.4': [
+    'The “Batteries charged” note appears only on the first day the batteries are full, not every day.',
     'The Cold stores and Mineral warehouses rows are gone from the report forecast (capacity is shown on the resource tiles).',
     'The report forecast shows people shortages: how many workers are missing and how many specialists of each type are below target.',
     'New COLONY tab: a pixel map of the colony – buildings in zones, construction sites with progress, blinking breakdowns and colonists walking around. All buildings now have their own icons.',

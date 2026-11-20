@@ -45,7 +45,8 @@ export function endTurn(s, acc, auto = {}) {
   s.prev = snapshot(s)
   s.energy = c.enStore
   if (!c.enCap) add('nobat')
-  else if (c.enStore >= c.enCap - 0.01) add('batFull')
+  // „Baterie naładowane” tylko w pierwszym dniu, w którym baterie się zapełniły
+  else if ((now.batFull = c.enStore >= c.enCap - 0.01) && !was.batFull) add('batFull')
   s.food += c.foodProd - c.foodCons
   if (s.food < 0) s.food = 0
   const deaths = c.hungerDeaths, hdPrev = s.hungerDays || 0
