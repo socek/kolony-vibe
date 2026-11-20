@@ -3,6 +3,7 @@ import { mount } from '@vue/test-utils'
 import { nextTick } from 'vue'
 import { game, ui } from '../../src/store.js'
 import { newState } from '../../src/game/state.js'
+import { TECH } from '../../src/game/constants.js'
 import { settings, stopDefaults } from '../../src/game/stops.js'
 import App from '../../src/App.vue'
 import ResourceTiles from '../../src/components/ResourceTiles.vue'
@@ -99,6 +100,14 @@ describe('liczniki na zakładkach', () => {
     expect(tab('WYPRAWY').find('.tcount').text()).toBe('1')
     game.s.q = []; game.s.exp = []; await nextTick()
     expect(tab('BUDOWA').find('.tcount').exists()).toBe(false)
+  })
+  it('TECHNOLOGIE zmienia kolor, gdy wszystko zbadane', async () => {
+    const w = mount(App)
+    const tech = () => w.findAll('.tabs button').find(b => b.text() === 'TECHNOLOGIE')
+    expect(tech().classes()).not.toContain('alldone')
+    for (const k of Object.keys(TECH)) game.s.tech[k] = true
+    await nextTick()
+    expect(tech().classes()).toContain('alldone')
   })
 })
 

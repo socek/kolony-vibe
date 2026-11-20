@@ -3,8 +3,11 @@ import { watchEffect, watch, ref, nextTick, computed } from 'vue'
 import { ui, game, setTab, syncMusic } from './store.js'
 import { t } from './i18n.js'
 watchEffect(syncMusic)
-import { TABS } from './game/constants.js'
+import { TABS, TECH } from './game/constants.js'
+import { techAvail } from './game/scenarios.js'
 // liczniki na przyciskach zakładek: budynki w budowie i trwające wyprawy
+// wszystkie technologie dostępne w scenariuszu są zbadane – przycisk TECHNOLOGIE ma inny kolor
+const allDone = computed(() => Object.keys(TECH).every(k => !techAvail(game.s, k) || game.s.tech[k]))
 const counts = computed(() => ({ budowa: game.s.q.length, wyprawy: (game.s.exp || []).length }))
 import TopStatus from './components/TopStatus.vue'
 import ResourceTiles from './components/ResourceTiles.vue'
@@ -43,7 +46,7 @@ watch(() => ui.turnsDone, async () => {
     <!-- zakładki: na szerokim ekranie menu boczne po lewej, na telefonie rząd przycisków nad treścią -->
     <div class="main">
       <nav class="tabs" aria-label="Zakładki">
-        <button v-for="[k, l] in TABS" :key="k" :class="{ on: ui.tab === k }" :title="counts[k] ? t('tab.count.' + k, { n: counts[k] }) : null" @click="setTab(k)">{{ l }}<span v-if="counts[k]" class="tcount" aria-hidden="true">{{ counts[k] }}</span></button>
+        <button v-for="[k, l] in TABS" :key="k" :class="{ on: ui.tab === k, alldone: k === 'nauka' && allDone }" :title="counts[k] ? t('tab.count.' + k, { n: counts[k] }) : k === 'nauka' && allDone ? t('tab.allDone') : null" @click="setTab(k)">{{ l }}<span v-if="counts[k]" class="tcount" aria-hidden="true">{{ counts[k] }}</span></button>
       </nav>
       <div ref="panel" class="panel"><component :is="PANELS[ui.tab]" /></div>
     </div>
