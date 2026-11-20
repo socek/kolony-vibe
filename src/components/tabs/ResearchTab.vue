@@ -48,6 +48,12 @@ const layout = computed(() => {
 
 const queueList = computed(() => (s.value.rq || []).map(k => TECH[k].n))
 const selInfo = computed(() => sel.value && info(sel.value))
+// zamykanie okienka z opisem klawiszem Esc
+const onKey = e => { if (e.key === 'Escape') sel.value = null }
+onMounted(() => window.addEventListener('keydown', onKey))
+onUnmounted(() => window.removeEventListener('keydown', onKey))
+// po akcji (kolejka, badaj teraz, usuń) okienko się zamyka
+const act = (f, k) => { f(k); sel.value = null }
 
 // strzałki wymagań rysowane na podstawie położenia bloków
 const grid = ref(null)
@@ -106,6 +112,24 @@ onUnmounted(() => ro && ro.disconnect())
     <div class="small">Kolejka: {{ queueList.length ? queueList.join(' → ') : 'pusta' }}</div>
   </div>
 
+  <!-- szczegóły wybranej technologii – okienko na wierzchu drzewa (kliknięcie obok albo Esc zamyka) -->
+  <div v-if="selInfo" class="tpop" @click.self="sel = null">
+  <div class="card tdetail" role="dialog" :aria-label="selInfo.t.n">
+    <div class="row"><span class="t">{{ selInfo.t.n }}</span><span :class="'st-' + selInfo.state">{{ STATE_TXT[selInfo.state] }}</span></div>
+    <div class="small">{{ selInfo.t.d }}</div>
+    <div class="small">Koszt: {{ selInfo.t.c }} pkt<template v-if="selInfo.pct > 0 && selInfo.state !== 'done'"> · postęp {{ Math.floor(selInfo.pct) }}%</template></div>
+    <div v-if="selInfo.t.req.length" class="small">Wymaga:
+      <template v-for="(r, i) in selInfo.t.req" :key="r"><span :class="s.tech[r] ? 'pos' : 'neg'">{{ TECH[r].n }}</span>{{ i < selInfo.t.req.length - 1 ? ', ' : '' }}</template>
+    </div>
+    <div class="btns">
+      <button v-if="canQueue(s, selInfo.k)" @click="act(research, selInfo.k)">DODAJ DO KOLEJKI</button>
+      <button v-if="selInfo.state === 'ready' || selInfo.state === 'queued'" :disabled="selInfo.state === 'queued' && !TECH[selInfo.k].req.every(r => s.tech[r])" @click="act(researchFirst, selInfo.k)">BADAJ TERAZ</button>
+      <button v-if="selInfo.state === 'queued' || selInfo.state === 'active'" @click="act(unresearch, selInfo.k)">USUŃ Z KOLEJKI</button>
+      <button @click="sel = null">ZAMKNIJ</button>
+    </div>
+  </div>
+  </div>
+
   <!-- schemat blokowy -->
   <div v-if="!narrow" class="ttree-wrap">
     <div class="ttree-head">
@@ -139,18 +163,4 @@ onUnmounted(() => ro && ro.disconnect())
     </template>
   </template>
 
-  <!-- szczegóły wybranej technologii -->
-  <div v-if="selInfo" class="card tdetail">
-    <div class="row"><span class="t">{{ selInfo.t.n }}</span><span :class="'st-' + selInfo.state">{{ STATE_TXT[selInfo.state] }}</span></div>
-    <div class="small">{{ selInfo.t.d }}</div>
-    <div class="small">Koszt: {{ selInfo.t.c }} pkt<template v-if="selInfo.pct > 0 && selInfo.state !== 'done'"> · postęp {{ Math.floor(selInfo.pct) }}%</template></div>
-    <div v-if="selInfo.t.req.length" class="small">Wymaga:
-      <template v-for="(r, i) in selInfo.t.req" :key="r"><span :class="s.tech[r] ? 'pos' : 'neg'">{{ TECH[r].n }}</span>{{ i < selInfo.t.req.length - 1 ? ', ' : '' }}</template>
-    </div>
-    <div class="btns">
-      <button v-if="canQueue(s, selInfo.k)" @click="research(selInfo.k)">DODAJ DO KOLEJKI</button>
-      <button v-if="selInfo.state === 'ready' || selInfo.state === 'queued'" :disabled="selInfo.state === 'queued' && !TECH[selInfo.k].req.every(r => s.tech[r])" @click="researchFirst(selInfo.k)">BADAJ TERAZ</button>
-      <button v-if="selInfo.state === 'queued' || selInfo.state === 'active'" @click="unresearch(selInfo.k)">USUŃ Z KOLEJKI</button>
-    </div>
-  </div>
 </template>

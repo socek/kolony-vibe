@@ -104,7 +104,9 @@ a{color:var(--cyan)}
 .st-locked{color:var(--red)}
 .tblock.sel{outline:2px dashed var(--white);outline-offset:2px}
 .tblock.tlist{width:100%;margin-top:6px}
-.tdetail{border:2px solid var(--text);padding:8px;margin-top:12px}
+/* okienko z opisem technologii na wierzchu drzewa (nad dolnym paskiem, pod animacją dnia) */
+.tpop{position:fixed;inset:0;z-index:15;background:rgba(20,12,60,.7);display:flex;align-items:center;justify-content:center;padding:16px}
+.tdetail{border:2px solid var(--white);padding:12px;margin:0;background:var(--screen);width:100%;max-width:480px;max-height:90vh;overflow:auto;box-shadow:6px 6px 0 rgba(0,0,0,.4)}
 .tarrow{stroke:var(--text);stroke-width:2}
 .tarrow.done{stroke:var(--green)}
 .tarrow.hi{stroke:var(--white);stroke-width:3}

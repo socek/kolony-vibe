@@ -10,6 +10,7 @@ export const versionLabel = (upper = false) => {
 export const CHANGELOG = [
   {
     v: '0.4 (in development)', d: 'w przygotowaniu', items: [
+      'Opis wybranej technologii otwiera się w okienku na wierzchu drzewa technologii, a nie na dole strony. Zamyka go przycisk ZAMKNIJ, kliknięcie obok albo Esc.',
       'Muzyka i dźwięki milkną, gdy ekran telefonu zgaśnie albo gra trafi do tła (inna karta, zminimalizowana przeglądarka), i wracają po powrocie do gry.',
       'Naprawiono: na telefonie technologie w zakładce TECHNOLOGIE nachodziły na dolny pasek z przyciskiem KONIEC DNIA.'
     ]
