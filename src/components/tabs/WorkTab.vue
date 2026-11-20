@@ -42,7 +42,7 @@ const setLimit = (j, v) => limit(j.k, v >= j.max ? null : v)
   <div class="card" style="border-top:0">
     <div class="row"><span><PixelIcon name="work" />{{ t('wt.able', { n: pct(c.workRate) }) }}</span><span>{{ fmt(c.workforce) }}</span></div>
     <div class="small" style="margin:2px 0 6px 12px">
-      <div v-for="x in parts" :key="x.k" class="row"><span>{{ x.n }}</span><span :class="{ pos: x.k !== 'base' && x.v > 0, neg: x.v < 0 }">{{ sgn(x) }}</span></div>
+      <div v-for="x in parts" :key="x.k" class="row" :style="x.sub ? 'padding-left:14px' : null"><span>{{ x.sub ? '└ ' : '' }}{{ x.n }}</span><span :class="{ pos: x.k !== 'base' && x.v > 0, neg: x.v < 0 }">{{ sgn(x) }}</span></div>
       <div>{{ t('wt.range', { a: pct(WORK_MIN), b: pct(WORK_MAX) }) }}</div>
     </div>
     <div class="row"><span>{{ t('wt.employed') }}</span><span>{{ fmt(c.workforce - c.unemp) }}</span></div>

@@ -111,5 +111,5 @@ export default {
   'state.homeDeposit': 'Home deposit', 'state.welcome': 'Welcome, Governor! Your colony ({n}) has {pop} settlers.',
   'state.goal': 'Goal: {g} within a year ({d} days).',
   'state.goalFree': 'Free play: no goal and no end of term – build as much as you like.',
-  'work.base': 'Base (children, the elderly and carers do not work)', 'work.hosp': 'Hospitals (fewer sick)', 'work.sick': 'Sick after an epidemic ({d})'
+  'work.base': 'Base (children, the elderly and carers do not work)', 'work.synth': 'of which synthetic food', 'work.hosp': 'Hospitals (fewer sick)', 'work.sick': 'Sick after an epidemic ({d})'
 }

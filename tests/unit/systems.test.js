@@ -1,3 +1,4 @@
+import { workParts, workRate } from '../../src/game/workforce.js'
 import { describe, it, expect, afterEach, vi } from 'vitest'
 import { newState, load, score } from '../../src/game/state.js'
 import { EVENTS } from '../../src/game/events.js'
@@ -154,6 +155,15 @@ describe('komunikaty o bateriach', async () => {
     const e = s.report.find(x => x.k === 'synth')
     expect(e.v.a).toBeGreaterThan(0)
     expect(REP.synth.f({ a: 12.4, _m: 3 }, 1)).toBe('Syntezatory wytworzyły 12 t żywności – syntetyczne jedzenie obniża morale (−3).')
+  })
+  it('rozbicie zdolnych do pracy pokazuje udział syntetycznego jedzenia, nie licząc go podwójnie', () => {
+    const s = newState(); s.pop = 400; s.b.house = 8; s.b.farm = 0; s.b.synth = 1; s.tech.synth = true
+    endTurn(s)
+    const p = workParts(s).find(x => x.k === 'synth')
+    expect(p.v).toBeLessThan(0)
+    expect(p.sub).toBe(true)
+    const sum = workParts(s).filter(x => !x.sub).reduce((a, x) => a + x.v, 0)
+    expect(workRate(s)).toBeCloseTo(Math.max(0.4, Math.min(0.8, sum)))
   })
   it('„Baterie naładowane” tylko w pierwszym dniu pełnych baterii', () => {
     const s = newState('moon'); s.energy = 1e6; s.b.power = 20

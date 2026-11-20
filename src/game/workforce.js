@@ -10,6 +10,10 @@ export function workParts(s) {
   const hosp = s.hospRed || 0, parts = [{ k: 'base', n: t('work.base'), v: WORK_BASE }]
   const mor = Math.max(-0.1, Math.min(0.1, ((s.mor ?? 50) - 50) / 50 * 0.1))
   if (Math.abs(mor) >= 0.001) parts.push({ k: 'mor', n: t('tile.mor'), v: mor })
+  // ile z tego zabiera syntetyczne jedzenie (s.synthMor – kara morale z poprzedniego dnia); sub – tylko informacja,
+  // już zawarta w linii morale, więc nie wchodzi do sumy
+  const sm = Math.min(0.1, (s.synthMor || 0) / 50 * 0.1)
+  if (sm >= 0.001) parts.push({ k: 'synth', n: t('work.synth'), v: -sm, sub: true })
   if (hosp > 0.001) parts.push({ k: 'hosp', n: t('work.hosp'), v: 0.05 * hosp })
   if (s.tech && s.tech.creche) parts.push({ k: 'creche', n: t('tech.creche.n'), v: 0.05 })
   { const w = lawFx(s, 'work'); if (w) parts.push({ k: 'law', n: t('law.part'), v: w }) }
@@ -18,7 +22,7 @@ export function workParts(s) {
 }
 
 export function workRate(s) {
-  return Math.max(WORK_MIN, Math.min(WORK_MAX, workParts(s).reduce((a, x) => a + x.v, 0)))
+  return Math.max(WORK_MIN, Math.min(WORK_MAX, workParts(s).reduce((a, x) => a + (x.sub ? 0 : x.v), 0)))
 }
 
 // epidemia: przez kilka dni część kolonistów nie może pracować

@@ -142,6 +142,7 @@ export function endTurn(s, acc, auto = {}) {
   if (s.cr < 0) add('debt')
   // szpitale z dzisiaj wpływają na jutrzejszą liczbę zdolnych do pracy; choroby mijają
   s.hospRed = c.hospRed
+  s.synthMor = c.synthMor // kara morale za syntetyczne jedzenie (do rozbicia „zdolnych do pracy”)
   if (s.sick > 0) s.sick = Math.max(0, s.sick - 1)
   s.mor = Math.max(0, Math.min(100, s.mor)); s.pop = Math.max(0, s.pop); s.energy = Math.min(s.energy, batCapOf(s))
   { const l = clampStore(s); edge('loss', l.food >= 1 || l.min >= 1); if (l.food > 0 || l.min > 0) add('loss', { f: l.food, m: l.min }) }

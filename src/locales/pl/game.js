@@ -108,5 +108,5 @@ export default {
   'state.homeDeposit': 'Złoże macierzyste', 'state.welcome': 'Witaj, gubernatorze! Twoja kolonia ({n}) liczy {pop} osadników.',
   'state.goal': 'Cel: {g} w ciągu roku ({d} dni).',
   'state.goalFree': 'Tryb swobodny: bez celu i bez końca kadencji – buduj, ile chcesz.',
-  'work.base': 'Bazowo (dzieci, seniorzy i opiekunowie nie pracują)', 'work.hosp': 'Szpitale (mniej chorych)', 'work.sick': 'Chorzy po epidemii ({d})'
+  'work.base': 'Bazowo (dzieci, seniorzy i opiekunowie nie pracują)', 'work.synth': 'w tym syntetyczne jedzenie', 'work.hosp': 'Szpitale (mniej chorych)', 'work.sick': 'Chorzy po epidemii ({d})'
 }

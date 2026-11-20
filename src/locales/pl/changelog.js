@@ -3,6 +3,7 @@ export default {
   'log.wip': 'w przygotowaniu',
   'log.v.0.4': '0.4 (in development)',
   'log.items.0.4': [
+    'W rozbiciu „zdolnych do pracy” (PRACOWNICY) pod morale widać, ile punktów zabiera syntetyczne jedzenie.',
     'Raport dnia podaje, ile żywności wytworzyły syntezatory (i o ile obniżyło to morale), a prognoza – ile z produkcji żywności przypada na syntezatory.',
     'Gdy wszystkie technologie są zbadane, przycisk TECHNOLOGIE zmienia kolor na zielony.',
     'Syntetyczne jedzenie obniża morale: kara rośnie z udziałem żywności z syntezatorów w dziennym spożyciu (do −15, gdy całe jedzenie jest syntetyczne). Widać ją w POLITYCE w składnikach morale.',
