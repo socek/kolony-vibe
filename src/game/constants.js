@@ -87,7 +87,7 @@ export const INFRA = ['battery', 'fridge', 'store', 'house', 'shield', 'platform
 export const JOBS = ['build', 'repair', 'farm', 'farm2', 'synth', 'power', 'power2', 'mine', 'mine2', 'school', 'hosp', 'rec', 'lab', 'port', 'gun', 'hunt', 'kelp', 'geo', 'icefac', 'fence', 'pen', 'gallery']
 // domyślna kolejność zadań (wyżej = pierwsze dostaje ludzi); gracz zmienia ją w zakładce PRACOWNICY
 export const JOB_ORDER = ['repair', 'farm', 'farm2', 'synth', 'kelp', 'hunt', 'power', 'power2', 'geo', 'build', 'mine', 'mine2', 'icefac', 'lab', 'hosp', 'school', 'rec', 'port', 'gun', 'fence', 'pen', 'gallery']
-export const TABS = [['raport'], ['budowa'], ['praca'], ['wyprawy'], ['rynek'], ['polityka'], ['nauka'], ['statystyki'], ['kolonia']]
+export const TABS = [['raport'], ['budowa'], ['praca'], ['prad'], ['wyprawy'], ['rynek'], ['polityka'], ['nauka'], ['statystyki'], ['kolonia']]
 export const RATIONS = [[0.75], [1], [1.25]]
 export const MDAYS = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
@@ -104,6 +104,11 @@ export const jobOrder = s => { const o = (s.order || []).filter(k => JOBS.includ
 // limit ludzi w zadaniu (0 = STOP, Infinity = bez limitu); infrastruktura nie ma limitu
 export const limOf = (s, k) => INFRA.includes(k) ? Infinity : ((s.lim || {})[k] ?? Infinity)
 export const jobOn = (s, k) => limOf(s, k) > 0
+// Prąd (zakładka ELEKTRYCZNOŚĆ): odbiorcy w kolejności gracza; s.plim[k] – ile budynków danego typu dostaje prąd
+// (brak = wszystkie). Ogrzewanie i pozostałe budynki (mieszkania, chłodnie, osłony…) są zasilane zawsze jako pierwsze.
+export const PWR_ORDER = ['farm', 'farm2', 'kelp', 'synth', 'hosp', 'mine', 'mine2', 'icefac', 'lab', 'school', 'port', 'rec', 'gun', 'fence', 'pen']
+export const pwrOrder = s => { const o = (s.pwr || []).filter(k => PWR_ORDER.includes(k)); return [...o, ...PWR_ORDER.filter(k => !o.includes(k))] }
+export const plimOf = (s, k) => (s.plim || {})[k] ?? Infinity
 export const jobName = k => k === 'build' || k === 'repair' || k === 'hunt' ? t('job.' + k) : BLD[k].n
 // pojemność magazynu danego surowca: żywność w chłodniach, minerały w magazynach minerałów
 export const capOf = (s, k) => k === 'food'

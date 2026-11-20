@@ -1,4 +1,4 @@
-import { moveJob, shiftJob, setLim, newSite, moveSite, shiftSite, setSiteLim } from './game/jobs.js'
+import { moveJob, shiftJob, setLim, movePwr, shiftPwr, setPlim, newSite, moveSite, shiftSite, setSiteLim } from './game/jobs.js'
 import { t } from './i18n.js'
 import { reactive, computed } from 'vue'
 import { BLD, TECH, DAYS, batCapOf } from './game/constants.js'
@@ -104,6 +104,10 @@ export function dismiss(T) { if (dismissSpec(game.s, T)) { beep(300, 0.06); pers
 export function moveTo(k, before) { moveJob(game.s, k, before); beep(600, 0.03); persist() }
 export function shift(k, d, visible) { if (shiftJob(game.s, k, d, visible)) { beep(600, 0.03); persist() } }
 export function limit(k, v) { setLim(game.s, k, v); persist() }
+// kolejność odbiorców prądu i liczba zasilanych budynków
+export function pwrTo(k, before) { movePwr(game.s, k, before); beep(600, 0.03); persist() }
+export function pwrShift(k, d, visible) { if (shiftPwr(game.s, k, d, visible)) { beep(600, 0.03); persist() } }
+export function pwrLimit(k, v) { setPlim(game.s, k, v); persist() }
 export function sendExp() { if (sendExpedition(game.s, ui.expRange, ui.expTeam, ui.expGoal, ui.expSol, ui.expEng)) { track('expedition', { range: ui.expRange, goal: ui.expGoal, team: ui.expTeam }); ui.expSol = 0; ui.expEng = 0; beep(440, 0.12); persist() } }
 export function neighborTrade(k) { if (nbTrade(game.s, k)) { beep(740, 0.05); persist() } }
 export function law(k) { if (toggleLaw(game.s, k, t)) { track('law', { law: k, on: game.s.laws.includes(k) }); beep(650, 0.08); persist() } }

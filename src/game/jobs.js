@@ -1,4 +1,4 @@
-import { jobOrder } from './constants.js'
+import { jobOrder, pwrOrder } from './constants.js'
 
 // Kolejność zadań i limity ludzi (zakładka PRACOWNICY)
 
@@ -48,4 +48,23 @@ export function setSiteLim(s, id, v) {
   if (!x) return
   if (v == null) delete x.lim
   else x.lim = Math.max(0, Math.round(v))
+}
+
+// Prąd: kolejność odbiorców (s.pwr) i liczba zasilanych budynków danego typu (s.plim; brak = wszystkie)
+export function movePwr(s, k, before) {
+  if (k === before) return
+  const o = pwrOrder(s).filter(x => x !== k), i = before == null ? -1 : o.indexOf(before)
+  o.splice(i < 0 ? o.length : i, 0, k)
+  s.pwr = o
+}
+export function shiftPwr(s, k, d, visible) {
+  const v = pwrOrder(s).filter(x => visible.includes(x)), i = v.indexOf(k), j = i + d
+  if (i < 0 || j < 0 || j >= v.length) return false
+  movePwr(s, k, d < 0 ? v[j] : (v[j + 1] ?? null))
+  return true
+}
+export function setPlim(s, k, v) {
+  if (!s.plim) s.plim = {}
+  if (v == null) delete s.plim[k]
+  else s.plim[k] = Math.max(0, Math.round(v))
 }

@@ -9,6 +9,7 @@ import App from '../../src/App.vue'
 import ResourceTiles from '../../src/components/ResourceTiles.vue'
 import BuildTab from '../../src/components/tabs/BuildTab.vue'
 import WorkTab from '../../src/components/tabs/WorkTab.vue'
+import PowerTab from '../../src/components/tabs/PowerTab.vue'
 import MarketTab from '../../src/components/tabs/MarketTab.vue'
 import ExpeditionsTab from '../../src/components/tabs/ExpeditionsTab.vue'
 import PolicyTab from '../../src/components/tabs/PolicyTab.vue'
@@ -91,6 +92,19 @@ describe('place budowy', () => {
   })
 })
 
+describe('elektryczność', () => {
+  it('lista odbiorców z suwakiem: odłączenie farm zapisuje limit', async () => {
+    const w = mount(PowerTab)
+    expect(w.findAll('[data-pwr]').length).toBeGreaterThan(0)
+    const farm = w.find('[data-pwr="farm"] input[type=range]')
+    await farm.setValue(0)
+    expect(game.s.plim.farm).toBe(0)
+    expect(w.find('[data-pwr="farm"]').text()).toContain('WYŁĄCZONE')
+    await farm.setValue(farm.attributes('max'))
+    expect(game.s.plim.farm).toBeUndefined()
+  })
+})
+
 describe('liczniki na zakładkach', () => {
   it('BUDOWA pokazuje liczbę budów, WYPRAWY liczbę wypraw', async () => {
     game.s.q = [{ k: 'farm', d: 0 }, { k: 'house', d: 0 }]; game.s.exp = [{ r: 'near', team: 4, left: 3, days: 3 }]
@@ -100,6 +114,11 @@ describe('liczniki na zakładkach', () => {
     expect(tab('WYPRAWY').find('.tcount').text()).toBe('1')
     game.s.q = []; game.s.exp = []; await nextTick()
     expect(tab('BUDOWA').find('.tcount').exists()).toBe(false)
+  })
+  it('IMPERIUM pokazuje liczbę zleceń (oferty i przyjęte)', async () => {
+    game.s.ord = { rep: 50, offers: [{ id: 1 }], active: [{ id: 2 }, { id: 3 }] }
+    const w = mount(App)
+    expect(w.findAll('.tabs button').find(b => b.text().startsWith('IMPERIUM')).find('.tcount').text()).toBe('3')
   })
   it('TECHNOLOGIE zmienia kolor, gdy wszystko zbadane', async () => {
     const w = mount(App)

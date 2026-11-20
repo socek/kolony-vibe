@@ -84,5 +84,19 @@ export default {
   'st.now': 'now {a} · min {b} · max {c}', 'st.day': 'day {d}',
   'hist.s.pop.n': 'Colonists', 'hist.s.mor.n': 'Morale %', 'hist.s.food.n': 'Food t', 'hist.s.energy.n': 'Energy kWh', 'hist.s.min.n': 'Minerals t',
   'hist.s.deps.n': 'Deposits t', 'hist.s.cr.n': 'Credits', 'hist.s.res.n': 'Research %', 'hist.s.work.n': 'Workers',
-  'hist.m.build.n': 'Completed buildings', 'hist.m.research.n': 'Discovered technologies', 'hist.m.bad.n': 'Dangerous events', 'hist.m.good.n': 'Good events', 'hist.m.choice.n': 'Decisions'
+  'hist.m.build.n': 'Completed buildings', 'hist.m.research.n': 'Discovered technologies', 'hist.m.bad.n': 'Dangerous events', 'hist.m.good.n': 'Good events', 'hist.m.choice.n': 'Decisions',
+  // zakładka ELEKTRYCZNOŚĆ
+  'pw.prod': 'Produced today',
+  'pw.stored': 'In batteries',
+  'pw.need': 'Demand',
+  'pw.covered': '{n}% covered',
+  'pw.info': 'Power from plants and batteries goes first to heating and infrastructure, then to buildings in order – from the top of the list. When power runs short, buildings at the bottom stop. The slider sets how many buildings of a type get power – switched-off ones produce nothing but use no energy either.',
+  'pw.infra': 'Heating and infrastructure',
+  'pw.infraInfo': 'Heating the homes ({h} kWh), cold stores, shields and other infrastructure buildings are always powered first.',
+  'pw.orderInfo': 'Power order: drag by ≡ (or use ▲ ▼) – higher means more important.',
+  'pw.none': 'You have no buildings yet whose power can be switched off.',
+  'pw.off': 'OFF',
+  'pw.all': 'all',
+  'pw.some': 'powered: {a} of {b}',
+  'pw.limitOf': 'Buildings with power: {n}',
 }

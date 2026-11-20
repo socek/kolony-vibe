@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { newState, migrate } from '../../src/game/state.js'
-import { jobOrder, JOBS, JOB_ORDER } from '../../src/game/constants.js'
-import { moveJob, shiftJob, setLim, newSite, moveSite, shiftSite, setSiteLim } from '../../src/game/jobs.js'
+import { jobOrder, pwrOrder, JOBS, JOB_ORDER } from '../../src/game/constants.js'
+import { moveJob, shiftJob, setLim, movePwr, shiftPwr, setPlim, newSite, moveSite, shiftSite, setSiteLim } from '../../src/game/jobs.js'
 import { calc } from '../../src/game/calc.js'
 import { endTurn } from '../../src/game/turn.js'
 
@@ -73,5 +73,43 @@ describe('place budowy: kolejność i limity', () => {
     const { s } = migrate(o)
     expect(s.q[0].id).toBeTruthy()
     expect(s.q[0].id).not.toBe(s.q[1].id)
+  })
+})
+
+describe('prąd: kolejność zasilania i limity', () => {
+  // kolonia bez elektrowni i z pustymi bateriami – prądu jest tyle, ile ustawimy w s.energy
+  const dark = () => {
+    const s = newState(); s.pop = 400; s.b.house = 8; s.b.farm = 4; s.b.mine = 2; s.b.lab = 1; s.spec.sci = 10
+    s.b.power = 0; s.b.power2 = 0; s.energy = 0
+    return s
+  }
+  it('infrastruktura i ogrzewanie dostają prąd pierwsze, potem odbiorcy po kolei', () => {
+    const s = dark(), c0 = calc(s)
+    s.energy = c0.enInfra + c0.enWant.farm // starczy tylko na infrastrukturę i farmy
+    const c = calc(s)
+    expect(c.gotInfra).toBeCloseTo(c.enInfra)
+    expect(c.P.farm).toBeCloseTo(1)
+    expect(c.P.mine).toBeCloseTo(0)
+    expect(c.minPot).toBeCloseTo(0)
+    movePwr(s, 'mine', 'farm')
+    const c2 = calc(s)
+    expect(c2.P.mine).toBeCloseTo(1)
+    expect(c2.P.farm).toBeLessThan(1)
+  })
+  it('limit odłącza część budynków: mniej produkcji i zużycia, ale to nie blackout', () => {
+    const s = newState(), full = calc(s)
+    setPlim(s, 'farm', 2)
+    const c = calc(s)
+    expect(c.P.farm).toBeCloseTo(2 / s.b.farm)
+    expect(c.enNeed).toBeLessThan(full.enNeed)
+    expect(c.f).toBe(1)
+    setPlim(s, 'farm', 0)
+    expect(calc(s).P.farm).toBe(0)
+  })
+  it('shiftPwr i setPlim', () => {
+    const s = newState(), vis = ['farm', 'mine', 'lab']
+    expect(shiftPwr(s, 'mine', -1, vis)).toBe(true)
+    expect(pwrOrder(s).filter(k => vis.includes(k))).toEqual(['mine', 'farm', 'lab'])
+    setPlim(s, 'lab', null); expect(s.plim.lab).toBeUndefined()
   })
 })

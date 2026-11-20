@@ -3,6 +3,8 @@ export default {
   'log.wip': 'in preparation',
   'log.v.0.4': '0.4 (in development)',
   'log.items.0.4': [
+    'New POWER tab: the order in which buildings get power (drag by ≡ or use ▲ ▼) and a slider for how many buildings of a type are powered. Heating and infrastructure are always powered first. In a shortage the buildings at the bottom of the list stop – instead of production dropping evenly everywhere. The 0 key opens the tenth tab.',
+    'The EMPIRE button shows the number of HUU orders – offers and accepted ones.',
     'Overcrowding lowers morale a bit more: −2 straight away, plus 0.7 points for every 1% of residents above housing capacity (at most −45).',
     'Only one expedition at a time can head to the same destination – send the next one after the previous one returns.',
     'When there is nothing left to research, the report no longer warns that the labs have no project (technologies from other scenarios used to count as unresearched), and the forecast and TECHNOLOGIES tab say “everything researched”.',

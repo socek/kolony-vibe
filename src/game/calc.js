@@ -1,5 +1,5 @@
 import { t } from '../i18n.js'
-import { BLD, TECH, MAINT, INFRA, JOBS, HUNGER_MAX, SPEC, SPEC_REQ, SPEC_BONUS, techIn, jobOrder, limOf, jobOn, capOf, batCapOf, houseCapOf } from './constants.js'
+import { BLD, TECH, MAINT, INFRA, JOBS, HUNGER_MAX, SPEC, SPEC_REQ, SPEC_BONUS, techIn, PWR_ORDER, pwrOrder, plimOf, jobOrder, limOf, jobOn, capOf, batCapOf, houseCapOf } from './constants.js'
 import { daysTxt } from './format.js'
 import { depTotal } from './expeditions.js'
 import { condMul, repairNeed, REPAIR_PER_WORKER } from './wear.js'
@@ -80,7 +80,7 @@ export function calc(s) {
     return { a, need, cap, rate, pct: Math.min(100, x.d / B.bt * 100), eta: rate > 0 ? Math.ceil((B.bt - x.d) / rate) : Infinity }
   })
 
-  let needed = 0, enNeed = s.pop * (0.033 + sea.heat) // zimą dochodzi ogrzewanie
+  let needed = 0
   for (const k in wNeed) needed += wCap[k] ?? wNeed[k]
   // produkcja z budynku: liczba × wydajność × obsada
   const out = k => (b[k] || 0) * BLD[k].p * M[k]
@@ -90,13 +90,32 @@ export function calc(s) {
   // syntezator nie robi zapasów: wytwarza tylko tyle, ile brakuje do dziennego spożycia ponad inne źródła,
   // i zużywa prąd proporcjonalnie do wykorzystania (nieużywany – wcale)
   const synthPot = out('synth'), synthUse = synthPot > 0 ? Math.min(1, Math.max(0, foodCons - otherFood) / synthPot) : 0
-  for (const k in BLD) enNeed += b[k] * BLD[k].en * E[k] * (k === 'synth' ? synthUse : 1)
   const e = needed > 0 ? Math.min(1, workforce / needed) : 1
   const enProd = (out('power') + out('power2')) * sea.solar + out('geo') // słońce zależy od pory roku
-  const f = enNeed > 0 ? Math.min(1, (s.energy + enProd) / enNeed) : 1
-  const synthFood = synthPot * synthUse * f, foodProd = otherFood * f + synthFood
-  const minPot = (out('mine') + out('mine2')) * f, deps = depTotal(s), minProd = Math.min(minPot, deps), resProd = b.lab * BLD.lab.p * M.lab * f * (1 + lawFx(s, 'res'))
-  const taxInc = s.pop * s.tax * 0.0167 * (1 + lawFx(s, 'tax')), trade = b.port * BLD.port.p * M.port * f, maint = nb * MAINT + lawFx(s, 'cr')
+
+  // Prąd: najpierw ogrzewanie i infrastruktura (mieszkania, chłodnie, osłony…), potem odbiorcy w kolejności gracza,
+  // każdy typ najwyżej dla tylu budynków, ile ustawiono w zakładce ELEKTRYCZNOŚĆ.
+  // P[k] – jaka część budynków danego typu pracuje z prądem (0..1); f – jaką część zapotrzebowania pokryto.
+  const enUse = k => b[k] * BLD[k].en * E[k] * (k === 'synth' ? synthUse : 1)
+  let enLeft = s.energy + enProd
+  const give = n => { const g = Math.min(enLeft, n); enLeft -= g; return g }
+  const heat = s.pop * (0.033 + sea.heat) // zimą dochodzi ogrzewanie
+  const fixed = Object.keys(BLD).filter(k => BLD[k].en > 0 && !PWR_ORDER.includes(k))
+  const enInfra = heat + fixed.reduce((a, k) => a + enUse(k), 0), gotInfra = give(enInfra)
+  const P = {}, enWant = {}, enGot = {}
+  for (const k of fixed) P[k] = enInfra > 0 ? gotInfra / enInfra : 1
+  let enNeed = enInfra, enDone = gotInfra
+  for (const k of pwrOrder(s)) {
+    const share = b[k] > 0 ? Math.min(1, plimOf(s, k) / b[k]) : 0, want = enUse(k) * share, g = give(want)
+    P[k] = want > 0 ? share * g / want : share
+    enWant[k] = want; enGot[k] = g; enNeed += want; enDone += g
+  }
+  const f = enNeed > 0 ? enDone / enNeed : 1
+  const pOut = k => out(k) * (P[k] ?? 1)
+  const synthFood = synthPot * synthUse * (P.synth ?? 1)
+  const foodProd = (pOut('farm') + pOut('farm2')) * sea.food * (mods.farmMul || 1) + pOut('kelp') + huntFood + synthFood
+  const minPot = pOut('mine') + pOut('mine2'), deps = depTotal(s), minProd = Math.min(minPot, deps), resProd = pOut('lab') * (1 + lawFx(s, 'res'))
+  const taxInc = s.pop * s.tax * 0.0167 * (1 + lawFx(s, 'tax')), trade = pOut('port'), maint = nb * MAINT + lawFx(s, 'cr')
   const unemp = avail
   const foodAfter = s.food + foodProd - foodCons
   const shortRatio = foodAfter < 0 && foodCons > 0 ? Math.min(1, -foodAfter / foodCons) : 0
@@ -105,18 +124,18 @@ export function calc(s) {
   const hd = s.hungerDays || 0, starving = shortRatio > 0
   const hungerNext = starving ? hd + 1 : (s.ration >= 1 ? 0 : hd)
   // szpitale (obsadzone przez naukowców): słabsze epidemie, mniej zgonów z głodu, szybszy przyrost
-  const hospRed = 1 - Math.pow(0.6, (b.hosp || 0) * E.hosp * f)
+  const hospRed = 1 - Math.pow(0.6, (b.hosp || 0) * E.hosp * P.hosp)
   const hungerDeaths = !starving ? 0 : hungerNext >= HUNGER_MAX ? s.pop : s.pop * 0.012 * hungerNext * (0.5 + 0.5 * shortRatio) * (1 - 0.3 * hospRed)
   // szkoły: tylu specjalistów dziennie kształcą
-  const train = (b.school || 0) * E.school * 0.25
+  const train = (b.school || 0) * E.school * P.school * 0.25
   // brak specjalistów na stanowiskach tylko dla nich
   const sciMissing = SPEC_REQ.reduce((a, k) => a + wNeed[k] - (specA[k] || 0), 0)
-  const recB = 20 * (1 - Math.pow(0.75, b.rec * E.rec * f * (t.holo ? 2 : 1)))
+  const recB = 20 * (1 - Math.pow(0.75, b.rec * E.rec * P.rec * (t.holo ? 2 : 1)))
   // obrona: obsadzone i zasilone działa; każde kolejne daje coraz mniej
   // fauna (Mruczysko): ogrodzenia soniczne zmniejszają straty; zagrody oswajają mruczki
-  const faunaRed = 1 - Math.pow(0.7, (b.fence || 0) * (M.fence || 0) * f), tameRate = (b.pen || 0) * (E.pen || 0) * 0.2
-  const tameMor = Math.min(10, (s.tamed || 0) * 0.2), iceProd = out('icefac') * f
-  const def = (b.gun || 0) * M.gun * f * (t.targeting ? 1.5 : 1) * (1 + lawFx(s, 'def')), defRed = 1 - Math.pow(0.75, def)
+  const faunaRed = 1 - Math.pow(0.7, (b.fence || 0) * (M.fence || 0) * P.fence), tameRate = (b.pen || 0) * (E.pen || 0) * P.pen * 0.2
+  const tameMor = Math.min(10, (s.tamed || 0) * 0.2), iceProd = pOut('icefac')
+  const def = (b.gun || 0) * M.gun * P.gun * (t.targeting ? 1.5 : 1) * (1 + lawFx(s, 'def')), defRed = 1 - Math.pow(0.75, def)
   // przeludnienie: −2 morale od razu, do tego 0,7 pkt za każdy 1% ponad pojemność modułów (najwyżej −45)
   const crowd = s.pop > cap + 0.5 ? Math.min(45, 2 + (s.pop - cap) / Math.max(cap, 1) * 70) : 0
   const unempPen = s.pop > 0 ? unemp / s.pop * 30 : 0, black = (1 - f) * 30, starv = shortRatio * 40
@@ -125,8 +144,8 @@ export function calc(s) {
   let mt = 55 - (s.tax - 10) * 1.5 + (s.ration - 1) * 40 + recB + tameMor - crowd - unempPen - black - starv - synthMor - (s.cr < 0 ? 10 : 0) + lawFx(s, 'mor')
   mt = Math.max(0, Math.min(100, mt))
   const foodCap = capOf(s, 'food'), minCap = capOf(s, 'min'), foodWaste = Math.max(0, foodAfter - foodCap), minWaste = Math.max(0, s.min + minProd - minCap)
-  const enStore = Math.max(0, Math.min(enCap, s.energy + enProd - enNeed * f)), enWaste = Math.max(0, s.energy + enProd - enNeed * f - enCap)
-  return { faunaRed, tameRate, tameMor, iceProd, huntFood, season: seasonOf(s),  repairPts, E, M, specA, ordA, wCap, synthPot, synthUse, synthFood, synthMor, sciMissing, train, hospRed, spTot, wNeed, builders, sites, foodCap, minCap, foodWaste, minWaste, enCap, enStore, enWaste, cap, workforce, workRate: workRateV, needed, e, f, enProd, enNeed, foodProd, foodCons, minPot, deps, minProd, resProd, taxInc, trade, maint, unemp, shortRatio, hungerNext, hungerDeaths, mt, crowd, unempPen, black, starv, recB, def, defRed }
+  const enStore = Math.max(0, Math.min(enCap, s.energy + enProd - enDone)), enWaste = Math.max(0, s.energy + enProd - enDone - enCap)
+  return { faunaRed, tameRate, tameMor, iceProd, huntFood, season: seasonOf(s),  repairPts, E, M, specA, ordA, wCap, synthPot, synthUse, synthFood, synthMor, sciMissing, train, hospRed, spTot, wNeed, builders, sites, foodCap, minCap, foodWaste, minWaste, enCap, enStore, enWaste, cap, workforce, workRate: workRateV, needed, e, f, P, enWant, enGot, enInfra, gotInfra, heat, enProd, enNeed, foodProd, foodCons, minPot, deps, minProd, resProd, taxInc, trade, maint, unemp, shortRatio, hungerNext, hungerDeaths, mt, crowd, unempPen, black, starv, recB, def, defRed }
 }
 
 // najtańsza niezbadana technologia dostępna w scenariuszu tej gry (undefined – wszystko zbadane)

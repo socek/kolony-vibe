@@ -1,6 +1,6 @@
 // Zasady gry (ekran ZASADY)
 export default {
-  'help.keys': 'SKRÓTY KLAWISZOWE', 'help.keyList': ['Spacja – koniec dnia (albo decyzja do podjęcia)', 'W – przewiń 7 dni', '1–9 – zakładki', 'Esc – menu gry albo zamknięcie otwartego okna'],
+  'help.keys': 'SKRÓTY KLAWISZOWE', 'help.keyList': ['Spacja – koniec dnia (albo decyzja do podjęcia)', 'W – przewiń 7 dni', '1–9 i 0 – zakładki', 'Esc – menu gry albo zamknięcie otwartego okna'],
   'help.intro': 'Jesteś gubernatorem kolonii na odległej planecie. Każda tura to jeden dzień. Gra oferuje kilka scenariuszy – każdy ma własny cel, historię i poziom trudności (trudniejszy scenariusz mnoży wynik). W obecnym scenariuszu ({scen}) masz {days} dni na cel: {goal}.',
   'help.introFree': 'Jesteś gubernatorem kolonii na odległej planecie. Każda tura to jeden dzień. W obecnym scenariuszu ({scen}) nie ma celu ani limitu dni – budujesz, ile chcesz, ale głód, bunt i bankructwo nadal kończą grę.',
   'help.rules': p => [
@@ -10,7 +10,7 @@ export default {
     'Wyprawa szuka wybranego celu (złoża, ruiny, wraki, osadnicy) – z dużą szansą znajdzie właśnie to, z małą coś innego. Żołnierze w ekipie zmniejszają ryzyko, inżynierowie zwiększają zysk.',
     'Specjaliści (naukowcy, inżynierowie, żołnierze) pracują o 50% wydajniej na swoich stanowiskach. Kształcą ich szkoły – zawsze tych, których najbardziej brakuje do celu. Cel ustawia się sam (AUTO: tyle, ile stanowisk w budynkach) albo ręcznie w zakładce PRACOWNICY; tam też można zwolnić zbędnego specjalistę.',
     'Budynki się zużywają: tracą sprawność, coraz częściej mają awarie, a zużyte do zera rozpadają się. Naprawiają je konserwatorzy (zakładka PRACOWNICY).',
-    'Budynki zużywają energię. Gdy jej brakuje, produkcja spada, a ludzie są źli.',
+    'Budynki zużywają energię. Gdy jej brakuje, ludzie są źli, a budynki z dołu listy w zakładce ELEKTRYCZNOŚĆ stoją (ogrzewanie i infrastruktura są zasilane zawsze jako pierwsze). Tam też ustawisz, ile budynków danego typu ma prąd.',
     'Energii nie da się kupić ani sprzedać. Nadwyżkę zmagazynujesz tylko w bateriach (po ' + p.bat + ' kWh każda), resztę tracisz.',
     'Żywność trzymasz w chłodniach, a minerały w magazynach minerałów – każdy surowiec ma ' + p.base + ' t miejsca bazowo + ' + p.cap + ' t za każdy budynek. Nadmiar przepada.',
     'Ludzie rosną w liczbie tylko, gdy mają gdzie mieszkać i co jeść.',

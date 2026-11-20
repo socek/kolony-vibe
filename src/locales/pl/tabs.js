@@ -84,5 +84,19 @@ export default {
   'st.now': 'teraz {a} · min {b} · max {c}', 'st.day': 'dzień {d}',
   'hist.s.pop.n': 'Koloniści', 'hist.s.mor.n': 'Morale %', 'hist.s.food.n': 'Żywność t', 'hist.s.energy.n': 'Energia kWh', 'hist.s.min.n': 'Minerały t',
   'hist.s.deps.n': 'Złoża t', 'hist.s.cr.n': 'Kredyty', 'hist.s.res.n': 'Badania %', 'hist.s.work.n': 'Pracownicy',
-  'hist.m.build.n': 'Ukończone budowy', 'hist.m.research.n': 'Odkryte technologie', 'hist.m.bad.n': 'Groźne zdarzenia', 'hist.m.good.n': 'Dobre zdarzenia', 'hist.m.choice.n': 'Decyzje'
+  'hist.m.build.n': 'Ukończone budowy', 'hist.m.research.n': 'Odkryte technologie', 'hist.m.bad.n': 'Groźne zdarzenia', 'hist.m.good.n': 'Dobre zdarzenia', 'hist.m.choice.n': 'Decyzje',
+  // zakładka ELEKTRYCZNOŚĆ
+  'pw.prod': 'Produkcja dziś',
+  'pw.stored': 'W bateriach',
+  'pw.need': 'Zapotrzebowanie',
+  'pw.covered': 'pokryte w {n}%',
+  'pw.info': 'Prąd z elektrowni i baterii trafia najpierw do ogrzewania i infrastruktury, potem do budynków po kolei – od góry listy. Gdy prądu brakuje, budynki na dole listy stoją. Suwak ustawia, ile budynków danego typu dostaje prąd – wyłączone nie produkują, ale też nie zużywają energii.',
+  'pw.infra': 'Ogrzewanie i infrastruktura',
+  'pw.infraInfo': 'Ogrzewanie mieszkań ({h} kWh), chłodnie, osłony i inne budynki infrastruktury są zawsze zasilane jako pierwsze.',
+  'pw.orderInfo': 'Kolejność zasilania: przeciągnij za ≡ (albo użyj ▲ ▼) – wyżej znaczy ważniej.',
+  'pw.none': 'Nie masz jeszcze budynków, którym można odłączyć prąd.',
+  'pw.off': 'WYŁĄCZONE',
+  'pw.all': 'wszystkie',
+  'pw.some': 'zasilane: {a} z {b}',
+  'pw.limitOf': 'Ile budynków ma prąd: {n}',
 }

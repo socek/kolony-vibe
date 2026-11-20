@@ -5,10 +5,10 @@ import { t } from './i18n.js'
 watchEffect(syncMusic)
 import { TABS, TECH } from './game/constants.js'
 import { techAvail } from './game/scenarios.js'
-// liczniki na przyciskach zakładek: budynki w budowie i trwające wyprawy
+// liczniki na przyciskach zakładek: budynki w budowie, trwające wyprawy, zlecenia LUJ (oferty i przyjęte)
 // wszystkie technologie dostępne w scenariuszu są zbadane – przycisk TECHNOLOGIE ma inny kolor
 const allDone = computed(() => Object.keys(TECH).every(k => !techAvail(game.s, k) || game.s.tech[k]))
-const counts = computed(() => ({ budowa: game.s.q.length, wyprawy: (game.s.exp || []).length }))
+const counts = computed(() => ({ budowa: game.s.q.length, wyprawy: (game.s.exp || []).length, rynek: game.s.ord ? game.s.ord.offers.length + game.s.ord.active.length : 0 }))
 import TopStatus from './components/TopStatus.vue'
 import ResourceTiles from './components/ResourceTiles.vue'
 import BottomBar from './components/BottomBar.vue'
@@ -17,6 +17,7 @@ import ScreenOverlay from './components/ScreenOverlay.vue'
 import ReportTab from './components/tabs/ReportTab.vue'
 import BuildTab from './components/tabs/BuildTab.vue'
 import WorkTab from './components/tabs/WorkTab.vue'
+import PowerTab from './components/tabs/PowerTab.vue'
 import MarketTab from './components/tabs/MarketTab.vue'
 import PolicyTab from './components/tabs/PolicyTab.vue'
 import ResearchTab from './components/tabs/ResearchTab.vue'
@@ -24,7 +25,7 @@ import ExpeditionsTab from './components/tabs/ExpeditionsTab.vue'
 import StatsTab from './components/tabs/StatsTab.vue'
 import MapTab from './components/tabs/MapTab.vue'
 
-const PANELS = { raport: ReportTab, budowa: BuildTab, praca: WorkTab, wyprawy: ExpeditionsTab, rynek: MarketTab, polityka: PolicyTab, nauka: ResearchTab, statystyki: StatsTab, kolonia: MapTab }
+const PANELS = { raport: ReportTab, budowa: BuildTab, praca: WorkTab, prad: PowerTab, wyprawy: ExpeditionsTab, rynek: MarketTab, polityka: PolicyTab, nauka: ResearchTab, statystyki: StatsTab, kolonia: MapTab }
 import ConsentBar from './components/ConsentBar.vue'
 
 // po rozegraniu dni przewiń tak, żeby początek raportu był na górze ekranu
