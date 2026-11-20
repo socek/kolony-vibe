@@ -1,4 +1,5 @@
 <script setup>
+import { t } from '../../i18n.js'
 import { computed, ref, onMounted, onUnmounted, nextTick, watch } from 'vue'
 import { game, c, research, unresearch, researchFirst } from '../../store.js'
 import { TECH, TECH_BRANCHES } from '../../game/constants.js'
@@ -11,7 +12,7 @@ import MeterBar from '../MeterBar.vue'
 
 const s = computed(() => game.s)
 const sel = ref(null)
-const STATE_TXT = { done: 'ODKRYTA', active: 'BADANA', queued: 'W KOLEJCE', ready: 'DOSTĘPNA', locked: 'ZABLOKOWANA' }
+const STATE_TXT = new Proxy({}, { get: (_, k) => t('rt.st.' + String(k)) })
 
 // na wąskim ekranie lista zamiast schematu
 const narrow = ref(false)
@@ -102,14 +103,14 @@ onUnmounted(() => ro && ro.disconnect())
 
 <template>
   <div class="small">
-    Laboratoria dają {{ num(c.resProd) }} pkt/dzień. Dodawaj technologie do kolejki – naukowcy badają je po kolei. Postęp przerwanego projektu nie przepada.
-    <span v-if="!s.b.lab" class="warn">Zbuduj laboratorium, żeby prowadzić badania.</span>
+    {{ t('rt.info', { n: num(c.resProd) }) }}
+    <span v-if="!s.b.lab" class="warn">{{ t('rt.noLab') }}</span>
   </div>
   <div class="card">
     <div class="row">
-      <span>Badana: <span :class="s.rs ? 'warn' : 'neg'">{{ s.rs ? TECH[s.rs].n + ' · ' + Math.floor(techPct(s, s.rs)) + '% · ' + techEta(s, s.rs, c) : 'nic' }}</span></span>
+      <span>{{ t('rt.active') }} <span :class="s.rs ? 'warn' : 'neg'">{{ s.rs ? TECH[s.rs].n + ' · ' + Math.floor(techPct(s, s.rs)) + '% · ' + techEta(s, s.rs, c) : t('rt.nothing') }}</span></span>
     </div>
-    <div class="small">Kolejka: {{ queueList.length ? queueList.join(' → ') : 'pusta' }}</div>
+    <div class="small">{{ t('rt.queue') }} {{ queueList.length ? queueList.join(' → ') : t('rt.empty') }}</div>
   </div>
 
   <!-- szczegóły wybranej technologii – okienko na wierzchu drzewa (kliknięcie obok albo Esc zamyka) -->
@@ -117,15 +118,15 @@ onUnmounted(() => ro && ro.disconnect())
   <div class="card tdetail" role="dialog" :aria-label="selInfo.t.n">
     <div class="row"><span class="t">{{ selInfo.t.n }}</span><span :class="'st-' + selInfo.state">{{ STATE_TXT[selInfo.state] }}</span></div>
     <div class="small">{{ selInfo.t.d }}</div>
-    <div class="small">Koszt: {{ selInfo.t.c }} pkt<template v-if="selInfo.pct > 0 && selInfo.state !== 'done'"> · postęp {{ Math.floor(selInfo.pct) }}%</template></div>
-    <div v-if="selInfo.t.req.length" class="small">Wymaga:
+    <div class="small">{{ t('rt.cost', { n: selInfo.t.c }) }}<template v-if="selInfo.pct > 0 && selInfo.state !== 'done'"> · {{ t('rt.progress', { n: Math.floor(selInfo.pct) }) }}</template></div>
+    <div v-if="selInfo.t.req.length" class="small">{{ t('rt.requires') }}
       <template v-for="(r, i) in selInfo.t.req" :key="r"><span :class="s.tech[r] ? 'pos' : 'neg'">{{ TECH[r].n }}</span>{{ i < selInfo.t.req.length - 1 ? ', ' : '' }}</template>
     </div>
     <div class="btns">
-      <button v-if="canQueue(s, selInfo.k)" @click="act(research, selInfo.k)">DODAJ DO KOLEJKI</button>
-      <button v-if="selInfo.state === 'ready' || selInfo.state === 'queued'" :disabled="selInfo.state === 'queued' && !TECH[selInfo.k].req.every(r => s.tech[r])" @click="act(researchFirst, selInfo.k)">BADAJ TERAZ</button>
-      <button v-if="selInfo.state === 'queued' || selInfo.state === 'active'" @click="act(unresearch, selInfo.k)">USUŃ Z KOLEJKI</button>
-      <button @click="sel = null">ZAMKNIJ</button>
+      <button v-if="canQueue(s, selInfo.k)" @click="act(research, selInfo.k)">{{ t('rt.add') }}</button>
+      <button v-if="selInfo.state === 'ready' || selInfo.state === 'queued'" :disabled="selInfo.state === 'queued' && !TECH[selInfo.k].req.every(r => s.tech[r])" @click="act(researchFirst, selInfo.k)">{{ t('rt.now') }}</button>
+      <button v-if="selInfo.state === 'queued' || selInfo.state === 'active'" @click="act(unresearch, selInfo.k)">{{ t('rt.remove') }}</button>
+      <button @click="sel = null">{{ t('common.close') }}</button>
     </div>
   </div>
   </div>
@@ -145,7 +146,7 @@ onUnmounted(() => ro && ro.disconnect())
       <button v-for="(p, k) in layout" :key="k" :data-tech="k" class="tblock" :class="[info(k).state, { sel: sel === k }]"
         :style="{ gridColumn: p.col, gridRow: p.row }" @click="sel = sel === k ? null : k">
         <span class="tname">{{ TECH[k].n }}</span>
-        <span class="tmeta">{{ TECH[k].c }} pkt · {{ info(k).qpos ? 'KOLEJKA #' + info(k).qpos : STATE_TXT[info(k).state] }}</span>
+        <span class="tmeta">{{ t('rt.pts', { n: TECH[k].c }) }} · {{ info(k).qpos ? t('rt.qpos', { n: info(k).qpos }) : STATE_TXT[info(k).state] }}</span>
         <MeterBar v-if="info(k).state !== 'done' && info(k).pct > 0" :value="info(k).pct" :max="100" />
       </button>
     </div>
@@ -157,7 +158,7 @@ onUnmounted(() => ro && ro.disconnect())
       <div class="grph" :style="{ '--g': b.color }">{{ b.n }}</div>
       <button v-for="k in techKeys().filter(x => TECH[x].g === b.k)" :key="k" :data-tech="k" class="tblock tlist" :class="[info(k).state, { sel: sel === k }]" @click="sel = sel === k ? null : k">
         <span class="tname">{{ TECH[k].n }}</span>
-        <span class="tmeta">{{ TECH[k].c }} pkt · {{ info(k).qpos ? 'KOLEJKA #' + info(k).qpos : STATE_TXT[info(k).state] }}<template v-if="TECH[k].req.length"> · wymaga: {{ TECH[k].req.map(r => TECH[r].n).join(', ') }}</template></span>
+        <span class="tmeta">{{ t('rt.pts', { n: TECH[k].c }) }} · {{ info(k).qpos ? t('rt.qpos', { n: info(k).qpos }) : STATE_TXT[info(k).state] }}<template v-if="TECH[k].req.length"> · {{ t('rt.req') }} {{ TECH[k].req.map(r => TECH[r].n).join(', ') }}</template></span>
         <MeterBar v-if="info(k).state !== 'done' && info(k).pct > 0" :value="info(k).pct" :max="100" />
       </button>
     </template>

@@ -1,3 +1,4 @@
+import { t } from '../i18n.js'
 import { BLD, TECH, MAINT, INFRA, JOBS, HUNGER_MAX, SPEC, SPEC_REQ, SPEC_BONUS, prioOf, capOf, batCapOf, houseCapOf } from './constants.js'
 import { daysTxt } from './format.js'
 import { depTotal } from './expeditions.js'
@@ -113,6 +114,6 @@ export function calc(s) {
 export const nextTech = s => Object.entries(TECH).filter(([k]) => !s.tech[k]).map(e => e[1]).sort((a, b) => a.c - b.c)[0]
 export const techPct = (s, k) => Math.min(100, (s.rp[k] || 0) / TECH[k].c * 100)
 export function techEta(s, k, c) {
-  if (c.resProd <= 0) return 'stoi – brak naukowców'
-  return 'jeszcze ' + daysTxt(Math.ceil((TECH[k].c - (s.rp[k] || 0)) / c.resProd))
+  if (c.resProd <= 0) return t('rt.noSci')
+  return t('rt.eta', { d: daysTxt(Math.ceil((TECH[k].c - (s.rp[k] || 0)) / c.resProd)) })
 }
