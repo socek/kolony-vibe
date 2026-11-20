@@ -10,7 +10,9 @@ import { settings, stopWhy } from './game/stops.js'
 import { sendExpedition, addDeposit } from './game/expeditions.js'
 import { startCampaign } from './game/campaigns.js'
 import { queueTech, unqueueTech, researchNow, nextResearch } from './game/research.js'
-import { resolveChoice, CHOICES } from './game/choices.js'
+import { resolveChoice } from './game/choices.js'
+import { BADGES, newBadges } from './game/badges.js'
+import { hall, recordGame, grantBadges } from './game/scores.js'
 
 const loaded = load(), saved = loaded.s
 const resumable = saved && !saved.over ? saved : null
@@ -19,7 +21,7 @@ const resumable = saved && !saved.over ? saved : null
 export const game = reactive({ s: resumable || newState() })
 export const ui = reactive({
   tab: 'raport', qty: 50, expRange: 'near', expTeam: 5, screen: 'boot', busy: false, turn: null, devMsg: '',
-  savedDay: resumable ? resumable.m : null, saveDropped: loaded.dropped
+  savedDay: resumable ? resumable.m : null, saveDropped: loaded.dropped, lastPlace: null
 })
 export const c = computed(() => calc(game.s))
 
@@ -83,10 +85,22 @@ export function research(k) { if (queueTech(game.s, k)) { beep(880, 0.08); persi
 export function unresearch(k) { unqueueTech(game.s, k); beep(300, 0.05); persist() }
 export function researchFirst(k) { if (researchNow(game.s, k)) { beep(990, 0.08); persist() } }
 
+// po każdym dniu: nowe odznaki; po końcu gry: zapis do tabeli wyników
+function checkBadges() {
+  const s = game.s, nb = newBadges(s, hall.badges)
+  if (!nb.length) return
+  grantBadges(nb)
+  s.earned = [...(s.earned || []), ...nb]
+  for (const k of nb) s.report.unshift({ k: 'txt', t: '★ Zdobyto odznakę: ' + BADGES.find(b => b.k === k).n + '!', c: 'pos', top: 1 })
+  beep(1200, 0.12)
+}
 function afterTurns() {
+  checkBadges()
+  if (game.s.over) ui.lastPlace = recordGame(game.s) || ui.lastPlace
   persist(); ui.tab = 'raport'
   if (game.s.over) { ui.screen = 'end'; beep(game.s.over.win ? 880 : 150, 0.4) }
 }
+export function showStats() { ui.tab = 'statystyki'; closeScreen() }
 
 // Rozgrywa n dni z animacją; przy n > 1 zatrzymuje się na ważnych wydarzeniach.
 export function advance(n) {

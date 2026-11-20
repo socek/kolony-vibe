@@ -120,3 +120,16 @@ a{color:var(--cyan)}
 .bar .go.decide{background:var(--red);animation:blink .8s steps(1) infinite}
 .autosel{font-family:'VT323',monospace;font-size:17px;background:#241b5e;color:var(--white);border:1px solid var(--text);max-width:55%}
 @media(prefers-reduced-motion:reduce){.bar .go.decide{animation:none}}
+.chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.chip{font-size:16px;padding:1px 6px;background:var(--screen);color:var(--c);border:2px solid var(--c)}
+.chip.offc{opacity:.35;text-decoration:line-through}
+.chart{margin-top:8px}
+.chartsvg{width:100%;height:70px;display:block;background:#241b5e;border:1px solid var(--text)}
+.scores .row{gap:10px}
+.scorerow{width:100%;background:var(--screen);color:var(--text);border-top:1px dashed var(--border);text-align:left;padding:3px 0;flex-wrap:nowrap}
+.scorerow:hover{background:#241b5e}
+.grow{flex:1}
+.scoredet{padding:2px 0 6px 24px}
+.badge{border-top:1px dashed var(--border);padding:4px 0;opacity:.55}
+.badge.got{opacity:1}
+.badge.got .t{color:var(--yellow)}

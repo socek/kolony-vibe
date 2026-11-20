@@ -1,5 +1,6 @@
 import { BLD, houseCapOf } from './constants.js'
 import { calc } from './calc.js'
+import { bumpStat } from './badges.js'
 import { addDeposit, depositName } from './expeditions.js'
 
 // Zdarzenia losowe – zmieniają stan i zwracają opis albo null, gdy nie mają zastosowania.
@@ -32,6 +33,7 @@ export const EVENTS = [
     const { defRed } = calc(s), l = Math.round(base * (1 - defRed))
     s.cr -= l; s.mor -= 3 * (1 - defRed)
     const gunHit = gunLoss(s, 0.35)
+    if (defRed > 0) bumpStat(s, 'repelled')
     if (defRed > 0) return 'ATAK PIRATÓW! Działa odparły część ataku – zrabowano ' + l + ' kredytów zamiast ' + base + '.' + gunHit
     return 'ATAK PIRATÓW! Zrabowano ' + l + ' kredytów.' + (s.b.gun ? ' Działa nie były obsadzone!' : '') + gunHit
   },

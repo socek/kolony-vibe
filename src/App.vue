@@ -13,8 +13,9 @@ import MarketTab from './components/tabs/MarketTab.vue'
 import PolicyTab from './components/tabs/PolicyTab.vue'
 import ResearchTab from './components/tabs/ResearchTab.vue'
 import ExpeditionsTab from './components/tabs/ExpeditionsTab.vue'
+import StatsTab from './components/tabs/StatsTab.vue'
 
-const PANELS = { raport: ReportTab, budowa: BuildTab, praca: WorkTab, wyprawy: ExpeditionsTab, rynek: MarketTab, polityka: PolicyTab, nauka: ResearchTab }
+const PANELS = { raport: ReportTab, budowa: BuildTab, praca: WorkTab, wyprawy: ExpeditionsTab, rynek: MarketTab, polityka: PolicyTab, nauka: ResearchTab, statystyki: StatsTab }
 </script>
 
 <template>

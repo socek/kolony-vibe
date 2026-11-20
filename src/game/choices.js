@@ -1,5 +1,6 @@
 import { BLD, TECH } from './constants.js'
 import { calc } from './calc.js'
+import { bumpStat } from './badges.js'
 
 // Zdarzenia z wyborem. Każda opcja: n – nazwa, d – podpowiedź (znane skutki),
 // need(s) – powód, dla którego opcja jest niedostępna (albo ''), run(s) – skutek, zwraca opis.
@@ -21,6 +22,7 @@ export const CHOICES = {
         run: s => {
           const red = calc(s).defRed, loot = R(Math.max(80, s.cr * 0.25) * (1 - red))
           s.cr -= Math.min(Math.max(s.cr, 0), loot); s.mor -= 4 * (1 - red)
+          if (red > 0) bumpStat(s, 'repelled')
           return red > 0 ? 'Działa odparły część ataku – piraci zrabowali ' + loot + ' kr.' : 'Bez obrony piraci splądrowali kolonię – zrabowali ' + loot + ' kr.'
         }
       }

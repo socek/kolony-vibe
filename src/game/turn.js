@@ -8,6 +8,8 @@ import { tickCampaigns } from './campaigns.js'
 import { nextResearch } from './research.js'
 import { scenarioOf } from './scenarios.js'
 import { CHOICES, CHOICE_KEYS, resolveChoice } from './choices.js'
+import { record } from './history.js'
+import { trackStats, bumpStat } from './badges.js'
 
 export function clampStore(s) {
   const l = { food: Math.max(0, s.food - capOf(s, 'food')), min: Math.max(0, s.min - capOf(s, 'min')) }
@@ -38,7 +40,7 @@ export function endTurn(s, acc, auto = {}) {
   const deaths = c.hungerDeaths, hdPrev = s.hungerDays || 0
   s.hungerDays = c.hungerNext
   if (deaths > 0) add('hunger', { a: deaths, _day: c.hungerNext })
-  else if (hdPrev > 0 && c.hungerNext === 0) note('Koniec głodu – koloniści znów jedzą do syta.', 'pos')
+  else if (hdPrev > 0 && c.hungerNext === 0) { note('Koniec głodu – koloniści znów jedzą do syta.', 'pos'); bumpStat(s, 'hungerSurvived') }
   else if (hdPrev > 0) add('hungerHold', { _day: c.hungerNext })
   s.min += c.minProd
   for (const n of extract(s, c.minProd)) { note('Wyczerpano: ' + n + '.', 'warn'); stops.add('depleted') }
@@ -131,5 +133,7 @@ export function endTurn(s, acc, auto = {}) {
   else if (s.cr < -500) s.over = { win: false, t: 'BANKRUCTWO', d: 'Długi przekroczyły 500 kredytów. Korporacja przejmuje kolonię.' }
   else if (s.m > DAYS) s.over = { win: false, t: 'KONIEC KADENCJI', d: 'Minął rok. Nie osiągnąłeś celu, ale kolonia przetrwała.' }
   if (s.over) stops.add('over')
+  trackStats(s)
+  record(s, [...stops])
   return [...stops]
 }

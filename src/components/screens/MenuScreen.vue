@@ -9,6 +9,7 @@ import { audio } from '../../game/audio.js'
   <div class="vmenu">
     <button @click="closeScreen">WRÓĆ DO GRY</button>
     <button @click="showScreen('settings')">USTAWIENIA</button>
+    <button @click="showScreen('scores')">WYNIKI I ODZNAKI</button>
     <button @click="audio.sound = !audio.sound">DŹWIĘK: {{ audio.sound ? 'WŁ.' : 'WYŁ.' }}</button>
     <button @click="showScreen('help')">ZASADY</button>
     <button @click="showScreen('about')">O GRZE</button>

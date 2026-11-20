@@ -1,4 +1,5 @@
 // Złoża minerałów i wyprawy poszukiwawcze
+import { bumpStat } from './badges.js'
 
 export const START_DEPOSIT = 1200
 export const MIN_POP_LEFT = 20 // tylu kolonistów musi zostać w kolonii
@@ -78,6 +79,7 @@ export function tickExpeditions(s, note) {
     let alive = x.team
     if (Math.random() < expRisk(r, s)) alive -= Math.max(1, Math.round(x.team * (0.1 + Math.random() * 0.2)))
     s.pop += alive
+    if (alive === x.team) bumpStat(s, 'expClean')
     const lost = x.team - alive, lostTxt = lost ? ' Zginęło ' + lost + ' z ' + x.team + ' uczestników.' : ''
     if (Math.random() < expChance(r, t, s)) {
       const name = depositName(r.places[Math.floor(Math.random() * r.places.length)])
