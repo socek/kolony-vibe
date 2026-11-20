@@ -1,3 +1,4 @@
+import { t } from '../i18n.js'
 // Ilu kolonistów jest zdolnych do pracy. Bazowo 60% – reszta to dzieci, seniorzy i ich opiekunowie.
 // Odsetek zmieniają morale, szpitale, technologia Zautomatyzowane żłobki i choroby po epidemiach.
 export const WORK_BASE = 0.6, WORK_MIN = 0.4, WORK_MAX = 0.8
@@ -5,12 +6,12 @@ export const SICK_DAYS = 14 // tyle dni po epidemii część kolonistów choruje
 
 // s.hospRed – skuteczność szpitali z poprzedniego dnia (0..1), zapisywana w endTurn
 export function workParts(s) {
-  const hosp = s.hospRed || 0, parts = [{ k: 'base', n: 'Bazowo (dzieci, seniorzy i opiekunowie nie pracują)', v: WORK_BASE }]
+  const hosp = s.hospRed || 0, parts = [{ k: 'base', n: t('work.base'), v: WORK_BASE }]
   const mor = Math.max(-0.1, Math.min(0.1, ((s.mor ?? 50) - 50) / 50 * 0.1))
-  if (Math.abs(mor) >= 0.001) parts.push({ k: 'mor', n: 'Morale', v: mor })
-  if (hosp > 0.001) parts.push({ k: 'hosp', n: 'Szpitale (mniej chorych)', v: 0.05 * hosp })
-  if (s.tech && s.tech.creche) parts.push({ k: 'creche', n: 'Zautomatyzowane żłobki', v: 0.05 })
-  if (s.sick > 0) parts.push({ k: 'sick', n: 'Chorzy po epidemii (' + Math.ceil(s.sick) + ' dni)', v: -0.1 * Math.min(1, s.sick / SICK_DAYS) * (1 - 0.5 * hosp) })
+  if (Math.abs(mor) >= 0.001) parts.push({ k: 'mor', n: t('tile.mor'), v: mor })
+  if (hosp > 0.001) parts.push({ k: 'hosp', n: t('work.hosp'), v: 0.05 * hosp })
+  if (s.tech && s.tech.creche) parts.push({ k: 'creche', n: t('tech.creche.n'), v: 0.05 })
+  if (s.sick > 0) parts.push({ k: 'sick', n: t('work.sick', { d: t('fmt.days', { n: Math.ceil(s.sick) }) }), v: -0.1 * Math.min(1, s.sick / SICK_DAYS) * (1 - 0.5 * hosp) })
   return parts
 }
 

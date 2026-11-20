@@ -1,3 +1,4 @@
+import { t } from '../i18n.js'
 import { DAYS, KEY, BLD } from './constants.js'
 import { START_DEPOSIT } from './expeditions.js'
 import { SCENARIOS, scenarioOf, diffOf } from './scenarios.js'
@@ -6,7 +7,7 @@ import { SCENARIOS, scenarioOf, diffOf } from './scenarios.js'
 // 4: bateria mieści 25 kWh zamiast 100
 export const SAVE_VERSION = 4, MIN_SAVE_VERSION = 2
 
-const startDeposit = () => ({ n: 'Złoże macierzyste', t: START_DEPOSIT, max: START_DEPOSIT })
+const startDeposit = () => ({ n: t('state.homeDeposit'), t: START_DEPOSIT, max: START_DEPOSIT })
 
 export function newState(sc = 'moon') {
   const scen = SCENARIOS.find(x => x.k === sc) || SCENARIOS[0]
@@ -25,8 +26,8 @@ export function newState(sc = 'moon') {
   if (scen.start) scen.start(s)
   // powitanie po zmianach scenariusza (liczba osadników może być inna niż 100)
   s.report = [
-    { k: 'txt', t: 'Witaj, gubernatorze! Twoja kolonia (' + scen.n + ') liczy ' + s.pop + ' osadników.' },
-    { k: 'txt', t: 'Cel: ' + scen.goal.text + ' w ciągu roku (' + DAYS + ' dni).' }
+    { k: 'txt', t: t('state.welcome', { n: scen.n, pop: s.pop }) },
+    { k: 'txt', t: t('state.goal', { g: scen.goal.text, d: DAYS }) }
   ]
   return s
 }

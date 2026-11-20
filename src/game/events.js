@@ -1,3 +1,4 @@
+import { t } from '../i18n.js'
 import { BLD, houseCapOf } from './constants.js'
 import { calc } from './calc.js'
 import { addSick } from './workforce.js'
@@ -10,24 +11,24 @@ function gunLoss(s, chance) {
   if (!s.b.gun || Math.random() >= chance) return ''
   const n = Math.min(s.b.gun, s.b.gun >= 4 ? 2 : 1)
   s.b.gun -= n
-  return n === 1 ? ' Zniszczone zostało 1 działo.' : ' Zniszczone zostały ' + n + ' działa.'
+  return ' ' + t('ev.gunLoss', { n })
 }
 
 export const EVENTS = [
   s => {
-    if (s.b.shield > 0) { s.b.shield--; return 'Deszcz meteorytów! Osłona orbitalna przechwyciła uderzenie i uległa zniszczeniu. Pozostało osłon: ' + s.b.shield + '.' }
+    if (s.b.shield > 0) { s.b.shield--; return t('ev.meteorShield', { n: s.b.shield }) }
     const { defRed } = calc(s), gunHit = gunLoss(s, 0.2)
-    if (defRed > 0 && Math.random() < defRed) { s.mor -= 1; return 'Deszcz meteorytów! Działa zestrzeliły odłamki – nic nie zostało zniszczone.' + gunHit }
+    if (defRed > 0 && Math.random() < defRed) { s.mor -= 1; return t('ev.meteorGuns') + gunHit }
     const ks = Object.keys(BLD).filter(k => s.b[k] > 0)
     if (!ks.length) return null
     const k = ks[Math.floor(Math.random() * ks.length)]
     s.b[k]--; s.mor -= 4
-    return 'DESZCZ METEORYTÓW! Zniszczony budynek: ' + BLD[k].n + '.' + (defRed > 0 ? ' Działa nie zdołały zestrzelić odłamków.' : '') + gunHit
+    return t('ev.meteor', { n: BLD[k].n }) + (defRed > 0 ? ' ' + t('ev.meteorGunsFail') : '') + gunHit
   },
-  s => { const d = s.pop * (s.tech.med ? 0.03 : 0.08) * (1 - 0.5 * calc(s).hospRed); s.pop -= d; s.mor -= 5; addSick(s); return 'EPIDEMIA! Zmarło ' + Math.round(d) + ' kolonistów, wielu choruje i nie może pracować.' },
-  s => { s.food += 100; s.min += 60; return 'Statek zaopatrzeniowy z Ziemi: +100 t żywności, +60 t minerałów.' },
-  s => { const l = Math.round(s.energy * 0.5); if (l < 5) return null; s.energy -= l; return 'Rozbłysk słoneczny! Utracono ' + l + ' kWh energii.' },
-  s => { const n = depositName('tuż obok kolonii'), t = addDeposit(s, n, 150 + Math.random() * 250); return 'Geolodzy przypadkiem odkryli nowe złoże: ' + n + ' – ' + t + ' t.' },
+  s => { const d = s.pop * (s.tech.med ? 0.03 : 0.08) * (1 - 0.5 * calc(s).hospRed); s.pop -= d; s.mor -= 5; addSick(s); return t('ev.epidemic', { n: Math.round(d) }) },
+  s => { s.food += 100; s.min += 60; return t('ev.supply') },
+  s => { const l = Math.round(s.energy * 0.5); if (l < 5) return null; s.energy -= l; return t('ev.flare', { n: l }) },
+  s => { const n = depositName(t('ev.nearby')), a = addDeposit(s, n, 150 + Math.random() * 250); return t('ev.deposit', { n, a }) },
   s => {
     if (s.cr <= 0) return null
     const base = Math.min(s.cr, Math.max(50, Math.round(s.cr * 0.15)))
@@ -35,22 +36,23 @@ export const EVENTS = [
     s.cr -= l; s.mor -= 3 * (1 - defRed)
     const gunHit = gunLoss(s, 0.35)
     if (defRed > 0) bumpStat(s, 'repelled')
-    if (defRed > 0) return 'ATAK PIRATÓW! Działa odparły część ataku – zrabowano ' + l + ' kredytów zamiast ' + base + '.' + gunHit
-    return 'ATAK PIRATÓW! Zrabowano ' + l + ' kredytów.' + (s.b.gun ? ' Działa nie były obsadzone!' : '') + gunHit
+    if (defRed > 0) return t('ev.piratesGuns', { l, base }) + gunHit
+    return t('ev.pirates', { l }) + (s.b.gun ? ' ' + t('ev.gunsIdle') : '') + gunHit
   },
-  s => { s.mor += 8; return 'Święto Założenia Kolonii – morale rośnie.' },
-  s => { s.food += 120; return 'Przechwycono lodową kometę: +120 t żywności.' },
+  s => { s.mor += 8; return t('ev.holiday') },
+  s => { s.food += 120; return t('ev.comet') },
   s => {
     const free = Math.floor(houseCapOf(s) - s.pop)
     if (free < 1) return null
     const w = 15 + Math.floor(Math.random() * 15), n = Math.min(w, free)
     s.pop += n
-    return 'Przybyli uchodźcy z upadłej stacji: +' + n + ' kolonistów.' + (n < w ? ' Dla ' + (w - n) + ' zabrakło miejsca – polecieli dalej.' : '')
+    return t('ev.refugees', { n }) + (n < w ? ' ' + t('ev.refugeesLeft', { n: w - n }) : '')
   },
-  s => { s.energy = Math.max(0, s.energy - 60); s.mor -= 4; return 'Awaria zasilania: −60 kWh energii.' }
+  s => { s.energy = Math.max(0, s.energy - 60); s.mor -= 4; return t('ev.power') }
 ]
 
 // które zdarzenia są złe (do ustawień zatrzymywania przewijania)
 export const EVENT_BAD = [true, true, false, true, false, true, false, false, false, true]
 
-export const EVNAMES = ['Deszcz meteorytów', 'Epidemia', 'Statek zaopatrzeniowy', 'Rozbłysk słoneczny', 'Nowe złoże', 'Atak piratów', 'Święto Założenia', 'Lodowa kometa', 'Uchodźcy', 'Awaria zasilania']
+// nazwy zdarzeń (menu deweloperskie) – z tłumaczeń ev.name.<i>
+export const EVNAMES = new Proxy([...Array(EVENTS.length).keys()], { get: (a, k) => /^\d+$/.test(k) ? t('ev.name.' + k) : a[k] })

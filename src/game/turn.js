@@ -1,3 +1,4 @@
+import { t } from '../i18n.js'
 import { BLD, TECH, RES, MORK, DAYS, SPEC, HUNGER_MAX, prioOf, jobName, capOf, batCapOf } from './constants.js'
 import { calc, nextTech } from './calc.js'
 import { EVENTS, EVENT_BAD } from './events.js'
@@ -49,7 +50,7 @@ export function endTurn(s, acc, auto = {}) {
   const deaths = c.hungerDeaths, hdPrev = s.hungerDays || 0
   s.hungerDays = c.hungerNext
   if (deaths > 0) add('hunger', { a: deaths, _day: c.hungerNext })
-  else if (hdPrev > 0 && c.hungerNext === 0) { note('Koniec głodu – koloniści znów jedzą do syta.', 'pos'); bumpStat(s, 'hungerSurvived') }
+  else if (hdPrev > 0 && c.hungerNext === 0) { note(t('turn.hungerEnd'), 'pos'); bumpStat(s, 'hungerSurvived') }
   else if (hdPrev > 0) add('hungerHold', { _day: c.hungerNext })
   s.min += c.minProd
   for (const n of extract(s, c.minProd)) { note('Wyczerpano: ' + n + '.', 'warn'); stops.add('depleted') }
@@ -64,7 +65,7 @@ export function endTurn(s, acc, auto = {}) {
     s.q = s.q.filter(x => {
       if (x.d < BLD[x.k].bt) return true
       s.b[x.k]++; stops.add('build')
-      note('★ Ukończono budowę: ' + BLD[x.k].n + '.', 'pos'); beep(520, 0.12)
+      note(t('turn.built', { n: BLD[x.k].n }), 'pos'); beep(520, 0.12)
       return false
     })
     if (s.q.length && c.builders < 0.5) add('stall')
@@ -116,14 +117,14 @@ export function endTurn(s, acc, auto = {}) {
   { const w = tickWear(s, c.repairPts)
     w.stops.forEach(r => stops.add(r))
     if (w.broke.length) add('broke', { a: w.broke.length, _n: w.broke[w.broke.length - 1] })
-    for (const n of w.collapsed) note('Budynek rozpadł się ze starości: ' + n + '. Trzeba zbudować go od nowa.', 'neg') }
+    for (const n of w.collapsed) note(t('turn.collapsed', { n }), 'neg') }
   if (s.m > 10 && Math.random() < 0.1) {
     if (Math.random() < 0.4) {
       // zdarzenie z wyborem: odpowiedź automatyczna albo czekanie na decyzję gracza
       const k = CHOICE_KEYS[Math.floor(Math.random() * CHOICE_KEYS.length)]
       const txt = auto[k] != null ? resolveChoice(s, k, auto[k]) : null
-      if (txt) note('★ ' + txt + ' (odpowiedź automatyczna)', 'sub')
-      else { s.pending = k; stops.add('choice'); note('★ ' + CHOICES[k].t + ' – czeka na twoją decyzję.', 'warn') }
+      if (txt) note('★ ' + txt + ' ' + t('turn.auto'), 'sub')
+      else { s.pending = k; stops.add('choice'); note(t('turn.waiting', { n: CHOICES[k].t }), 'warn') }
       beep(220, 0.25)
     } else {
       const ei = Math.floor(Math.random() * EVENTS.length), m = EVENTS[ei](s)
@@ -139,12 +140,12 @@ export function endTurn(s, acc, auto = {}) {
   s.mor = Math.max(0, Math.min(100, s.mor)); s.pop = Math.max(0, s.pop); s.energy = Math.min(s.energy, batCapOf(s))
   { const l = clampStore(s); edge('loss', l.food >= 1 || l.min >= 1); if (l.food > 0 || l.min > 0) add('loss', { f: l.food, m: l.min }) }
   if (s.rs && c.resProd > 0) {
-    const k = s.rs, t = TECH[k]
+    const k = s.rs, tc = TECH[k]
     s.rp[k] = (s.rp[k] || 0) + c.resProd
-    if (s.rp[k] >= t.c) {
+    if (s.rp[k] >= tc.c) {
       stops.add('research'); s.tech[k] = 1; delete s.rp[k]; s.rs = null
       nextResearch(s)
-      note('★ Naukowcy ukończyli projekt: ' + t.n + '! ' + t.d + '.' + (s.rs ? ' Teraz badają: ' + TECH[s.rs].n + '.' : ' Kolejka badań jest pusta.'), 'pos', s.rs ? null : 'Wybierz kolejny projekt w zakładce TECHNOLOGIE.'); beep(990, 0.15)
+      note(t('turn.researched', { n: tc.n, d: tc.d, next: s.rs ? TECH[s.rs].n : null }), 'pos', s.rs ? null : t('turn.researchedTip')); beep(990, 0.15)
     }
   } else if (!s.rs && c.resProd > 0 && nextTech(s)) add('nores')
   edge('nores', !s.rs && c.resProd > 0 && nextTech(s))
@@ -155,12 +156,12 @@ export function endTurn(s, acc, auto = {}) {
   if (acc && Array.isArray(s.report)) { mergeRep(s.report, r); s.repDays = (s.repDays || 1) + 1 }
   else { s.report = r; s.repDays = 1 }
 
-  if (s.hungerDays >= HUNGER_MAX) s.over = { win: false, t: 'ŚMIERĆ GŁODOWA', d: 'Kolonia głodowała przez ' + HUNGER_MAX + ' dni. Nie przeżył nikt.' }
-  else if (scenarioOf(s).goal.done(s)) s.over = { win: true, t: 'ZWYCIĘSTWO!', d: scenarioOf(s).win || 'Cel scenariusza osiągnięty.' }
-  else if (s.pop < 10) s.over = { win: false, t: 'KOLONIA UPADŁA', d: 'Zostało zbyt mało osadników, by przetrwać.' }
-  else if (s.mor <= 5) s.over = { win: false, t: 'BUNT!', d: 'Koloniści przejęli władzę i odesłali cię na Ziemię.' }
-  else if (s.cr < -500) s.over = { win: false, t: 'BANKRUCTWO', d: 'Długi przekroczyły 500 kredytów. Korporacja przejmuje kolonię.' }
-  else if (s.m > DAYS) s.over = { win: false, t: 'KONIEC KADENCJI', d: 'Minął rok. Nie osiągnąłeś celu, ale kolonia przetrwała.' }
+  if (s.hungerDays >= HUNGER_MAX) s.over = { win: false, t: t('over.famine.t'), d: t('over.famine.d', { n: HUNGER_MAX }) }
+  else if (scenarioOf(s).goal.done(s)) s.over = { win: true, t: t('over.win.t'), d: scenarioOf(s).win || t('over.win.d') }
+  else if (s.pop < 10) s.over = { win: false, t: t('over.fall.t'), d: t('over.fall.d') }
+  else if (s.mor <= 5) s.over = { win: false, t: t('over.revolt.t'), d: t('over.revolt.d') }
+  else if (s.cr < -500) s.over = { win: false, t: t('over.bankrupt.t'), d: t('over.bankrupt.d') }
+  else if (s.m > DAYS) s.over = { win: false, t: t('over.term.t'), d: t('over.term.d') }
   if (s.over) stops.add('over')
   trackStats(s)
   record(s, [...stops])

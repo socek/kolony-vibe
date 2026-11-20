@@ -1,3 +1,4 @@
+import { t } from './i18n.js'
 import { reactive, computed } from 'vue'
 import { BLD, TECH, DAYS, batCapOf } from './game/constants.js'
 import { calc } from './game/calc.js'
@@ -120,7 +121,7 @@ function checkBadges() {
   grantBadges(nb)
   for (const k of nb) track('badge_earned', { badge: k, scenario: s.sc || 'moon', day: s.m })
   s.earned = [...(s.earned || []), ...nb]
-  for (const k of nb) s.report.unshift({ k: 'txt', t: '★ Zdobyto odznakę: ' + BADGES.find(b => b.k === k).n + '!', c: 'pos', top: 1 })
+  for (const k of nb) s.report.unshift({ k: 'txt', t: t('turn.badge', { n: BADGES.find(b => b.k === k).n }), c: 'pos', top: 1 })
   beep(1200, 0.12)
 }
 function afterTurns() {

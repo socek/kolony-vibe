@@ -77,7 +77,7 @@ export const TECH = {
   propa: { g: 'trade', c: 80, req: ['exchange', 'holo'] }
 }
 
-export const RES = { food: { n: 'Żywność', base: 4 }, min: { n: 'Minerały', base: 6 } }
+export const RES = { food: { base: 4 }, min: { base: 6 } }
 
 export const BATCAP = 25, STBASE = 150, STCAP = 250, MAINT = 1, MORK = 0.11
 export const HUNGER_MAX = 12 // po tylu dniach głodu kolonia wymiera
@@ -117,6 +117,7 @@ export const techReady = (s, k) => TECH[k].req.every(r => s.tech[r])
 localize(BLD, 'bld', ['n', 'd'])
 localize(TECH, 'tech', ['n', 'd'])
 localize(SPEC, 'spec', ['n', 'one'])
+for (const k in RES) Object.defineProperty(RES[k], 'n', { get: () => t(k === 'food' ? 'tile.food' : 'tile.min'), enumerable: true })
 for (const g of BLD_GROUPS) Object.defineProperty(g, 'n', { get: () => t('bldgrp.' + g.k), enumerable: true })
 for (const b of TECH_BRANCHES) Object.defineProperty(b, 'n', { get: () => t('branch.' + b.k), enumerable: true })
 // pary [wartość, etykieta] – etykieta jako getter, więc destrukturyzacja [k, l] dalej działa

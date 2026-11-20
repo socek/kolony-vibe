@@ -7,4 +7,6 @@ import misc from './misc.js'
 import data from './data.js'
 import tabs from './tabs.js'
 import game from './game.js'
-export default { ...ui, ...screens, ...end, ...help, ...story, ...misc, ...data, ...tabs, ...game }
+import events from './events.js'
+import choices from './choices.js'
+export default { ...ui, ...screens, ...end, ...help, ...story, ...misc, ...data, ...tabs, ...game, ...events, ...choices }

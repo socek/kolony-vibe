@@ -1,3 +1,4 @@
+import { t } from '../i18n.js'
 import { BLD, TECH } from './constants.js'
 import { calc } from './calc.js'
 import { addSick } from './workforce.js'
@@ -8,157 +9,156 @@ import { bumpStat } from './badges.js'
 // Ostatnia opcja każdego zdarzenia jest zawsze dostępna, więc decyzję zawsze da się podjąć.
 const R = Math.round
 const rnd = () => Math.random()
-const lack = (s, cr, min) => s.cr < cr ? 'Brakuje kredytów.' : (min && s.min < min ? 'Brakuje minerałów.' : '')
+const lack = (s, cr, min) => s.cr < cr ? t('ch.lackCr') : (min && s.min < min ? t('ch.lackMin') : '')
 const randomBuilding = s => { const ks = Object.keys(BLD).filter(k => s.b[k] > 0); return ks.length ? ks[Math.floor(rnd() * ks.length)] : null }
+// skutki opcji: kredyty i morale, np. „−150 kr, +3 morale” (jednostka zależy od języka)
+// tekst opcji: ch.<zdarzenie>.<nr opcji>.<pole>
+const o = (k, i, f, p) => t('ch.' + k + '.' + i + '.' + f, p)
 
+// Teksty zdarzeń są w słownikach: tytuł ch.<k>.t, opis ch.<k>.d, opcje ch.<k>.<i>.n / .d (skutki) / .r… (wynik)
 export const CHOICES = {
   // ---------- 2 opcje ----------
   ransom: {
-    t: 'Piraci żądają okupu',
-    d: s => 'Statek piracki zawisł nad kolonią. Kapitan żąda ' + ransomOf(s) + ' kr za „ochronę”. Odmowa oznacza atak.',
+    d: s => t('ch.ransom.d', { n: ransomOf(s) }),
     opts: [
-      { n: 'Zapłać okup', d: s => '−' + ransomOf(s) + ' kr', need: s => lack(s, ransomOf(s)), run: s => { s.cr -= ransomOf(s); return 'Zapłacono ' + ransomOf(s) + ' kr okupu. Piraci odlecieli.' } },
+      { d: s => o('ransom', 0, 'd', { n: ransomOf(s) }), need: s => lack(s, ransomOf(s)), run: s => { const n = ransomOf(s); s.cr -= n; return o('ransom', 0, 'r', { n }) } },
       {
-        n: 'Walcz', d: () => 'Działa zmniejszają straty – bez nich piraci zabiorą więcej niż okup.',
+        d: () => o('ransom', 1, 'd'),
         run: s => {
           const red = calc(s).defRed, loot = R(Math.max(80, s.cr * 0.25) * (1 - red))
           s.cr -= Math.min(Math.max(s.cr, 0), loot); s.mor -= 4 * (1 - red)
           if (red > 0) bumpStat(s, 'repelled')
-          return red > 0 ? 'Działa odparły część ataku – piraci zrabowali ' + loot + ' kr.' : 'Bez obrony piraci splądrowali kolonię – zrabowali ' + loot + ' kr.'
+          return o('ransom', 1, red > 0 ? 'r' : 'r2', { n: loot })
         }
       }
     ]
   },
   sick: {
-    t: 'Uchodźcy z gorączką',
-    d: () => 'Do kolonii przyleciała grupa uchodźców. Część z nich ma wysoką gorączkę.',
+    d: () => t('ch.sick.d'),
     opts: [
       {
-        n: 'Przyjmij', d: () => 'Nowi koloniści (jeśli jest miejsce), ale choroba może się rozprzestrzenić.',
+        d: () => o('sick', 0, 'd'),
         run: s => {
           const n = R(Math.min(15, Math.max(0, calc(s).cap - s.pop))); s.pop += n
-          if (rnd() < 0.5) { const d = R(s.pop * (s.tech.med ? 0.02 : 0.05) * (1 - 0.5 * calc(s).hospRed)); s.pop -= d; addSick(s, 10); return 'Przyjęto ' + n + ' uchodźców, ale choroba się rozprzestrzeniła – zmarło ' + d + ' osób.' }
-          return 'Przyjęto ' + n + ' uchodźców. Gorączka szybko minęła.'
+          if (rnd() < 0.5) { const d = R(s.pop * (s.tech.med ? 0.02 : 0.05) * (1 - 0.5 * calc(s).hospRed)); s.pop -= d; addSick(s, 10); return o('sick', 0, 'r2', { n, d }) }
+          return o('sick', 0, 'r', { n })
         }
       },
-      { n: 'Odeślij', d: () => '−3 morale', run: s => { s.mor -= 3; return 'Uchodźców odesłano. Koloniści czują się z tym źle.' } }
+      { d: () => t('ch.fx', { mor: -3 }), run: s => { s.mor -= 3; return o('sick', 1, 'r') } }
     ]
   },
   trader: {
-    t: 'Wędrowny kupiec',
-    d: () => 'Kupiec z pasa asteroid oferuje 150 t minerałów za 300 kr – taniej niż na rynku.',
+    d: () => t('ch.trader.d'),
     opts: [
-      { n: 'Kup', d: () => '−300 kr, +150 t minerałów', need: s => lack(s, 300), run: s => { s.cr -= 300; s.min += 150; return 'Kupiono 150 t minerałów od wędrownego kupca.' } },
-      { n: 'Odmów', d: () => 'Bez skutków', run: () => 'Kupiec odleciał szukać innych klientów.' }
+      { d: () => o('trader', 0, 'd'), need: s => lack(s, 300), run: s => { s.cr -= 300; s.min += 150; return o('trader', 0, 'r') } },
+      { d: () => t('ch.noEffect'), run: () => o('trader', 1, 'r') }
     ]
   },
   strike: {
-    t: 'Strajk górników',
-    d: () => 'Górnicy odłożyli kilofy i żądają premii za pracę w pyle.',
+    d: () => t('ch.strike.d'),
     opts: [
-      { n: 'Wypłać premię', d: () => '−150 kr, +3 morale', need: s => lack(s, 150), run: s => { s.cr -= 150; s.mor += 3; return 'Górnicy dostali premię i wrócili do pracy w dobrych humorach.' } },
-      { n: 'Odmów', d: () => '−6 morale', run: s => { s.mor -= 6; return 'Górnicy wrócili do pracy, ale niezadowolenie rośnie.' } }
+      { d: () => t('ch.fx', { cr: -150, mor: +3 }), need: s => lack(s, 150), run: s => { s.cr -= 150; s.mor += 3; return o('strike', 0, 'r') } },
+      { d: () => t('ch.fx', { mor: -6 }), run: s => { s.mor -= 6; return o('strike', 1, 'r') } }
     ]
   },
   beacon: {
-    t: 'Sygnał z wraku',
-    d: () => 'Radar wykrył sygnał alarmowy z rozbitego statku niedaleko kolonii.',
+    d: () => t('ch.beacon.d'),
     opts: [
       {
-        n: 'Zbadaj wrak', d: () => 'Może się opłacić, ale wrak bywa niebezpieczny.',
+        d: () => o('beacon', 0, 'd'),
         run: s => {
-          if (rnd() < 0.6) { s.min += 200; s.cr += 100; return 'Ekipa wróciła z wraku z 200 t minerałów i sprzętem wartym 100 kr.' }
-          const d = Math.min(3, R(s.pop)); s.pop -= d; return 'Wrak eksplodował podczas badania – zginęło ' + d + ' kolonistów.'
+          if (rnd() < 0.6) { s.min += 200; s.cr += 100; return o('beacon', 0, 'r') }
+          const d = Math.min(3, R(s.pop)); s.pop -= d; return o('beacon', 0, 'r2', { d })
         }
       },
-      { n: 'Zignoruj', d: () => 'Bez skutków', run: () => 'Sygnał z wraku po kilku dniach ucichł.' }
+      { d: () => t('ch.noEffect'), run: () => o('beacon', 1, 'r') }
     ]
   },
   // ---------- 3 opcje ----------
   swarm: {
-    t: 'Ostrzeżenie przed rojem meteorów',
-    d: () => 'Astronomowie wykryli rój meteorów, który jutro przetnie orbitę kolonii.',
+    d: () => t('ch.swarm.d'),
     opts: [
-      { n: 'Ewakuuj ludzi do schronów', d: () => '−5 morale, budynki bez strat', run: s => { s.mor -= 5; return 'Koloniści przesiedzieli noc w schronach. Rój minął kolonię bokiem.' } },
-      { n: 'Wzmocnij budynki', d: () => '−150 t minerałów', need: s => lack(s, 0, 150), run: s => { s.min -= 150; return 'Wzmocnione budynki wytrzymały uderzenia odłamków.' } },
+      { d: () => o('swarm', 0, 'd'), run: s => { s.mor -= 5; return o('swarm', 0, 'r') } },
+      { d: () => o('swarm', 1, 'd'), need: s => lack(s, 0, 150), run: s => { s.min -= 150; return o('swarm', 1, 'r') } },
       {
-        n: 'Zaryzykuj', d: () => 'Może nic się nie stanie… a może coś zostanie zniszczone.',
+        d: () => o('swarm', 2, 'd'),
         run: s => {
-          if (rnd() < 0.5) return 'Rój meteorów przeleciał bokiem. Udało się!'
-          const k = randomBuilding(s); if (!k) return 'Meteory spadły na puste pole.'
-          s.b[k]--; return 'Meteory zniszczyły budynek: ' + BLD[k].n + '.'
+          if (rnd() < 0.5) return o('swarm', 2, 'r')
+          const k = randomBuilding(s); if (!k) return o('swarm', 2, 'r2')
+          s.b[k]--; return o('swarm', 2, 'r3', { n: BLD[k].n })
         }
       }
     ]
   },
   festival: {
-    t: 'Koloniści chcą święta',
-    d: () => 'Rada kolonistów prosi o zorganizowanie Dnia Pioniera.',
+    d: () => t('ch.festival.d'),
     opts: [
-      { n: 'Hucznie', d: () => '−200 kr, +12 morale', need: s => lack(s, 200), run: s => { s.cr -= 200; s.mor += 12; return 'Huczny Dzień Pioniera przejdzie do historii kolonii.' } },
-      { n: 'Skromnie', d: () => '−60 kr, +5 morale', need: s => lack(s, 60), run: s => { s.cr -= 60; s.mor += 5; return 'Skromne, ale miłe święto poprawiło nastroje.' } },
-      { n: 'Odmów', d: () => '−4 morale', run: s => { s.mor -= 4; return 'Święta nie będzie. Koloniści są zawiedzeni.' } }
+      { d: () => t('ch.fx', { cr: -200, mor: +12 }), need: s => lack(s, 200), run: s => { s.cr -= 200; s.mor += 12; return o('festival', 0, 'r') } },
+      { d: () => t('ch.fx', { cr: -60, mor: +5 }), need: s => lack(s, 60), run: s => { s.cr -= 60; s.mor += 5; return o('festival', 1, 'r') } },
+      { d: () => t('ch.fx', { mor: -4 }), run: s => { s.mor -= 4; return o('festival', 2, 'r') } }
     ]
   },
   journalist: {
-    t: 'Dziennikarz z Ludzkiej Unii Jedności',
-    d: () => 'Reporter imperialnej telewizji chce nakręcić materiał o kolonii.',
+    d: () => t('ch.journalist.d'),
     opts: [
       {
-        n: 'Oprowadź po kolonii', d: () => '−50 kr; dobry materiał może przyciągnąć osadników',
+        d: () => o('journalist', 0, 'd'),
         need: s => lack(s, 50),
         run: s => {
           s.cr -= 50
-          if (rnd() < 0.5) { const n = R(Math.min(15, Math.max(0, calc(s).cap - s.pop))); s.pop += n; return 'Reportaż był świetny – przybyło ' + n + ' nowych kolonistów.' }
-          return 'Reportaż wyemitowano o trzeciej w nocy. Nikt go nie widział.'
+          if (rnd() < 0.5) { const n = R(Math.min(15, Math.max(0, calc(s).cap - s.pop))); s.pop += n; return o('journalist', 0, 'r', { n }) }
+          return o('journalist', 0, 'r2')
         }
       },
-      { n: 'Przekup, żeby pisał same dobre rzeczy', d: () => '−150 kr, +6 morale', need: s => lack(s, 150), run: s => { s.cr -= 150; s.mor += 6; return 'Entuzjastyczny artykuł podniósł kolonistom morale.' } },
-      { n: 'Wyrzuć go', d: () => '−3 morale', run: s => { s.mor -= 3; return 'Dziennikarz odleciał obrażony. W kolonii mówi się o cenzurze.' } }
+      { d: () => t('ch.fx', { cr: -150, mor: +6 }), need: s => lack(s, 150), run: s => { s.cr -= 150; s.mor += 6; return o('journalist', 1, 'r') } },
+      { d: () => t('ch.fx', { mor: -3 }), run: s => { s.mor -= 3; return o('journalist', 2, 'r') } }
     ]
   },
   // ---------- 4 opcje ----------
   plague: {
-    t: 'Wybuch epidemii',
-    d: () => 'W kolonii szerzy się groźna choroba. Lekarze czekają na decyzję.',
+    d: () => t('ch.plague.d'),
     opts: [
-      { n: 'Kwarantanna', d: () => 'Niewielkie straty w ludziach, −6 morale', run: s => { const d = R(s.pop * 0.02); s.pop -= d; s.mor -= 6; addSick(s, 7); return 'Kwarantanna zatrzymała chorobę. Zmarło ' + d + ' osób.' } },
-      { n: 'Leczenie za kredyty', d: () => '−300 kr, minimalne straty', need: s => lack(s, 300), run: s => { s.cr -= 300; const d = R(s.pop * 0.01); s.pop -= d; addSick(s, 4); return 'Drogie leki uratowały większość chorych. Zmarło ' + d + ' osób.' } },
+      { d: () => o('plague', 0, 'd'), run: s => { const d = R(s.pop * 0.02); s.pop -= d; s.mor -= 6; addSick(s, 7); return o('plague', 0, 'r', { d }) } },
+      { d: () => o('plague', 1, 'd'), need: s => lack(s, 300), run: s => { s.cr -= 300; const d = R(s.pop * 0.01); s.pop -= d; addSick(s, 4); return o('plague', 1, 'r', { d }) } },
       {
-        n: 'Szczepionka eksperymentalna', d: () => 'Może zadziałać idealnie… albo wcale.',
-        run: s => { if (rnd() < 0.5) return 'Szczepionka zadziałała! Nikt nie zmarł.'; const d = R(s.pop * 0.08); s.pop -= d; addSick(s); return 'Szczepionka nie zadziałała. Zmarło ' + d + ' osób.' }
+        d: () => o('plague', 2, 'd'),
+        run: s => { if (rnd() < 0.5) return o('plague', 2, 'r'); const d = R(s.pop * 0.08); s.pop -= d; addSick(s); return o('plague', 2, 'r2', { d }) }
       },
-      { n: 'Nic nie rób', d: () => 'Duże straty w ludziach', run: s => { const d = R(s.pop * (s.tech.med ? 0.03 : 0.08) * (1 - 0.5 * calc(s).hospRed)); s.pop -= d; s.mor -= 5; addSick(s); return 'Epidemia przeszła przez kolonię. Zmarło ' + d + ' osób.' } }
+      { d: () => o('plague', 3, 'd'), run: s => { const d = R(s.pop * (s.tech.med ? 0.03 : 0.08) * (1 - 0.5 * calc(s).hospRed)); s.pop -= d; s.mor -= 5; addSick(s); return o('plague', 3, 'r', { d }) } }
     ]
   },
   smugglers: {
-    t: 'Przemytnicy',
-    d: () => 'Podejrzany frachtowiec proponuje towary „bez zbędnych pytań”.',
+    d: () => t('ch.smugglers.d'),
     opts: [
-      { n: 'Kup działo', d: () => '−250 kr, +1 działo magnetyczne', need: s => lack(s, 250), run: s => { s.cr -= 250; s.b.gun = (s.b.gun || 0) + 1; return 'Przemytnicy zostawili gotowe działo magnetyczne.' } },
-      { n: 'Kup nasiona', d: () => '−150 kr, +120 t żywności', need: s => lack(s, 150), run: s => { s.cr -= 150; s.food += 120; return 'Przemycone nasiona dały szybki plon: +120 t żywności.' } },
+      { d: () => o('smugglers', 0, 'd'), need: s => lack(s, 250), run: s => { s.cr -= 250; s.b.gun = (s.b.gun || 0) + 1; return o('smugglers', 0, 'r') } },
+      { d: () => o('smugglers', 1, 'd'), need: s => lack(s, 150), run: s => { s.cr -= 150; s.food += 120; return o('smugglers', 1, 'r') } },
       {
-        n: 'Kup dane naukowe', d: () => '−200 kr, +30 pkt do bieżących badań', need: s => s.rs ? lack(s, 200) : 'Nic nie jest badane.',
-        run: s => { s.cr -= 200; s.rp[s.rs] = (s.rp[s.rs] || 0) + 30; return 'Wykradzione dane przyspieszyły badania: ' + TECH[s.rs].n + ' +30 pkt.' }
+        d: () => o('smugglers', 2, 'd'), need: s => s.rs ? lack(s, 200) : t('ch.noResearch'),
+        run: s => { s.cr -= 200; s.rp[s.rs] = (s.rp[s.rs] || 0) + 30; return o('smugglers', 2, 'r', { n: TECH[s.rs].n }) }
       },
-      { n: 'Przegoń ich', d: () => 'Bez skutków', run: () => 'Przemytnicy odlecieli, przeklinając pod nosem.' }
+      { d: () => t('ch.noEffect'), run: () => o('smugglers', 3, 'r') }
     ]
   },
   // ---------- 5 opcji ----------
   gift: {
-    t: 'List od Imperatora',
-    d: () => 'Kancelaria Imperatora Gały przypomina, że każda kolonia przysyła prezent na Jubileusz. Termin: wczoraj.',
+    d: () => t('ch.gift.d'),
     opts: [
-      { n: 'Ręcznie przepisana książka', d: () => '−50 kr, +3 morale', need: s => lack(s, 50), run: s => { s.cr -= 50; s.mor += 3; return 'Kopiści przepisali „Kodeks drogowy Unii”. Imperator podobno się wzruszył.' } },
-      { n: 'Skrzynia minerałów', d: () => '−200 t minerałów, nagroda 400 kr', need: s => lack(s, 0, 200), run: s => { s.min -= 200; s.cr += 400; return 'Imperator docenił skrzynię minerałów i odesłał 400 kr nagrody.' } },
-      { n: 'Delegacja kolonistów', d: () => '−10 kolonistów, nagroda 600 kr', need: s => s.pop < 40 ? 'Za mało kolonistów.' : '', run: s => { s.pop -= 10; s.cr += 600; return 'Delegacja zostanie na dworze na zawsze. Kancelaria przysłała 600 kr „na otarcie łez”.' } },
+      { d: () => t('ch.fx', { cr: -50, mor: +3 }), need: s => lack(s, 50), run: s => { s.cr -= 50; s.mor += 3; return o('gift', 0, 'r') } },
+      { d: () => o('gift', 1, 'd'), need: s => lack(s, 0, 200), run: s => { s.min -= 200; s.cr += 400; return o('gift', 1, 'r') } },
+      { d: () => o('gift', 2, 'd'), need: s => s.pop < 40 ? t('ch.fewPop') : '', run: s => { s.pop -= 10; s.cr += 600; return o('gift', 2, 'r') } },
       {
-        n: 'Wiersz napisany przez dzieci', d: () => 'Za darmo – ale gust Imperatora jest nieprzewidywalny.',
-        run: s => { if (rnd() < 0.5) { s.mor += 10; return 'Imperator recytował wiersz na balu! Koloniści pękają z dumy.' } s.mor -= 5; return 'Imperator uznał wiersz za „zbyt awangardowy”. Wstyd na całą galaktykę.' }
+        d: () => o('gift', 3, 'd'),
+        run: s => { if (rnd() < 0.5) { s.mor += 10; return o('gift', 3, 'r') } s.mor -= 5; return o('gift', 3, 'r2') }
       },
-      { n: 'Nic nie wysyłaj', d: () => '−8 morale', run: s => { s.mor -= 8; return 'Kolonia nie wysłała prezentu. Plotki o tym krążą po całej Unii.' } }
+      { d: () => t('ch.fx', { mor: -8 }), run: s => { s.mor -= 8; return o('gift', 4, 'r') } }
     ]
   }
+}
+
+// tytuły zdarzeń i nazwy opcji jako gettery ze słownika
+for (const k in CHOICES) {
+  Object.defineProperty(CHOICES[k], 't', { get: () => t('ch.' + k + '.t'), enumerable: true })
+  CHOICES[k].opts.forEach((x, i) => Object.defineProperty(x, 'n', { get: () => o(k, i, 'n'), enumerable: true }))
 }
 
 export const ransomOf = s => Math.max(100, R(Math.max(s.cr, 0) * 0.2))

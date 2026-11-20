@@ -94,5 +94,20 @@ export default {
   'hint.build.t': 'First construction completed',
   'hint.build.d': 'Congratulations! The more builders (priority in the WORKERS tab), the faster new buildings go up – but the fewer people work in production.',
   'hint.exp.t': 'An expedition has returned',
-  'hint.exp.d': 'Expeditions search for the chosen target, but sometimes they find something else. Soldiers in the team lower the risk of losses, and engineers increase the gain.'
+  'hint.exp.d': 'Expeditions search for the chosen target, but sometimes they find something else. Soldiers in the team lower the risk of losses, and engineers increase the gain.',
+  // game day: messages, game over, start
+  'turn.hungerEnd': 'The famine is over – the colonists are eating their fill again.', 'turn.built': '★ Construction completed: {n}.',
+  'turn.collapsed': 'A building collapsed from old age: {n}. It has to be built again from scratch.', 'turn.auto': '(automatic answer)',
+  'turn.waiting': '★ {n} – waiting for your decision.',
+  'turn.researched': p => '★ The scientists have completed a project: ' + p.n + '! ' + p.d + '.' + (p.next ? ' Now researching: ' + p.next + '.' : ' The research queue is empty.'),
+  'turn.researchedTip': 'Choose the next project in the TECHNOLOGIES tab.', 'turn.badge': '★ Badge earned: {n}!',
+  'over.famine.t': 'DEATH BY STARVATION', 'over.famine.d': 'The colony starved for {n} days. Nobody survived.',
+  'over.win.t': 'VICTORY!', 'over.win.d': 'The scenario goal has been reached.',
+  'over.fall.t': 'THE COLONY HAS FALLEN', 'over.fall.d': 'Too few settlers are left to survive.',
+  'over.revolt.t': 'REVOLT!', 'over.revolt.d': 'The colonists seized power and sent you back to Earth.',
+  'over.bankrupt.t': 'BANKRUPTCY', 'over.bankrupt.d': 'Debts exceeded 500 credits. The Corporation takes over the colony.',
+  'over.term.t': 'END OF TERM', 'over.term.d': 'A year has passed. You did not reach the goal, but the colony survived.',
+  'state.homeDeposit': 'Home deposit', 'state.welcome': 'Welcome, Governor! Your colony ({n}) has {pop} settlers.',
+  'state.goal': 'Goal: {g} within a year ({d} days).',
+  'work.base': 'Base (children, the elderly and carers do not work)', 'work.hosp': 'Hospitals (fewer sick)', 'work.sick': 'Sick after an epidemic ({d})'
 }

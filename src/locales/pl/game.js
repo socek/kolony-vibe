@@ -91,4 +91,20 @@ export default {
   'hint.build.t': 'Pierwsza budowa ukończona',
   'hint.build.d': 'Gratulacje! Im więcej budowniczych (priorytet w zakładce PRACOWNICY), tym szybciej powstają kolejne budynki – ale tym mniej ludzi pracuje przy produkcji.',
   'hint.exp.t': 'Wyprawa wróciła',
-  'hint.exp.d': 'Wyprawy szukają wybranego celu, ale czasem znajdą coś innego. Żołnierze w ekipie zmniejszają ryzyko strat, a inżynierowie zwiększają zysk.',}
+  'hint.exp.d': 'Wyprawy szukają wybranego celu, ale czasem znajdą coś innego. Żołnierze w ekipie zmniejszają ryzyko strat, a inżynierowie zwiększają zysk.',
+  // dzień gry: wiadomości, koniec gry, start
+  'turn.hungerEnd': 'Koniec głodu – koloniści znów jedzą do syta.', 'turn.built': '★ Ukończono budowę: {n}.',
+  'turn.collapsed': 'Budynek rozpadł się ze starości: {n}. Trzeba zbudować go od nowa.', 'turn.auto': '(odpowiedź automatyczna)',
+  'turn.waiting': '★ {n} – czeka na twoją decyzję.',
+  'turn.researched': p => '★ Naukowcy ukończyli projekt: ' + p.n + '! ' + p.d + '.' + (p.next ? ' Teraz badają: ' + p.next + '.' : ' Kolejka badań jest pusta.'),
+  'turn.researchedTip': 'Wybierz kolejny projekt w zakładce TECHNOLOGIE.', 'turn.badge': '★ Zdobyto odznakę: {n}!',
+  'over.famine.t': 'ŚMIERĆ GŁODOWA', 'over.famine.d': 'Kolonia głodowała przez {n} dni. Nie przeżył nikt.',
+  'over.win.t': 'ZWYCIĘSTWO!', 'over.win.d': 'Cel scenariusza osiągnięty.',
+  'over.fall.t': 'KOLONIA UPADŁA', 'over.fall.d': 'Zostało zbyt mało osadników, by przetrwać.',
+  'over.revolt.t': 'BUNT!', 'over.revolt.d': 'Koloniści przejęli władzę i odesłali cię na Ziemię.',
+  'over.bankrupt.t': 'BANKRUCTWO', 'over.bankrupt.d': 'Długi przekroczyły 500 kredytów. Korporacja przejmuje kolonię.',
+  'over.term.t': 'KONIEC KADENCJI', 'over.term.d': 'Minął rok. Nie osiągnąłeś celu, ale kolonia przetrwała.',
+  'state.homeDeposit': 'Złoże macierzyste', 'state.welcome': 'Witaj, gubernatorze! Twoja kolonia ({n}) liczy {pop} osadników.',
+  'state.goal': 'Cel: {g} w ciągu roku ({d} dni).',
+  'work.base': 'Bazowo (dzieci, seniorzy i opiekunowie nie pracują)', 'work.hosp': 'Szpitale (mniej chorych)', 'work.sick': 'Chorzy po epidemii ({d})'
+}
