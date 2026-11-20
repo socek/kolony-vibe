@@ -4,4 +4,6 @@ import screens, { end } from './screens.js'
 import help from './help.js'
 import story from './story.js'
 import misc from './misc.js'
-export default { ...ui, ...screens, ...end, ...help, ...story, ...misc }
+import data from './data.js'
+import tabs from './tabs.js'
+export default { ...ui, ...screens, ...end, ...help, ...story, ...misc, ...data, ...tabs }
