@@ -15,7 +15,7 @@ describe('nowa gra', () => {
 describe('calc – przydział pracowników', () => {
   it('na starcie brakuje odrobiny rąk do pracy', () => {
     const c = calc(newState())
-    expect(c.workforce).toBe(60)
+    expect(c.workforce).toBeCloseTo(newState().pop * 0.62) // morale 60 na starcie daje +2 pkt proc.
     expect(c.needed).toBeGreaterThan(c.workforce)
     expect(c.e).toBeLessThan(1)
   })

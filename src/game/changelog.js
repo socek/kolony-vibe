@@ -9,6 +9,7 @@ export const versionLabel = (upper = false) => {
 export const CHANGELOG = [
   {
     v: '0.3 „Merveil” (in development)', d: 'w przygotowaniu', items: [
+      'Zdolni do pracy: odsetek nie jest już stały (60%). Zmieniają go morale (±10 pkt proc.), szpitale (do +5), nowa technologia Zautomatyzowane żłobki (+5) i epidemie (chorzy przez kilka dni nie pracują). Zakładka PRACA pokazuje, z czego wynika.',
       'Pięć nowych scenariuszy: Planeta Mruczysko (pory roku, fauna, zagrody, myśliwi), Asteroida Tik-Tak (anomalie czasu, cel badawczy: Rozciągacz Doby), Planeta Chlupotka (pływające pole golfowe, sztormy, mało lądu), Stacja Parapet-3 (bez kopalń, rozszczelnienia, Galeria Widokowa) i Glob Kostkolód (wieczna zima, Lód Ceremonialny).',
       'Muzyka chiptune w stylu C64: własne motywy – spokojny, kryzysowy (głód, blackout, dług, niskie morale), zwycięstwo i porażka. Osobny przełącznik muzyki w menu i ustawieniach.',
       'Podpowiedzi kontekstowe: okienko z radą, gdy coś dzieje się pierwszy raz (brak rąk do pracy, głód, blackout, awaria, decyzja…). Przycisk „nie pokazuj więcej” i przełącznik w ustawieniach.',
@@ -22,7 +23,7 @@ export const CHANGELOG = [
       'Zdarzenia z wyborem: 11 nowych sytuacji (od 2 do 5 opcji), np. okup piratów, strajk górników, epidemia, list od Imperatora. Czas stoi, dopóki nie podejmiesz decyzji; w ustawieniach można ustawić odpowiedzi automatyczne.',
       'Scenariusze: nowa gra zaczyna się od wyboru scenariusza. Każdy ma własny cel, historię i poziom trudności, który mnoży wynik. Pierwszy scenariusz: Księżyc Jowisz-67 (łatwy).',
       'Wspólna fabuła: przygotowania do setnych urodzin Imperatora Ludzkiej Unii Jedności.',
-      'Nowe drzewo technologii: 17 technologii w 6 gałęziach, z wymaganiami, pokazane jako schemat blokowy (na telefonie jako lista).',
+      'Nowe drzewo technologii: 18 technologii w 6 gałęziach, z wymaganiami, pokazane jako schemat blokowy (na telefonie jako lista).',
       'Kolejka badań – naukowcy badają kolejne technologie po sobie.',
       'Nowe technologie: krioprzechowalnictwo, synteza białka (syntezator żywności), superkondensatory, moduły piętrowe, holorozrywka, systemy celownicze, sonary geologiczne, łaziki terenowe, giełda międzygwiezdna, propaganda holograficzna.',
       'Pas wulkaniczny, Pole meteorytowe i Loteria biletów kolonijnych wymagają teraz technologii.',

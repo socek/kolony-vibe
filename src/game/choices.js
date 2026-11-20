@@ -1,5 +1,6 @@
 import { BLD, TECH } from './constants.js'
 import { calc } from './calc.js'
+import { addSick } from './workforce.js'
 import { bumpStat } from './badges.js'
 
 // Zdarzenia z wyborem. Każda opcja: n – nazwa, d – podpowiedź (znane skutki),
@@ -36,7 +37,7 @@ export const CHOICES = {
         n: 'Przyjmij', d: () => 'Nowi koloniści (jeśli jest miejsce), ale choroba może się rozprzestrzenić.',
         run: s => {
           const n = R(Math.min(15, Math.max(0, calc(s).cap - s.pop))); s.pop += n
-          if (rnd() < 0.5) { const d = R(s.pop * (s.tech.med ? 0.02 : 0.05) * (1 - 0.5 * calc(s).hospRed)); s.pop -= d; return 'Przyjęto ' + n + ' uchodźców, ale choroba się rozprzestrzeniła – zmarło ' + d + ' osób.' }
+          if (rnd() < 0.5) { const d = R(s.pop * (s.tech.med ? 0.02 : 0.05) * (1 - 0.5 * calc(s).hospRed)); s.pop -= d; addSick(s, 10); return 'Przyjęto ' + n + ' uchodźców, ale choroba się rozprzestrzeniła – zmarło ' + d + ' osób.' }
           return 'Przyjęto ' + n + ' uchodźców. Gorączka szybko minęła.'
         }
       },
@@ -121,13 +122,13 @@ export const CHOICES = {
     t: 'Wybuch epidemii',
     d: () => 'W kolonii szerzy się groźna choroba. Lekarze czekają na decyzję.',
     opts: [
-      { n: 'Kwarantanna', d: () => 'Niewielkie straty w ludziach, −6 morale', run: s => { const d = R(s.pop * 0.02); s.pop -= d; s.mor -= 6; return 'Kwarantanna zatrzymała chorobę. Zmarło ' + d + ' osób.' } },
-      { n: 'Leczenie za kredyty', d: () => '−300 kr, minimalne straty', need: s => lack(s, 300), run: s => { s.cr -= 300; const d = R(s.pop * 0.01); s.pop -= d; return 'Drogie leki uratowały większość chorych. Zmarło ' + d + ' osób.' } },
+      { n: 'Kwarantanna', d: () => 'Niewielkie straty w ludziach, −6 morale', run: s => { const d = R(s.pop * 0.02); s.pop -= d; s.mor -= 6; addSick(s, 7); return 'Kwarantanna zatrzymała chorobę. Zmarło ' + d + ' osób.' } },
+      { n: 'Leczenie za kredyty', d: () => '−300 kr, minimalne straty', need: s => lack(s, 300), run: s => { s.cr -= 300; const d = R(s.pop * 0.01); s.pop -= d; addSick(s, 4); return 'Drogie leki uratowały większość chorych. Zmarło ' + d + ' osób.' } },
       {
         n: 'Szczepionka eksperymentalna', d: () => 'Może zadziałać idealnie… albo wcale.',
-        run: s => { if (rnd() < 0.5) return 'Szczepionka zadziałała! Nikt nie zmarł.'; const d = R(s.pop * 0.08); s.pop -= d; return 'Szczepionka nie zadziałała. Zmarło ' + d + ' osób.' }
+        run: s => { if (rnd() < 0.5) return 'Szczepionka zadziałała! Nikt nie zmarł.'; const d = R(s.pop * 0.08); s.pop -= d; addSick(s); return 'Szczepionka nie zadziałała. Zmarło ' + d + ' osób.' }
       },
-      { n: 'Nic nie rób', d: () => 'Duże straty w ludziach', run: s => { const d = R(s.pop * (s.tech.med ? 0.03 : 0.08) * (1 - 0.5 * calc(s).hospRed)); s.pop -= d; s.mor -= 5; return 'Epidemia przeszła przez kolonię. Zmarło ' + d + ' osób.' } }
+      { n: 'Nic nie rób', d: () => 'Duże straty w ludziach', run: s => { const d = R(s.pop * (s.tech.med ? 0.03 : 0.08) * (1 - 0.5 * calc(s).hospRed)); s.pop -= d; s.mor -= 5; addSick(s); return 'Epidemia przeszła przez kolonię. Zmarło ' + d + ' osób.' } }
     ]
   },
   smugglers: {

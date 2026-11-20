@@ -11,7 +11,7 @@ const scen = computed(() => scenarioOf(game.s))
   <h1>ZASADY</h1>
   <p>Jesteś gubernatorem kolonii na odległej planecie. Każda tura to jeden dzień. Gra oferuje kilka scenariuszy – każdy ma własny cel, historię i poziom trudności (trudniejszy scenariusz mnoży wynik). W obecnym scenariuszu ({{ scen.n }}) masz {{ DAYS }} dni na cel: {{ scen.goal.text }}.</p>
   <p>
-    • 60% kolonistów pracuje. Najpierw obsadzane są mieszkania, chłodnie, magazyny, baterie i osłony, potem reszta zadań (budynki i budowniczowie) wg priorytetów z zakładki PRACA. Zatrzymany budynek nie produkuje ani nie zużywa energii, a jego pracownicy są bezrobotni.<br>
+    • Pracować może zwykle 60% kolonistów (reszta to dzieci, seniorzy i opiekunowie). Wysokie morale dodaje do 10 pkt proc., niskie tyle samo odejmuje; szpitale i technologia Zautomatyzowane żłobki dodają po 5 pkt proc., a po epidemii chorzy przez kilka dni nie pracują. Odsetek mieści się między 40% a 80%. Najpierw obsadzane są mieszkania, chłodnie, magazyny, baterie i osłony, potem reszta zadań (budynki i budowniczowie) wg priorytetów z zakładki PRACA. Zatrzymany budynek nie produkuje ani nie zużywa energii, a jego pracownicy są bezrobotni.<br>
     • Budowa trwa. Każdy budynek wymaga określonej ilości pracy – im większy, tym więcej. Więcej budowniczych kończy budowę szybciej, ale zabiera ludzi z produkcji. Anulowana budowa zwraca połowę kosztów.<br>
     • Kopalnie wydobywają minerały ze złóż, które się wyczerpują. Nowe złoża znajdują wyprawy (zakładka WYPRAWY) – uczestnicy na czas wyprawy opuszczają kolonię.<br>
     • Wyprawa szuka wybranego celu (złoża, ruiny, wraki, osadnicy) – z dużą szansą znajdzie właśnie to, z małą coś innego. Żołnierze w ekipie zmniejszają ryzyko, inżynierowie zwiększają zysk.<br>

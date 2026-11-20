@@ -222,3 +222,12 @@ test('scenariusz Chlupotka: limit miejsc na budynki', async ({ page }) => {
   await expect(page.locator('.card', { hasText: 'Pływający dołek golfowy' })).toBeVisible()
   await expect(page.locator('.card', { hasText: 'Kopalnia głębinowa' })).toBeVisible()
 })
+
+test('zakładka PRACA wyjaśnia odsetek zdolnych do pracy', async ({ page }) => {
+  await newGame(page)
+  await tab(page, 'PRACA')
+  await expect(page.getByText('Zdolni do pracy (62% kolonistów)')).toBeVisible()
+  await expect(page.getByText('Bazowo (dzieci, seniorzy i opiekunowie nie pracują)')).toBeVisible()
+  await expect(page.getByText('+2 pkt proc.')).toBeVisible()
+  await page.screenshot({ path: process.env.SHOT || 'test-results/work.png' })
+})

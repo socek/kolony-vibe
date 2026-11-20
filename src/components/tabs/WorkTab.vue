@@ -8,6 +8,10 @@ const setTrain = T => { game.s.train = T; saveNow() }
 import { fmt } from '../../game/format.js'
 import PixelIcon from '../PixelIcon.vue'
 import MeterBar from '../MeterBar.vue'
+import { workParts, WORK_MIN, WORK_MAX } from '../../game/workforce.js'
+const parts = computed(() => workParts(s.value))
+const pct = v => Math.round(v * 100)
+const sgn = x => x.k === 'base' ? pct(x.v) + '%' : (x.v > 0 ? '+' : '−') + Math.abs(Math.round(x.v * 1000) / 10) + ' pkt proc.'
 
 const s = computed(() => game.s)
 const infra = computed(() => INFRA.reduce((a, k) => a + c.value.wNeed[k], 0))
@@ -20,7 +24,11 @@ const jobs = computed(() => JOBS.filter(k => k === 'build' || k === 'repair' || 
 
 <template>
   <div class="card" style="border-top:0">
-    <div class="row"><span><PixelIcon name="work" />Zdolni do pracy (60% kolonistów)</span><span>{{ fmt(c.workforce) }}</span></div>
+    <div class="row"><span><PixelIcon name="work" />Zdolni do pracy ({{ pct(c.workRate) }}% kolonistów)</span><span>{{ fmt(c.workforce) }}</span></div>
+    <div class="small" style="margin:2px 0 6px 12px">
+      <div v-for="x in parts" :key="x.k" class="row"><span>{{ x.n }}</span><span :class="{ pos: x.k !== 'base' && x.v > 0, neg: x.v < 0 }">{{ sgn(x) }}</span></div>
+      <div>Odsetek mieści się zawsze między {{ pct(WORK_MIN) }}% a {{ pct(WORK_MAX) }}%. Wysokie morale, szpitale i technologia Zautomatyzowane żłobki go podnoszą, a niskie morale i epidemie obniżają.</div>
+    </div>
     <div class="row"><span>Zatrudnieni</span><span>{{ fmt(c.workforce - c.unemp) }}</span></div>
     <div class="row"><span>Bezrobotni</span><span :class="{ warn: c.unemp >= 1 }">{{ fmt(c.unemp) }}</span></div>
     <div class="row"><span>Brakuje rąk do pracy</span><span :class="{ neg: c.e < 1 }">{{ fmt(missing) }}</span></div>

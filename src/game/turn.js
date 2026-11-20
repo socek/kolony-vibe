@@ -97,7 +97,7 @@ export function endTurn(s, acc, auto = {}) {
   s.pop -= deaths
   // szkoły kształcą specjalistów spośród zwykłych pracowników
   s.trainProg = (s.trainProg || 0) + c.train
-  while (s.trainProg >= 1 && s.pop * 0.6 - specCount(s) >= 1) { s.trainProg -= 1; s.spec[s.train || 'sci']++; add('trained', { a: 1, _k: s.train || 'sci' }) }
+  while (s.trainProg >= 1 && s.pop * c.workRate - specCount(s) >= 1) { s.trainProg -= 1; s.spec[s.train || 'sci']++; add('trained', { a: 1, _k: s.train || 'sci' }) }
   if (s.trainProg > 1) s.trainProg = 1
   // gdy ludzi ubywa, specjalistów ubywa proporcjonalnie
   { const tot = specCount(s), max = s.pop * 0.6; if (tot > max && tot > 0) for (const T in s.spec) s.spec[T] = Math.floor(s.spec[T] * max / tot) }
@@ -128,6 +128,9 @@ export function endTurn(s, acc, auto = {}) {
   for (const k in s.pr) { const b = RES[k].base; s.pr[k] = Math.max(b * 0.5, Math.min(b * 2, s.pr[k] * (1 + (Math.random() - 0.5) * 0.14))) }
   edge('debt', s.cr < 0)
   if (s.cr < 0) add('debt')
+  // szpitale z dzisiaj wpływają na jutrzejszą liczbę zdolnych do pracy; choroby mijają
+  s.hospRed = c.hospRed
+  if (s.sick > 0) s.sick = Math.max(0, s.sick - 1)
   s.mor = Math.max(0, Math.min(100, s.mor)); s.pop = Math.max(0, s.pop); s.energy = Math.min(s.energy, batCapOf(s))
   { const l = clampStore(s); edge('loss', l.food >= 1 || l.min >= 1); if (l.food > 0 || l.min > 0) add('loss', { f: l.food, m: l.min }) }
   if (s.rs && c.resProd > 0) {

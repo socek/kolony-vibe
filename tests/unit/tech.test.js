@@ -11,9 +11,9 @@ import { fixRandom } from './helpers.js'
 afterEach(() => vi.restoreAllMocks())
 
 describe('drzewo technologii', () => {
-  it('ma 17 technologii wspólnych (plus scenariuszowe), każda w istniejącej gałęzi i z istniejącymi wymaganiami', () => {
+  it('ma 18 technologii wspólnych (plus scenariuszowe), każda w istniejącej gałęzi i z istniejącymi wymaganiami', () => {
     const branches = TECH_BRANCHES.map(b => b.k)
-    expect(Object.keys(TECH).filter(k => !TECH[k].sc)).toHaveLength(17)
+    expect(Object.keys(TECH).filter(k => !TECH[k].sc)).toHaveLength(18)
     for (const [k, t] of Object.entries(TECH)) {
       expect(branches, k).toContain(t.g)
       for (const r of t.req) expect(TECH[r], k + ' wymaga ' + r).toBeDefined()
