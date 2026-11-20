@@ -13,7 +13,6 @@ export default {
   'rp.battery': 'Energy storage', 'rp.noBat': 'no batteries', 'rp.charged': 'charged',
   'rp.deps': p => p.t + ' t in deposits' + (p.d ? ', for ' + p.d : ''), 'rp.noDeps': 'no deposits',
   'rp.exp': '{n} in the field', 'rp.expBack': 'next return in {d}',
-  'rp.fridges': 'Cold stores', 'rp.stores': 'Mineral warehouses', 'rp.lossFood': '{n} t of food lost', 'rp.lossMin': '{n} t of minerals lost',
   'rp.money': p => 'taxes ' + p.tax + (p.trade != null ? ', trade ' + p.trade : '') + ', upkeep −' + p.maint,
   'rp.noProject': 'no project', 'rp.defence': 'Defence',
   'rp.defOn': 'losses from pirates and meteorites −{n}%', 'rp.defOff': 'guns unstaffed – not working', 'rp.guns': 'working guns: {n}/{max}',

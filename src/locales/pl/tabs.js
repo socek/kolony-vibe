@@ -13,7 +13,6 @@ export default {
   'rp.battery': 'Magazyn energii', 'rp.noBat': 'brak baterii', 'rp.charged': 'naładowane',
   'rp.deps': p => 'w złożach ' + p.t + ' t' + (p.d ? ', na ' + p.d : ''), 'rp.noDeps': 'brak złóż',
   'rp.exp': '{n} w terenie', 'rp.expBack': 'najbliższy powrót za {d}',
-  'rp.fridges': 'Chłodnie', 'rp.stores': 'Magazyny minerałów', 'rp.lossFood': 'strata {n} t żywności', 'rp.lossMin': 'strata {n} t minerałów',
   'rp.money': p => 'podatki ' + p.tax + (p.trade != null ? ', handel ' + p.trade : '') + ', utrzymanie −' + p.maint,
   'rp.noProject': 'brak projektu', 'rp.defence': 'Obrona',
   'rp.defOn': 'straty od piratów i meteorytów −{n}%', 'rp.defOff': 'działa nieobsadzone – nie działają', 'rp.guns': 'sprawne działa: {n}/{max}',

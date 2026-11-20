@@ -71,14 +71,6 @@ const depDays = computed(() => c.value.minProd > 0 ? Math.floor(c.value.deps / c
       <span><SignedNum :n="c.minProd" /> t <span class="small" :class="{ neg: !s.dep.length && s.b.mine, warn: depDays !== null && depDays < 30 }">({{ s.dep.length ? t('rp.deps', { t: fmt(c.deps), d: depDays !== null ? daysTxt(depDays) : null }) : t('rp.noDeps') }})</span></span>
     </div>
     <div v-if="s.exp.length" class="row"><span><PixelIcon name="exp" />{{ t('tab.wyprawy') }}</span><span>{{ t('rp.exp', { n: s.exp.length }) }} <span class="small">({{ t('rp.expBack', { d: daysTxt(Math.min(...s.exp.map(x => x.left))) }) }})</span></span></div>
-    <div class="row">
-      <span><PixelIcon name="fridge" />{{ t('rp.fridges') }}</span>
-      <span>{{ c.foodCap }} t<span v-if="c.foodWaste >= 1" class="small warn"> ({{ t('rp.lossFood', { n: R(c.foodWaste) }) }})</span></span>
-    </div>
-    <div class="row">
-      <span><PixelIcon name="store" />{{ t('rp.stores') }}</span>
-      <span>{{ c.minCap }} t<span v-if="c.minWaste >= 1" class="small warn"> ({{ t('rp.lossMin', { n: R(c.minWaste) }) }})</span></span>
-    </div>
     <div class="row"><span><PixelIcon name="cr" />{{ t('tile.cr') }}</span><span><SignedNum :n="c.taxInc + c.trade - c.maint" /> <span class="small">({{ t('rp.money', { tax: R(c.taxInc), trade: c.trade ? R(c.trade) : null, maint: c.maint }) }})</span></span></div>
     <div class="row">
       <span><PixelIcon name="res" />{{ t('tile.res') }}</span>
