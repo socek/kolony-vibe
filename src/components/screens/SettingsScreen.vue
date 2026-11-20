@@ -10,6 +10,11 @@ const reset = () => Object.assign(settings.stops, stopDefaults())
 
 <template>
   <h1>USTAWIENIA</h1>
+  <div class="devh">PODPOWIEDZI</div>
+  <div class="card">
+    <label class="row stopopt"><span>Pokazuj podpowiedzi, gdy coś dzieje się pierwszy raz</span><input v-model="settings.hints" type="checkbox"></label>
+    <div v-if="Object.keys(settings.hintOff).length" class="row small"><span>Wyłączone pojedynczo: {{ Object.keys(settings.hintOff).length }}</span><button @click="Object.keys(settings.hintOff).forEach(k => delete settings.hintOff[k])">PRZYWRÓĆ WSZYSTKIE</button></div>
+  </div>
   <div class="devh">ZATRZYMYWANIE PRZEWIJANIA</div>
   <div class="small">Wybierz, które wydarzenia zatrzymują przewijanie przyciskiem ▶▶ 7 DNI. Stany długotrwałe (głód, blackout, brak rąk do pracy…) zatrzymują je tylko w dniu, w którym się zaczynają. Koniec gry zawsze zatrzymuje przewijanie. Ustawienia obowiązują we wszystkich grach.</div>
   <div class="card">

@@ -13,6 +13,7 @@ import { accept, deliver, makeOffer, ensureOrders } from './game/orders.js'
 import { queueTech, unqueueTech, researchNow, nextResearch } from './game/research.js'
 import { resolveChoice } from './game/choices.js'
 import { syncCond } from './game/wear.js'
+import { pickHint } from './game/hints.js'
 import { BADGES, newBadges } from './game/badges.js'
 import { hall, recordGame, grantBadges } from './game/scores.js'
 
@@ -23,7 +24,7 @@ const resumable = saved && !saved.over ? saved : null
 export const game = reactive({ s: resumable || newState() })
 export const ui = reactive({
   tab: 'raport', qty: 50, expRange: 'near', expTeam: 5, expGoal: 'dep', expSol: 0, expEng: 0, screen: 'boot', busy: false, turn: null, devMsg: '',
-  savedDay: resumable ? resumable.m : null, saveDropped: loaded.dropped, lastPlace: null
+  savedDay: resumable ? resumable.m : null, saveDropped: loaded.dropped, lastPlace: null, hint: null, reasons: []
 })
 export const c = computed(() => calc(game.s))
 
@@ -109,7 +110,19 @@ function afterTurns() {
   if (game.s.over) ui.lastPlace = recordGame(game.s) || ui.lastPlace
   persist(); ui.tab = 'raport'
   if (game.s.over) { ui.screen = 'end'; beep(game.s.over.win ? 880 : 150, 0.4) }
+  else showHint()
+  ui.reasons = []
 }
+// podpowiedź kontekstowa przy pierwszym wystąpieniu sytuacji (decyzja i koniec gry mają pierwszeństwo)
+function showHint() {
+  const s = game.s
+  if (!settings.hints || s.pending) return
+  const k = pickHint(ui.reasons, s.hintsShown || [], settings.hintOff)
+  if (!k) return
+  s.hintsShown = [...(s.hintsShown || []), k]
+  ui.hint = k; ui.screen = 'hint'
+}
+export function closeHint(never) { if (never && ui.hint) settings.hintOff[ui.hint] = true; ui.hint = null; persist(); closeScreen() }
 export function showStats() { ui.tab = 'statystyki'; closeScreen() }
 
 // Rozgrywa n dni z animacją; przy n > 1 zatrzymuje się na ważnych wydarzeniach.
@@ -122,7 +135,9 @@ export function advance(n) {
   ui.turn = { ...label(), fill: 0, out: false }
   let i = 0, why = []
   const step = () => {
-    why = endTurn(game.s, i > 0, settings.auto).filter(k => k === 'over' || k === 'choice' || (n > 1 && settings.stops[k]))
+    const raw = endTurn(game.s, i > 0, settings.auto)
+    ui.reasons.push(...raw)
+    why = raw.filter(k => k === 'over' || k === 'choice' || (n > 1 && settings.stops[k]))
     i++
     persist() // zapis od razu, nie dopiero po animacji
     ui.tab = 'raport'

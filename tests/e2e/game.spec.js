@@ -6,7 +6,11 @@ test.beforeEach(async ({ page }) => {
   page.on('pageerror', e => page.errors.push(e.message))
   page.on('console', m => { if (m.type() === 'error' || m.type() === 'warning') page.errors.push(m.text()) })
   await page.addInitScript(() => {
-    if (!sessionStorage.getItem('kept')) localStorage.clear()
+    if (!sessionStorage.getItem('kept')) {
+      localStorage.clear()
+      // podpowiedzi wyłączone w testach rozgrywki (osobny test poniżej)
+      if (!location.hash.includes('hints')) localStorage.setItem('kolony-vibe-settings', JSON.stringify({ hints: false }))
+    }
     Math.random = () => 0.5
   })
 })
@@ -179,4 +183,16 @@ test('konserwatorzy i stan budynków', async ({ page }) => {
   await expect(page.locator('.card', { hasText: 'Konserwatorzy (naprawy' })).toBeVisible()
   await tab(page, 'RAPORT')
   await expect(page.getByText('Stan budynków')).toBeVisible()
+})
+
+test('podpowiedź przy pierwszym braku rąk do pracy i „nie pokazuj więcej”', async ({ page }) => {
+  await page.goto('/#hints')
+  await page.getByRole('button', { name: 'NOWA GRA' }).click()
+  await page.getByRole('button', { name: 'ROZPOCZNIJ' }).click()
+  await page.getByRole('button', { name: 'DO DZIEŁA!' }).click()
+  await page.getByRole('button', { name: '▶ KONIEC DNIA' }).click()
+  await expect(page.getByText('BRAKUJE RĄK DO PRACY')).toBeVisible()
+  await page.getByRole('button', { name: 'NIE POKAZUJ WIĘCEJ' }).click()
+  const st = await page.evaluate(() => JSON.parse(localStorage.getItem('kolony-vibe-settings')))
+  expect(st.hintOff.short).toBe(true)
 })

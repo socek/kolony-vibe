@@ -34,5 +34,5 @@ const KEY = 'kolony-vibe-settings'
 let stored = null
 try { stored = JSON.parse(localStorage.getItem(KEY) || 'null') } catch (e) { /* brak ustawień */ }
 // stops – powody zatrzymania przewijania, auto – automatyczne odpowiedzi na zdarzenia z wyborem
-export const settings = reactive({ stops: { ...stopDefaults(), ...(stored && stored.stops) }, auto: { ...(stored && stored.auto) }, chart: { range: 90, off: {}, ...(stored && stored.chart) } })
+export const settings = reactive({ stops: { ...stopDefaults(), ...(stored && stored.stops) }, auto: { ...(stored && stored.auto) }, chart: { range: 90, off: {}, ...(stored && stored.chart) }, hints: stored && stored.hints === false ? false : true, hintOff: { ...(stored && stored.hintOff) } })
 watch(settings, v => { try { localStorage.setItem(KEY, JSON.stringify(v)) } catch (e) { /* brak zapisu */ } }, { deep: true })

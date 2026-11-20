@@ -50,3 +50,13 @@ describe('tabela wyników', () => {
     expect(JSON.parse(localStorage.getItem('kolony-vibe-scores'))).toHaveLength(2)
   })
 })
+
+import { HINTS, pickHint } from '../../src/game/hints.js'
+describe('podpowiedzi', () => {
+  it('wybiera nieużytą i niewyłączoną podpowiedź pasującą do sytuacji', () => {
+    expect(pickHint(['short', 'black'], [], {})).toBe('short')
+    expect(pickHint(['short', 'black'], ['short'], {})).toBe('black')
+    expect(pickHint(['short'], [], { short: true })).toBe(null)
+    for (const k in HINTS) expect(HINTS[k].d.length, k).toBeGreaterThan(30)
+  })
+})
