@@ -17,7 +17,7 @@ export const BOOT_STORY = [
   'Pakuj walizkę, gubernatorze. Prom odlatuje o świcie. I pamiętaj motto obszaru: Spokojnie, Przetrwasz! Ambitnie Działaj, Awansujesz Jutro!'
 ]
 
-export const PROLOGUE = 'Jego Wysokość Imperator Gała, władca Ludzkiej Unii Jedności, obchodzi wkrótce setne urodziny i zapowiedział „Najwspanialszy Jubileusz w Dziejach Ludzkości”. Każdy z jego dworzan dostał do przygotowania jeden element uroczystości – i każdy uznał, że najlepiej będzie założyć w tym celu nową kolonię w Ósmym Wielkim Nowym Obszarze. Jako świeżo mianowany gubernator obszaru wybierasz, którą kolonią pokierujesz.'
+export const PROLOGUE = 'Imperator Gała zjadł swoje ulubione śniadanie – jajecznicę z trzech strusich jaj, popitą świeżym mlekiem z nowej lodówki zamykanej na szyfr – i wyraźnie złagodniał. W przypływie łaskawości pozwolił ci samemu wybrać kolonię, którą pokierujesz. Wybieraj rozważnie: Jego Wysokość obchodzi wkrótce setne urodziny, a każda kolonia Ósmego Wielkiego Nowego Obszaru ma przygotować coś wyjątkowego na „Najwspanialszy Jubileusz w Dziejach Ludzkości”. Dobry humor Imperatora trwa zwykle do obiadu.'
 
 const R = Math.round, rnd = () => Math.random()
 const pct = (v, n) => Math.min(100, v / n * 100)
