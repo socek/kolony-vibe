@@ -5,6 +5,7 @@ import { depTotal } from './expeditions.js'
 import { condMul, repairNeed, REPAIR_PER_WORKER } from './wear.js'
 import { scenarioOf, seasonOf } from './scenarios.js'
 import { workRate } from './workforce.js'
+import { lawFx } from './laws.js'
 
 // Wylicza wszystko, co dzieje się w ciągu jednego dnia, bez zmieniania stanu.
 export function calc(s) {
@@ -57,6 +58,8 @@ export function calc(s) {
     M[k] = n > 0 ? (SPEC_REQ.includes(k) ? E[k] : (o + SPEC_BONUS * st) / n) : 1
     // zużyte i zepsute budynki pracują gorzej
     if (BLD[k]) M[k] *= condMul(s, k)
+    // ustawa: obowiązkowa gimnastyka
+    M[k] *= 1 + lawFx(s, 'eff')
   }
   // punkty napraw dziennie (inżynierowie naprawiają szybciej)
   const repairPts = wNeed.repair * (M.repair || 0) / Math.max(af, 0.01) * REPAIR_PER_WORKER
@@ -79,9 +82,9 @@ export function calc(s) {
   const enProd = (out('power') + out('power2')) * sea.solar + out('geo') // słońce zależy od pory roku
   const f = enNeed > 0 ? Math.min(1, (s.energy + enProd) / enNeed) : 1
   const huntFood = wNeed.hunt * (M.hunt || 0) / af * 1.3 // 1,3 t na myśliwego dziennie
-  const foodProd = ((out('farm') + out('farm2')) * sea.food * (mods.farmMul || 1) + out('synth') + out('kelp') + huntFood) * f, foodCons = s.pop * 0.2 * s.ration
-  const minPot = (out('mine') + out('mine2')) * f, deps = depTotal(s), minProd = Math.min(minPot, deps), resProd = b.lab * BLD.lab.p * M.lab * f
-  const taxInc = s.pop * s.tax * 0.0167, trade = b.port * BLD.port.p * M.port * f, maint = nb * MAINT
+  const foodProd = ((out('farm') + out('farm2')) * sea.food * (mods.farmMul || 1) + out('synth') + out('kelp') + huntFood) * f, foodCons = s.pop * 0.2 * s.ration * (1 + lawFx(s, 'food'))
+  const minPot = (out('mine') + out('mine2')) * f, deps = depTotal(s), minProd = Math.min(minPot, deps), resProd = b.lab * BLD.lab.p * M.lab * f * (1 + lawFx(s, 'res'))
+  const taxInc = s.pop * s.tax * 0.0167 * (1 + lawFx(s, 'tax')), trade = b.port * BLD.port.p * M.port * f, maint = nb * MAINT + lawFx(s, 'cr')
   const unemp = avail
   const foodAfter = s.food + foodProd - foodCons
   const shortRatio = foodAfter < 0 && foodCons > 0 ? Math.min(1, -foodAfter / foodCons) : 0
@@ -101,10 +104,10 @@ export function calc(s) {
   // fauna (Mruczysko): ogrodzenia soniczne zmniejszają straty; zagrody oswajają mruczki
   const faunaRed = 1 - Math.pow(0.7, (b.fence || 0) * (M.fence || 0) * f), tameRate = (b.pen || 0) * (E.pen || 0) * 0.2
   const tameMor = Math.min(10, (s.tamed || 0) * 0.2), iceProd = out('icefac') * f
-  const def = (b.gun || 0) * M.gun * f * (t.targeting ? 1.5 : 1), defRed = 1 - Math.pow(0.75, def)
+  const def = (b.gun || 0) * M.gun * f * (t.targeting ? 1.5 : 1) * (1 + lawFx(s, 'def')), defRed = 1 - Math.pow(0.75, def)
   const crowd = s.pop > cap ? Math.min(40, (s.pop - cap) / Math.max(cap, 1) * 60) : 0
   const unempPen = s.pop > 0 ? unemp / s.pop * 30 : 0, black = (1 - f) * 30, starv = shortRatio * 40
-  let mt = 55 - (s.tax - 10) * 1.5 + (s.ration - 1) * 40 + recB + tameMor - crowd - unempPen - black - starv - (s.cr < 0 ? 10 : 0)
+  let mt = 55 - (s.tax - 10) * 1.5 + (s.ration - 1) * 40 + recB + tameMor - crowd - unempPen - black - starv - (s.cr < 0 ? 10 : 0) + lawFx(s, 'mor')
   mt = Math.max(0, Math.min(100, mt))
   const foodCap = capOf(s, 'food'), minCap = capOf(s, 'min'), foodWaste = Math.max(0, foodAfter - foodCap), minWaste = Math.max(0, s.min + minProd - minCap)
   const enStore = Math.max(0, Math.min(enCap, s.energy + enProd - enNeed * f)), enWaste = Math.max(0, s.energy + enProd - enNeed * f - enCap)

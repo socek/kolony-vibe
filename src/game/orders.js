@@ -1,5 +1,6 @@
 import { BLD, TECH, techReady, techIn, houseCapOf } from './constants.js'
 import { t, localize } from '../i18n.js'
+import { lawFx } from './laws.js'
 
 // Zlecenia Ludzkiej Unii Jedności (LUJ). Co jakiś czas przychodzi oferta; przyjęte zlecenie
 // ma termin, nagrodę i karę za niewykonanie. Reputacja u LUJ zmienia wysokość nagród.
@@ -40,7 +41,7 @@ export function makeOffer(s) {
   const offer = {
     id: ++o.seq, kind, tech, amount, days, expires: s.m + 5,
     who: pick(t('ord.who')), why: pick(t('ord.why.' + kind)),
-    reward: { cr: rewards.includes('cr') ? R(value * 1.6 * repMul(s) / 10) * 10 : 0, pop: rewards.includes('pop') ? R(5 + scale * 3) : 0, techpts: rewards.includes('techpts') ? R(value / 8) : 0, building: rewards.includes('building') ? pick(['farm', 'power', 'house', 'fridge', 'store', 'battery']) : null },
+    reward: { cr: rewards.includes('cr') ? R(value * 1.6 * repMul(s) * (1 + lawFx(s, 'orders')) / 10) * 10 : 0, pop: rewards.includes('pop') ? R(5 + scale * 3) : 0, techpts: rewards.includes('techpts') ? R(value / 8) : 0, building: rewards.includes('building') ? pick(['farm', 'power', 'house', 'fridge', 'store', 'battery']) : null },
     penalty: { kind: penalty, cr: R(value * 0.6 / 10) * 10, mor: 8, rep: 15 }
   }
   o.offers.push(offer)

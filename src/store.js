@@ -15,6 +15,7 @@ import { queueTech, unqueueTech, researchNow, nextResearch } from './game/resear
 import { resolveChoice } from './game/choices.js'
 import { syncCond } from './game/wear.js'
 import { pickHint } from './game/hints.js'
+import { toggleLaw } from './game/laws.js'
 import { track } from './analytics.js'
 import { specTargets, setSpecTarget, dismissSpec } from './game/specialists.js'
 import { playTheme, themeFor } from './game/music.js'
@@ -90,6 +91,7 @@ export function dismiss(T) { if (dismissSpec(game.s, T)) { beep(300, 0.06); pers
 export function setPrio(k, l) { game.s.prio[k] = l; beep(600, 0.03); persist() }
 export function sendExp() { if (sendExpedition(game.s, ui.expRange, ui.expTeam, ui.expGoal, ui.expSol, ui.expEng)) { track('expedition', { range: ui.expRange, goal: ui.expGoal, team: ui.expTeam }); ui.expSol = 0; ui.expEng = 0; beep(440, 0.12); persist() } }
 export function neighborTrade(k) { if (nbTrade(game.s, k)) { beep(740, 0.05); persist() } }
+export function law(k) { if (toggleLaw(game.s, k, t)) { track('law', { law: k, on: game.s.laws.includes(k) }); beep(650, 0.08); persist() } }
 export function campaign(k) { if (startCampaign(game.s, k)) { track('campaign', { campaign: k }); beep(700, 0.1); persist() } }
 // decyzja w zdarzeniu z wyborem
 export function decide(i) {

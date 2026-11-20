@@ -13,4 +13,5 @@ import expeditions from './expeditions.js'
 import empire from './empire.js'
 import scenarios from './scenarios.js'
 import changelog from './changelog.js'
-export default { ...ui, ...screens, ...end, ...help, ...story, ...misc, ...data, ...tabs, ...game, ...events, ...choices, ...expeditions, ...empire, ...scenarios, ...changelog }
+import laws from './laws.js'
+export default { ...ui, ...screens, ...end, ...help, ...story, ...misc, ...data, ...tabs, ...game, ...events, ...choices, ...expeditions, ...empire, ...scenarios, ...changelog, ...laws }

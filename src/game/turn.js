@@ -9,6 +9,7 @@ import { tickCampaigns } from './campaigns.js'
 import { nextResearch } from './research.js'
 import { scenarioOf } from './scenarios.js'
 import { trainPick } from './specialists.js'
+import { lawFx } from './laws.js'
 
 import { CHOICES, CHOICE_KEYS, resolveChoice } from './choices.js'
 import { record } from './history.js'
@@ -83,7 +84,7 @@ export function endTurn(s, acc, auto = {}) {
   edge('crowd', c.crowd > 0)
   if (c.crowd > 0) add('crowd')
   if (!deaths && !s.hungerDays && s.pop < c.cap) {
-    const g = Math.min(s.pop * 0.0082 * (s.mor / 60) * (s.tech.med ? 1.3 : 1), c.cap - s.pop)
+    const g = Math.min(s.pop * 0.0082 * (s.mor / 60) * (s.tech.med ? 1.3 : 1) * (1 + lawFx(s, 'growth')), c.cap - s.pop)
     s.pop += g
     if (g > 0) add('born', { a: g })
   }

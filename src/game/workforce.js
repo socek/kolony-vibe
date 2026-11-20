@@ -1,4 +1,5 @@
 import { t } from '../i18n.js'
+import { lawFx } from './laws.js'
 // Ilu kolonistów jest zdolnych do pracy. Bazowo 60% – reszta to dzieci, seniorzy i ich opiekunowie.
 // Odsetek zmieniają morale, szpitale, technologia Zautomatyzowane żłobki i choroby po epidemiach.
 export const WORK_BASE = 0.6, WORK_MIN = 0.4, WORK_MAX = 0.8
@@ -11,6 +12,7 @@ export function workParts(s) {
   if (Math.abs(mor) >= 0.001) parts.push({ k: 'mor', n: t('tile.mor'), v: mor })
   if (hosp > 0.001) parts.push({ k: 'hosp', n: t('work.hosp'), v: 0.05 * hosp })
   if (s.tech && s.tech.creche) parts.push({ k: 'creche', n: t('tech.creche.n'), v: 0.05 })
+  { const w = lawFx(s, 'work'); if (w) parts.push({ k: 'law', n: t('law.part'), v: w }) }
   if (s.sick > 0) parts.push({ k: 'sick', n: t('work.sick', { d: t('fmt.days', { n: Math.ceil(s.sick) }) }), v: -0.1 * Math.min(1, s.sick / SICK_DAYS) * (1 - 0.5 * hosp) })
   return parts
 }

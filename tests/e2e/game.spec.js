@@ -427,3 +427,15 @@ test('Piaskownica: bez limitu dni i bez wyniku', async ({ page }) => {
   await expect(page.getByText('KADENCJA GUBERNATORA')).toHaveCount(0)
   await expect(page.getByText('TRYB SWOBODNY', { exact: true })).toBeVisible()
 })
+
+test('ustawy w zakładce POLITYKA', async ({ page }) => {
+  await newGame(page)
+  await tab(page, 'POLITYKA')
+  const row = page.locator('.law', { hasText: 'Niedzielne festyny' })
+  await row.getByRole('button', { name: 'UCHWAL −100 kr' }).click()
+  await expect(row).toHaveClass(/on/)
+  await expect(page.getByText('uchwalone: 1/3')).toBeVisible()
+  await expect(page.locator('.tile', { hasText: 'Kredyty' })).toContainText('400')
+  await row.getByRole('button', { name: 'UCHYL' }).click()
+  await expect(page.getByText('uchwalone: 0/3')).toBeVisible()
+})
