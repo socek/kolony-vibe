@@ -107,7 +107,7 @@ export function acceptOrder(id) { if (accept(game.s, id)) { track('order_accept'
 export function deliverOrder(id) {
   const txt = deliver(game.s, id)
   if (!txt) return
-  game.s.report.unshift({ k: 'txt', t: '★ LUJ: ' + txt, c: 'pos', day: game.s.m - 1, top: 1 })
+  game.s.report.unshift({ k: 'txt', t: t('ord.prefix') + txt, c: 'pos', day: game.s.m - 1, top: 1 })
   beep(990, 0.12); persist()
 }
 export function research(k) { if (queueTech(game.s, k)) { track('research', { tech: k }); beep(880, 0.08); persist() } }

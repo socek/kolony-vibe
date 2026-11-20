@@ -1,4 +1,5 @@
 import { BLD, TECH, techReady, techIn, houseCapOf } from './constants.js'
+import { t, localize } from '../i18n.js'
 
 // Zlecenia Ludzkiej Unii Jedności (LUJ). Co jakiś czas przychodzi oferta; przyjęte zlecenie
 // ma termin, nagrodę i karę za niewykonanie. Reputacja u LUJ zmienia wysokość nagród.
@@ -6,21 +7,14 @@ const R = Math.round, rnd = () => Math.random()
 const pick = a => a[Math.floor(rnd() * a.length)]
 
 export const ORDER_KINDS = {
-  food: { n: 'Dostawa żywności', unit: 't', what: 't żywności', have: s => s.food, take: (s, n) => { s.food -= n } },
-  min: { n: 'Dostawa minerałów', unit: 't', what: 't minerałów', have: s => s.min, take: (s, n) => { s.min -= n } },
-  energy: { n: 'Dostawa energii', unit: 'kWh', what: 'kWh energii (przez port kosmiczny)', have: s => s.energy, take: (s, n) => { s.energy -= n }, need: s => s.b.port ? '' : 'Wymaga portu kosmicznego.' },
-  people: { n: 'Wysłanie kolonistów', unit: 'os.', what: 'osób do innej kolonii', have: s => Math.max(0, s.pop - 20), take: (s, n) => { s.pop -= n } },
-  tech: { n: 'Badania dla LUJ', unit: '', what: '', auto: true }
+  food: { unit: 't', have: s => s.food, take: (s, n) => { s.food -= n } },
+  min: { unit: 't', have: s => s.min, take: (s, n) => { s.min -= n } },
+  energy: { unit: 'kWh', have: s => s.energy, take: (s, n) => { s.energy -= n }, need: s => s.b.port ? '' : t('ord.needPort') },
+  people: { have: s => Math.max(0, s.pop - 20), take: (s, n) => { s.pop -= n } },
+  tech: { unit: '', auto: true }
 }
 
-const WHO = ['Komitet Jubileuszowy LUJ', 'Ministerstwo Zaopatrzenia Bankietów', 'Biuro Kolonii Zamorskich', 'Kancelaria Imperialnych Prezentów', 'Departament Spraw Bardzo Pilnych']
-const WHY = {
-  food: ['na próbny bankiet jubileuszowy', 'dla głodujących chórzystów orkiestry jubileuszowej', 'na tort w kształcie Imperatora'],
-  min: ['na pomnik Imperatora w skali 1:1', 'na fundamenty trybun jubileuszowych', 'na medale okolicznościowe'],
-  energy: ['do zasilenia iluminacji jubileuszowej', 'na pokaz laserów nad stolicą', 'do podgrzania basenu Imperatora'],
-  people: ['do obsługi szatni na Jubileuszu', 'jako statyści do parady', 'do nowej kolonii na pograniczu'],
-  tech: ['bo Imperator usłyszał o tym w radiu', 'do raportu dla Rady Unii', 'na wystawę osiągnięć ludzkości']
-}
+// zleceniodawcy i powody zleceń – w słownikach (ord.who, ord.why.<rodzaj>)
 
 const repMul = s => 0.5 + (s.ord ? s.ord.rep : 50) / 100 // reputacja 0..100 → nagrody ×0,5..×1,5
 
@@ -45,7 +39,7 @@ export function makeOffer(s) {
   const penalty = pick(['none', 'cr', 'mor', 'rep'])
   const offer = {
     id: ++o.seq, kind, tech, amount, days, expires: s.m + 5,
-    who: pick(WHO), why: pick(WHY[kind]),
+    who: pick(t('ord.who')), why: pick(t('ord.why.' + kind)),
     reward: { cr: rewards.includes('cr') ? R(value * 1.6 * repMul(s) / 10) * 10 : 0, pop: rewards.includes('pop') ? R(5 + scale * 3) : 0, techpts: rewards.includes('techpts') ? R(value / 8) : 0, building: rewards.includes('building') ? pick(['farm', 'power', 'house', 'fridge', 'store', 'battery']) : null },
     penalty: { kind: penalty, cr: R(value * 0.6 / 10) * 10, mor: 8, rep: 15 }
   }
@@ -53,25 +47,25 @@ export function makeOffer(s) {
   return offer
 }
 
-export const orderTitle = x => x.kind === 'tech' ? 'Zbadaj technologię: ' + TECH[x.tech].n : ORDER_KINDS[x.kind].n + ': ' + x.amount + ' ' + ORDER_KINDS[x.kind].what
+export const orderTitle = x => x.kind === 'tech' ? t('ord.techTitle', { n: TECH[x.tech].n }) : ORDER_KINDS[x.kind].n + ': ' + x.amount + ' ' + ORDER_KINDS[x.kind].what
 
 export function rewardText(x) {
   const r = x.reward, p = []
-  if (r.cr) p.push(r.cr + ' kr')
-  if (r.pop) p.push(r.pop + ' kolonistów')
-  if (r.techpts) p.push(r.techpts + ' pkt badań')
-  if (r.building) p.push('darmowy budynek: ' + BLD[r.building].n)
+  if (r.cr) p.push(t('ord.r.cr', { n: r.cr }))
+  if (r.pop) p.push(t('ord.r.pop', { n: r.pop }))
+  if (r.techpts) p.push(t('ord.r.pts', { n: r.techpts }))
+  if (r.building) p.push(t('ord.r.bld', { n: BLD[r.building].n }))
   return p.join(' + ')
 }
 export function penaltyText(x) {
   const p = x.penalty
-  return { none: 'brak (tylko utrata nagrody)', cr: 'grzywna ' + p.cr + ' kr', mor: '−' + p.mor + ' morale', rep: '−' + p.rep + ' reputacji u LUJ' }[p.kind]
+  return t('ord.p.' + p.kind, p)
 }
 
 export function canAccept(s, id) {
   const o = ensureOrders(s)
-  if (o.active.length >= 3) return 'Możesz mieć najwyżej 3 zlecenia naraz.'
-  return o.offers.some(x => x.id === id) ? '' : 'Oferta wygasła.'
+  if (o.active.length >= 3) return t('ord.max3')
+  return o.offers.some(x => x.id === id) ? '' : t('ord.expired')
 }
 export function accept(s, id) {
   if (canAccept(s, id)) return false
@@ -84,10 +78,10 @@ export function accept(s, id) {
 
 export function canDeliver(s, id) {
   const x = ensureOrders(s).active.find(y => y.id === id)
-  if (!x || x.kind === 'tech') return 'Wykonuje się samo po odkryciu technologii.'
+  if (!x || x.kind === 'tech') return t('ord.auto')
   const k = ORDER_KINDS[x.kind]
   if (k.need && k.need(s)) return k.need(s)
-  return k.have(s) >= x.amount ? '' : 'Za mało: masz ' + R(k.have(s)) + ' ' + k.unit + '.'
+  return k.have(s) >= x.amount ? '' : t('ord.few', { n: R(k.have(s)), u: k.unit })
 }
 
 function grant(s, x) {
@@ -105,7 +99,7 @@ export function deliver(s, id) {
   const x = s.ord.active.find(y => y.id === id)
   ORDER_KINDS[x.kind].take(s, x.amount)
   grant(s, x)
-  return 'Zlecenie wykonane (' + orderTitle(x) + '). Nagroda: ' + rewardText(x) + '.'
+  return t('ord.done', { n: orderTitle(x), r: rewardText(x) })
 }
 
 // codzienny przegląd zleceń; note(tekst, klasa); zwraca listę powodów zatrzymania przewijania
@@ -113,22 +107,26 @@ export function tickOrders(s, note) {
   const o = ensureOrders(s), stops = []
   o.offers = o.offers.filter(x => x.expires >= s.m)
   for (const x of [...o.active]) {
-    if (x.kind === 'tech' && s.tech[x.tech]) { grant(s, x); note('★ LUJ: zlecenie wykonane – odkryto ' + TECH[x.tech].n + '. Nagroda: ' + rewardText(x) + '.', 'pos'); continue }
+    if (x.kind === 'tech' && s.tech[x.tech]) { grant(s, x); note(t('ord.doneTech', { n: TECH[x.tech].n, r: rewardText(x) }), 'pos'); continue }
     if (s.m > x.deadline) {
       const p = x.penalty
       if (p.kind === 'cr') s.cr -= p.cr
       if (p.kind === 'mor') s.mor -= p.mor
       o.rep = Math.max(0, o.rep - 8 - (p.kind === 'rep' ? p.rep : 0))
       o.active = o.active.filter(y => y.id !== x.id)
-      note('LUJ: minął termin zlecenia „' + orderTitle(x) + '”. Kara: ' + penaltyText(x) + '.', 'neg')
+      note(t('ord.fail', { n: orderTitle(x), p: penaltyText(x) }), 'neg')
       stops.push('orderFail')
     }
   }
   if (s.m >= o.next) {
     const x = makeOffer(s)
     o.next = s.m + 15 + R(rnd() * 15)
-    note('★ LUJ: nowa oferta zlecenia – ' + orderTitle(x) + '.', 'sub', 'Szczegóły w zakładce IMPERIUM.')
+    note(t('ord.new', { n: orderTitle(x) }), 'sub', t('ord.newTip'))
     stops.push('order')
   }
   return stops
 }
+
+// nazwy rodzajów zleceń (ord.k.<rodzaj>.n), opis ilości (.what) i jednostka osób (people.unit)
+localize(ORDER_KINDS, 'ord.k', ['n', 'what'])
+Object.defineProperty(ORDER_KINDS.people, 'unit', { get: () => t('ord.k.people.unit'), enumerable: true })

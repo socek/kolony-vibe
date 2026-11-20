@@ -9,4 +9,6 @@ import tabs from './tabs.js'
 import game from './game.js'
 import events from './events.js'
 import choices from './choices.js'
-export default { ...ui, ...screens, ...end, ...help, ...story, ...misc, ...data, ...tabs, ...game, ...events, ...choices }
+import expeditions from './expeditions.js'
+import empire from './empire.js'
+export default { ...ui, ...screens, ...end, ...help, ...story, ...misc, ...data, ...tabs, ...game, ...events, ...choices, ...expeditions, ...empire }

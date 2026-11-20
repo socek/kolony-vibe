@@ -35,7 +35,7 @@ export function t(key, p) {
   const v = LANGS[i18n.lang].dict[key] ?? LANGS.pl.dict[key]
   if (v == null) return key
   // funkcja w słowniku dostaje parametry i samo t (do sięgania po inne teksty)
-  return typeof v === 'function' ? v(p || {}, t) : fill(v, p)
+  return typeof v === 'function' ? v(p || {}, t) : typeof v === 'string' ? fill(v, p) : v
 }
 // czy klucz istnieje (np. opcjonalne teksty)
 export const has = key => LANGS[i18n.lang].dict[key] != null || LANGS.pl.dict[key] != null
