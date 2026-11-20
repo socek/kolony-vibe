@@ -140,3 +140,5 @@ a{color:var(--cyan)}
 
 .spec{margin-top:6px;padding-top:4px;border-top:1px dashed var(--border)}
 .bootstory{margin-top:10px;color:var(--white);line-height:1.25}.bootstory p{margin:0 0 8px}
+.bootbody{display:flex;flex-direction:column}
+@media (max-width:600px){.bootbody .btns{order:-1;margin-bottom:6px}}

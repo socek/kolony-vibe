@@ -9,7 +9,7 @@ export const versionLabel = (upper = false) => {
 export const CHANGELOG = [
   {
     v: '0.3 „Merveil” (in development)', d: 'w przygotowaniu', items: [
-      'Ekran startowy opowiada początek fabuły: jak Imperator Gała awansował cię na Gubernatora Ósmego Wielkiego Nusziwegi Obszaru.',
+      'Ekran startowy opowiada początek fabuły: jak Imperator Gała awansował cię na Gubernatora Ósmego Wielkiego Nowego Obszaru. Na telefonie przyciski są nad fabułą. Wstęp do scenariuszy i list z kancelarii mówią teraz o Imperatorze Gale.',
       'Animacja „wczytywania” na ekranie startowym leci tylko raz, przy uruchomieniu gry – nie przy powrocie z zasad czy „O grze”.',
       'Zakładka RYNEK nazywa się teraz IMPERIUM (rynek, zlecenia LUJ i osada sąsiedzka).',
       'Specjaliści według celów: zamiast wybierać, kogo szkolą szkoły, każda specjalizacja ma docelową liczbę – AUTO (tyle, ile stanowisk w budynkach) albo ręczną. Szkoły kształcą tych, których najbardziej brakuje, a po osiągnięciu celów nie zabierają ludzi. Nowe: zwalnianie specjalistów i ostrzeżenie, gdy szkoły nie nadążają.',
@@ -28,7 +28,7 @@ export const CHANGELOG = [
       'Wyniki i odznaki (menu → WYNIKI I ODZNAKI): tabela najlepszych gier ze wszystkimi szczegółami i 10 odznak wspólnych dla wszystkich scenariuszy. Ekran końca gry pokazuje miejsce w tabeli i ma przycisk do statystyk.',
       'Zdarzenia z wyborem: 11 nowych sytuacji (od 2 do 5 opcji), np. okup piratów, strajk górników, epidemia, list od Imperatora. Czas stoi, dopóki nie podejmiesz decyzji; w ustawieniach można ustawić odpowiedzi automatyczne.',
       'Scenariusze: nowa gra zaczyna się od wyboru scenariusza. Każdy ma własny cel, historię i poziom trudności, który mnoży wynik. Pierwszy scenariusz: Księżyc Jowisz-67 (łatwy).',
-      'Wspólna fabuła: przygotowania do setnych urodzin Imperatora Ludzkiej Unii Jedności.',
+      'Wspólna fabuła: przygotowania do setnych urodzin Imperatora Gały, władcy Ludzkiej Unii Jedności.',
       'Nowe drzewo technologii: 18 technologii w 6 gałęziach, z wymaganiami, pokazane jako schemat blokowy (na telefonie jako lista).',
       'Kolejka badań – naukowcy badają kolejne technologie po sobie.',
       'Nowe technologie: krioprzechowalnictwo, synteza białka (syntezator żywności), superkondensatory, moduły piętrowe, holorozrywka, systemy celownicze, sonary geologiczne, łaziki terenowe, giełda międzygwiezdna, propaganda holograficzna.',

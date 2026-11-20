@@ -23,6 +23,8 @@ import LinkButtons from '../LinkButtons.vue'
     <template v-for="(l, i) in LINES.slice(0, shown)" :key="i">{{ l }}<br></template>
     <template v-if="shown > LINES.length">
       RUN<span class="cursor"></span>
+      <!-- na telefonie przyciski idą nad fabułę (CSS: .bootbody .btns{order:-1}), żeby nie trzeba było ich szukać -->
+      <div class="bootbody">
       <div class="bootstory"><p v-for="(p, i) in BOOT_STORY" :key="i">{{ p }}</p></div>
       <div v-if="ui.saveDropped" class="warn small" style="margin-top:8px">Zapis gry z poprzedniej wersji nie jest zgodny z obecną wersją gry i nie może zostać wczytany. Zacznij nową grę.</div>
       <div class="btns">
@@ -32,6 +34,7 @@ import LinkButtons from '../LinkButtons.vue'
         <button @click="showScreen('about')">O GRZE</button>
         <button @click="showScreen('log')">ZMIANY</button>
         <LinkButtons />
+      </div>
       </div>
     </template>
   </div>

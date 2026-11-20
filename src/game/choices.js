@@ -147,7 +147,7 @@ export const CHOICES = {
   // ---------- 5 opcji ----------
   gift: {
     t: 'List od Imperatora',
-    d: () => 'Kancelaria Imperatora przypomina, że każda kolonia przysyła prezent na Jubileusz. Termin: wczoraj.',
+    d: () => 'Kancelaria Imperatora Gały przypomina, że każda kolonia przysyła prezent na Jubileusz. Termin: wczoraj.',
     opts: [
       { n: 'Ręcznie przepisana książka', d: () => '−50 kr, +3 morale', need: s => lack(s, 50), run: s => { s.cr -= 50; s.mor += 3; return 'Kopiści przepisali „Kodeks drogowy Unii”. Imperator podobno się wzruszył.' } },
       { n: 'Skrzynia minerałów', d: () => '−200 t minerałów, nagroda 400 kr', need: s => lack(s, 0, 200), run: s => { s.min -= 200; s.cr += 400; return 'Imperator docenił skrzynię minerałów i odesłał 400 kr nagrody.' } },
