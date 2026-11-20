@@ -10,7 +10,7 @@ export const versionLabel = (upper = false) => {
 export const CHANGELOG = [
   {
     v: '0.4 (in development)', d: 'w przygotowaniu', items: [
-      'Bateria mieści 25 kWh zamiast 100. Nowa gra zaczyna się z 4 bateriami (tak jak dotąd 100 kWh), a w zapisanych grach każda dawna bateria zamienia się w 4 nowe.',
+      'Bateria mieści 25 kWh zamiast 100. Nowa gra zaczyna się z 4 bateriami (tak jak dotąd 100 kWh), a w zapisanych grach każda dawna bateria zamienia się w 4 nowe. Bateria kosztuje 35 kr i 20 t minerałów (zamiast 130 kr i 70 t).',
       'Okienko samouczka ma przycisk WYŁĄCZ SAMOUCZEK CAŁKOWICIE i informację, gdzie go potem włączyć.',
       'Nowa opcja dla zaawansowanych (menu → USTAWIENIA): skrócone komunikaty w raporcie – tylko co się stało, bez rad, co z tym zrobić.',
       'Po zakończeniu dnia (i przewijaniu 7 dni) gra przewija ekran tak, żeby początek raportu był na górze.',
