@@ -17,9 +17,10 @@ import { analyticsOn } from '../../analytics.js'
     <label class="row stopopt"><span>Muzyka w tle (zmienia się zależnie od sytuacji w kolonii)</span><input v-model="settings.music" type="checkbox"></label>
     <label class="row stopopt"><span>Efekty dźwiękowe</span><input v-model="audio.sound" type="checkbox"></label>
   </div>
-  <div class="devh">PODPOWIEDZI</div>
+  <div class="devh">SAMOUCZEK I KOMUNIKATY</div>
   <div class="card">
-    <label class="row stopopt"><span>Pokazuj podpowiedzi, gdy coś dzieje się pierwszy raz</span><input v-model="settings.hints" type="checkbox"></label>
+    <label class="row stopopt"><span>Samouczek: okienka z podpowiedzią, gdy coś dzieje się pierwszy raz</span><input v-model="settings.hints" type="checkbox"></label>
+    <label class="row stopopt"><span>Skrócone komunikaty w raporcie – tylko co się stało, bez rad, co z tym zrobić (dla zaawansowanych)</span><input v-model="settings.short" type="checkbox"></label>
     <div v-if="Object.keys(settings.hintOff).length" class="row small"><span>Wyłączone pojedynczo: {{ Object.keys(settings.hintOff).length }}</span><button @click="Object.keys(settings.hintOff).forEach(k => delete settings.hintOff[k])">PRZYWRÓĆ WSZYSTKIE</button></div>
   </div>
   <template v-if="analyticsOn">

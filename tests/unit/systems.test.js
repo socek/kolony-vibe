@@ -149,3 +149,18 @@ describe('komunikaty o bateriach', async () => {
     expect(REP.batFull.f({}, 1)).toBe('Baterie naładowane.')
   })
 })
+
+describe('skrócone komunikaty', async () => {
+  const { repLines } = await import('../../src/game/report.js')
+  const s = { repDays: 1, report: [{ k: 'crowd', v: {}, d: 1 }, { k: 'txt', t: '★ LUJ: nowa oferta.', tip: 'Szczegóły w zakładce IMPERIUM.', day: 1, top: 1 }] }
+  it('pełne komunikaty zawierają radę, co zrobić', () => {
+    const t = repLines(s).map(x => x.text)
+    expect(t).toContain('Przeludnienie. Zbuduj moduły mieszkalne.')
+    expect(t).toContain('★ LUJ: nowa oferta. Szczegóły w zakładce IMPERIUM.')
+  })
+  it('skrócone – tylko co się stało', () => {
+    const t = repLines(s, true).map(x => x.text)
+    expect(t).toContain('Przeludnienie.')
+    expect(t).toContain('★ LUJ: nowa oferta.')
+  })
+})

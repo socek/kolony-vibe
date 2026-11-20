@@ -7,6 +7,7 @@ import { avgCond, brokenCount } from '../../game/wear.js'
 import { num, fmt, daysTxt } from '../../game/format.js'
 import { techPct, techEta } from '../../game/calc.js'
 import { repLines } from '../../game/report.js'
+import { settings } from '../../game/stops.js'
 import PixelIcon from '../PixelIcon.vue'
 import MeterBar from '../MeterBar.vue'
 import SignedNum from '../SignedNum.vue'
@@ -16,7 +17,7 @@ const title = computed(() => {
   const d = s.value.repDays
   return !d ? 'RAPORT' : d === 1 ? 'RAPORT Z OSTATNIEGO DNIA' : 'RAPORT Z OSTATNICH ' + d + ' DNI'
 })
-const lines = computed(() => repLines(s.value))
+const lines = computed(() => repLines(s.value, settings.short))
 const eff = computed(() => c.value.e * c.value.f)
 const nextMor = computed(() => Math.max(0, Math.min(100, s.value.mor + (c.value.mt - s.value.mor) * MORK)))
 const prog = computed(() => scenarioOf(s.value).goal.progress(s.value))

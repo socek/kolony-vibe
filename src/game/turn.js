@@ -36,7 +36,8 @@ export function endTurn(s, acc, auto = {}) {
   // edge: powód tylko w dniu, w którym problem się zaczyna
   const edge = (k, cond) => { now[k] = !!cond; if (cond && !was[k]) stops.add(k) }
   const add = (k, v) => r.push({ k, v: v || {}, d: 1 })
-  const note = (t, cl) => r.push({ k: 'txt', t, c: cl, day: s.m, top: 1 })
+  // tip – rada, co zrobić (pomijana w trybie skróconych komunikatów)
+  const note = (t, cl, tip) => r.push({ k: 'txt', t, c: cl, day: s.m, top: 1, ...(tip ? { tip } : {}) })
 
   syncCond(s)
   s.prev = snapshot(s)
@@ -143,7 +144,7 @@ export function endTurn(s, acc, auto = {}) {
     if (s.rp[k] >= t.c) {
       stops.add('research'); s.tech[k] = 1; delete s.rp[k]; s.rs = null
       nextResearch(s)
-      note('★ Naukowcy ukończyli projekt: ' + t.n + '! ' + t.d + '.' + (s.rs ? ' Teraz badają: ' + TECH[s.rs].n + '.' : ' Kolejka badań jest pusta – wybierz kolejny projekt w zakładce TECHNOLOGIE.'), 'pos'); beep(990, 0.15)
+      note('★ Naukowcy ukończyli projekt: ' + t.n + '! ' + t.d + '.' + (s.rs ? ' Teraz badają: ' + TECH[s.rs].n + '.' : ' Kolejka badań jest pusta.'), 'pos', s.rs ? null : 'Wybierz kolejny projekt w zakładce TECHNOLOGIE.'); beep(990, 0.15)
     }
   } else if (!s.rs && c.resProd > 0 && nextTech(s)) add('nores')
   edge('nores', !s.rs && c.resProd > 0 && nextTech(s))
