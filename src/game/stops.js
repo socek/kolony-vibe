@@ -23,11 +23,12 @@ export const STOPS = [
 ]
 
 export const stopDefaults = () => Object.fromEntries(STOPS.map(x => [x.k, x.def]))
-export const stopWhy = k => k === 'over' ? 'koniec gry' : (STOPS.find(x => x.k === k) || {}).why || k
+export const stopWhy = k => k === 'over' ? 'koniec gry' : k === 'choice' ? 'decyzja do podjęcia' : (STOPS.find(x => x.k === k) || {}).why || k
 
 // Ustawienia gracza – wspólne dla wszystkich gier, osobno od zapisu stanu gry
 const KEY = 'kolony-vibe-settings'
 let stored = null
 try { stored = JSON.parse(localStorage.getItem(KEY) || 'null') } catch (e) { /* brak ustawień */ }
-export const settings = reactive({ stops: { ...stopDefaults(), ...(stored && stored.stops) } })
+// stops – powody zatrzymania przewijania, auto – automatyczne odpowiedzi na zdarzenia z wyborem
+export const settings = reactive({ stops: { ...stopDefaults(), ...(stored && stored.stops) }, auto: { ...(stored && stored.auto) } })
 watch(settings, v => { try { localStorage.setItem(KEY, JSON.stringify(v)) } catch (e) { /* brak zapisu */ } }, { deep: true })

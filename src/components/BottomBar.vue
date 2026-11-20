@@ -11,8 +11,9 @@ onUnmounted(() => window.removeEventListener('hashchange', check))
 
 <template>
   <div class="bar">
-    <button class="go" :disabled="ui.busy || !!game.s.over" @click="advance(1)">▶ KONIEC DNIA</button>
-    <button :disabled="ui.busy || !!game.s.over" title="Przewiń do 7 dni – zatrzymuje się przy ważnych wydarzeniach" @click="advance(7)">▶▶ 7 DNI</button>
+    <button v-if="game.s.pending" class="go decide" @click="showScreen('choice')">⚠ DECYZJA!</button>
+    <button v-else class="go" :disabled="ui.busy || !!game.s.over" @click="advance(1)">▶ KONIEC DNIA</button>
+    <button :disabled="ui.busy || !!game.s.over || !!game.s.pending" title="Przewiń do 7 dni – zatrzymuje się przy ważnych wydarzeniach" @click="advance(7)">▶▶ 7 DNI</button>
     <button v-if="devOn" title="Menu deweloperskie" @click="showScreen('dev')">DEV</button>
     <button title="Menu" @click="showScreen('menu')">≡</button>
   </div>

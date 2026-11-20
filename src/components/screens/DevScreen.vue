@@ -3,6 +3,7 @@ import { computed } from 'vue'
 import { game, ui, closeScreen, devAct, devSet, devTech } from '../../store.js'
 import { BLD, TECH } from '../../game/constants.js'
 import { EVNAMES } from '../../game/events.js'
+import { CHOICES } from '../../game/choices.js'
 
 // Menu deweloperskie / cheaty – edycja całego stanu gry
 const s = computed(() => game.s)
@@ -56,6 +57,9 @@ const ACTIONS = [['finish', 'UKOŃCZ BUDOWY'], ['fill', 'NAPEŁNIJ MAGAZYNY'], [
 
   <div class="devh">WYWOŁAJ ZDARZENIE</div>
   <div class="btns" style="margin-top:4px"><button v-for="(n, i) in EVNAMES" :key="i" @click="devAct('ev' + i)">{{ n }}</button></div>
+
+  <div class="devh">WYWOŁAJ ZDARZENIE Z WYBOREM</div>
+  <div class="btns" style="margin-top:4px"><button v-for="(ev, k) in CHOICES" :key="k" @click="devAct('ch:' + k)">{{ ev.t }}</button></div>
 
   <div class="btns"><button @click="closeScreen">ZAMKNIJ</button></div>
 </template>

@@ -7,6 +7,7 @@ import { extract, tickExpeditions } from './expeditions.js'
 import { tickCampaigns } from './campaigns.js'
 import { nextResearch } from './research.js'
 import { scenarioOf } from './scenarios.js'
+import { CHOICES, CHOICE_KEYS, resolveChoice } from './choices.js'
 
 export function clampStore(s) {
   const l = { food: Math.max(0, s.food - capOf(s, 'food')), min: Math.max(0, s.min - capOf(s, 'min')) }
@@ -18,8 +19,11 @@ export const snapshot = s => ({ pop: s.pop, food: s.food, energy: s.energy, min:
 
 // Rozgrywa jeden dzień. acc = true dokleja raport do raportu z poprzednich dni.
 // Zwraca listę powodów, dla których przewijanie mogłoby się zatrzymać (klucze z STOPS w stops.js).
-export function endTurn(s, acc) {
+// auto – automatyczne odpowiedzi na zdarzenia z wyborem: { klucz zdarzenia: numer opcji }
+export function endTurn(s, acc, auto = {}) {
   if (s.over) return ['over']
+  // gra czeka na decyzję gracza – dzień się nie rozgrywa
+  if (s.pending) return ['choice']
   const c = calc(s), r = [], stops = new Set(), was = s.was || {}, now = {}
   // edge: powód tylko w dniu, w którym problem się zaczyna
   const edge = (k, cond) => { now[k] = !!cond; if (cond && !was[k]) stops.add(k) }
@@ -86,8 +90,17 @@ export function endTurn(s, acc) {
   if (tickExpeditions(s, note)) stops.add('exp')
   if (tickCampaigns(s, note)) stops.add('camp')
   if (s.m > 10 && Math.random() < 0.1) {
-    const ei = Math.floor(Math.random() * EVENTS.length), m = EVENTS[ei](s)
-    if (m) { stops.add(EVENT_BAD[ei] ? 'evBad' : 'evGood'); note('★ ' + m, 'sub'); beep(220, 0.25) }
+    if (Math.random() < 0.4) {
+      // zdarzenie z wyborem: odpowiedź automatyczna albo czekanie na decyzję gracza
+      const k = CHOICE_KEYS[Math.floor(Math.random() * CHOICE_KEYS.length)]
+      const txt = auto[k] != null ? resolveChoice(s, k, auto[k]) : null
+      if (txt) note('★ ' + txt + ' (odpowiedź automatyczna)', 'sub')
+      else { s.pending = k; stops.add('choice'); note('★ ' + CHOICES[k].t + ' – czeka na twoją decyzję.', 'warn') }
+      beep(220, 0.25)
+    } else {
+      const ei = Math.floor(Math.random() * EVENTS.length), m = EVENTS[ei](s)
+      if (m) { stops.add(EVENT_BAD[ei] ? 'evBad' : 'evGood'); note('★ ' + m, 'sub'); beep(220, 0.25) }
+    }
   }
   for (const k in s.pr) { const b = RES[k].base; s.pr[k] = Math.max(b * 0.5, Math.min(b * 2, s.pr[k] * (1 + (Math.random() - 0.5) * 0.14))) }
   edge('debt', s.cr < 0)

@@ -112,3 +112,17 @@ test('kolejka badań w zakładce TECHNOLOGIE', async ({ page }) => {
   await expect(page.locator('[data-tech="auto"]')).toContainText('KOLEJKA #1')
   await expect(page.locator('.tarrow').first()).toBeAttached()
 })
+
+test('zdarzenie z wyborem wstrzymuje czas do decyzji', async ({ page }) => {
+  await newGame(page)
+  await page.evaluate(() => { location.hash = '#iddqd' })
+  await page.getByRole('button', { name: 'DEV' }).click()
+  await page.getByRole('button', { name: 'Wędrowny kupiec' }).click()
+  await expect(page.getByText('WĘDROWNY KUPIEC')).toBeVisible()
+  await page.getByRole('button', { name: /OBEJRZYJ KOLONIĘ/ }).click()
+  await expect(page.getByRole('button', { name: '▶▶ 7 DNI' })).toBeDisabled()
+  await page.getByRole('button', { name: '⚠ DECYZJA!' }).click()
+  await page.getByRole('button', { name: /^Kup/ }).click()
+  await expect(page.locator('.log')).toContainText('Kupiono 150 t minerałów')
+  await expect(page.getByRole('button', { name: '▶ KONIEC DNIA' })).toBeEnabled()
+})

@@ -10,6 +10,7 @@ import { settings, stopWhy } from './game/stops.js'
 import { sendExpedition, addDeposit } from './game/expeditions.js'
 import { startCampaign } from './game/campaigns.js'
 import { queueTech, unqueueTech, researchNow, nextResearch } from './game/research.js'
+import { resolveChoice, CHOICES } from './game/choices.js'
 
 const loaded = load(), saved = loaded.s
 const resumable = saved && !saved.over ? saved : null
@@ -67,6 +68,17 @@ export const saveNow = persist
 export function setPrio(k, l) { game.s.prio[k] = l; beep(600, 0.03); persist() }
 export function sendExp() { if (sendExpedition(game.s, ui.expRange, ui.expTeam)) { beep(440, 0.12); persist() } }
 export function campaign(k) { if (startCampaign(game.s, k)) { beep(700, 0.1); persist() } }
+// decyzja w zdarzeniu z wyborem
+export function decide(i) {
+  const s = game.s
+  if (!s.pending) return
+  const txt = resolveChoice(s, s.pending, i)
+  if (!txt) return
+  if (!Array.isArray(s.report)) s.report = []
+  s.report.unshift({ k: 'txt', t: '★ ' + txt, c: 'sub', day: s.m - 1, top: 1 })
+  s.pending = null
+  beep(600, 0.08); persist(); closeScreen()
+}
 export function research(k) { if (queueTech(game.s, k)) { beep(880, 0.08); persist() } }
 export function unresearch(k) { unqueueTech(game.s, k); beep(300, 0.05); persist() }
 export function researchFirst(k) { if (researchNow(game.s, k)) { beep(990, 0.08); persist() } }
@@ -86,7 +98,7 @@ export function advance(n) {
   ui.turn = { ...label(), fill: 0, out: false }
   let i = 0, why = []
   const step = () => {
-    why = endTurn(game.s, i > 0).filter(k => k === 'over' || (n > 1 && settings.stops[k]))
+    why = endTurn(game.s, i > 0, settings.auto).filter(k => k === 'over' || k === 'choice' || (n > 1 && settings.stops[k]))
     i++
     persist() // zapis od razu, nie dopiero po animacji
     ui.tab = 'raport'
@@ -102,7 +114,7 @@ export function advance(n) {
     beep(660, 0.06)
     setTimeout(() => {
       ui.turn.out = true
-      setTimeout(() => { ui.turn = null; ui.busy = false; afterTurns() }, 200)
+      setTimeout(() => { ui.turn = null; ui.busy = false; afterTurns(); if (game.s.pending && !game.s.over) ui.screen = 'choice' }, 200)
     }, n > 1 ? 150 : 200)
   }
   setTimeout(step, n > 1 ? 120 : 200)
@@ -118,11 +130,12 @@ export function devAct(a) {
   else if (a === 'alltech') { for (const k in TECH) s.tech[k] = 1; s.rs = null; s.rp = {}; s.rq = []; ui.devMsg = 'Odkryto wszystkie technologie.' }
   else if (a === 'dep') { addDeposit(s, 'Złoże deweloperskie', 1000); ui.devMsg = 'Dodano złoże 1000 t.' }
   else if (a === 'expback') { s.exp.forEach(x => x.left = 1); ui.devMsg = 'Wyprawy wrócą na koniec dnia.' }
+  else if (a.startsWith('ch:')) { if (!s.pending) { s.pending = a.slice(3); ui.screen = 'choice'; persist(); return } ui.devMsg = 'Najpierw rozstrzygnij bieżącą decyzję.' }
   else if (a === 'revive') { s.over = null; ui.devMsg = 'Gra wznowiona.' }
   else if (a === 'skip7' || a === 'skip30') {
     const n = a === 'skip7' ? 7 : 30, p0 = snapshot(s)
     let i = 0
-    while (i < n && !s.over) { endTurn(s, i > 0); i++ }
+    while (i < n && !s.over && !s.pending) { endTurn(s, i > 0, settings.auto); i++ }
     s.prev = p0
     ui.devMsg = 'Przewinięto ' + i + ' dni bez zatrzymywania.'
     if (s.over) { afterTurns(); return }

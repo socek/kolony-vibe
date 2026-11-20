@@ -114,3 +114,9 @@ a{color:var(--cyan)}
 .scen.off{opacity:.45}
 .scen .t{font-size:21px}
 .scen:disabled{background:var(--screen);color:var(--text);opacity:.5}
+.vchoice{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.vchoice button{display:flex;flex-direction:column;align-items:flex-start;text-align:left;padding:6px 10px}
+.vchoice button .t{font-size:22px;color:inherit}
+.bar .go.decide{background:var(--red);animation:blink .8s steps(1) infinite}
+.autosel{font-family:'VT323',monospace;font-size:17px;background:#241b5e;color:var(--white);border:1px solid var(--text);max-width:55%}
+@media(prefers-reduced-motion:reduce){.bar .go.decide{animation:none}}

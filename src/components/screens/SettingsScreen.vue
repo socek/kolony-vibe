@@ -1,6 +1,8 @@
 <script setup>
 import { showScreen } from '../../store.js'
 import { STOPS, settings, stopDefaults } from '../../game/stops.js'
+import { CHOICES } from '../../game/choices.js'
+const setAuto = (k, v) => { if (v === '') delete settings.auto[k]; else settings.auto[k] = +v }
 
 const setAll = v => { for (const x of STOPS) settings.stops[x.k] = v }
 const reset = () => Object.assign(settings.stops, stopDefaults())
@@ -20,6 +22,17 @@ const reset = () => Object.assign(settings.stops, stopDefaults())
     <button @click="setAll(true)">WSZYSTKO</button>
     <button @click="reset">DOMYŚLNE</button>
     <button @click="setAll(false)">NIC</button>
+  </div>
+  <div class="devh" style="margin-top:14px">AUTOMATYCZNE ODPOWIEDZI</div>
+  <div class="small">Zdarzenia z wyborem zawsze czekają na twoją decyzję – chyba że ustawisz tu odpowiedź automatyczną. Jeśli wybranej odpowiedzi nie da się wykonać (np. brakuje kredytów), gra i tak zapyta.</div>
+  <div class="card">
+    <label v-for="(ev, k) in CHOICES" :key="k" class="row stopopt">
+      <span>{{ ev.t }}</span>
+      <select class="autosel" :value="settings.auto[k] ?? ''" @change="setAuto(k, $event.target.value)">
+        <option value="">pytaj mnie</option>
+        <option v-for="(o, i) in ev.opts" :key="i" :value="i">{{ o.n }}</option>
+      </select>
+    </label>
   </div>
   <div class="btns"><button @click="showScreen('menu')">WRÓĆ DO MENU</button></div>
 </template>

@@ -20,6 +20,7 @@ const scen = computed(() => scenarioOf(game.s))
     • Ludzie rosną w liczbie tylko, gdy mają gdzie mieszkać i co jeść.<br>
     • Głód: każdy dzień braku jedzenia zabija coraz więcej osób, a 12. dnia głodu umierają wszyscy. Głód kończy dzień pełnego jedzenia przy co najmniej normalnych racjach. Racje głodowe tylko wstrzymują umieranie.<br>
     • Działa magnetyczne (po zbadaniu technologii) zmniejszają straty od piratów i meteorytów – tylko obsadzone i zasilone. Mogą zostać zniszczone w czasie ataku.<br>
+    • Niektóre zdarzenia wymagają decyzji – dopóki jej nie podejmiesz, czas stoi. W ustawieniach możesz ustawić odpowiedzi automatyczne.<br>
     • Kampanie reklamowe (zakładka POLITYKA) mogą przyciągnąć nowych kolonistów. Znasz tylko ich koszt i czas trwania – skuteczność trzeba sprawdzić samemu.<br>
     • Wysokie podatki i głodowe racje obniżają morale. Przy morale 5% wybucha bunt.<br>
     • Laboratoria codziennie posuwają naprzód badania. W zakładce TECHNOLOGIE dodajesz technologie do kolejki – naukowcy badają je po kolei. Technologie tworzą drzewo: niektóre wymagają odkrycia innych. Dają nowe budynki, premie i nowe możliwości (cele wypraw, kampanie, handel).<br>
