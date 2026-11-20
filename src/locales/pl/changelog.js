@@ -3,6 +3,7 @@ export default {
   'log.wip': 'w przygotowaniu',
   'log.v.0.4': '0.4 (in development)',
   'log.items.0.4': [
+    'Syntetyczne jedzenie obniża morale: kara rośnie z udziałem żywności z syntezatorów w dziennym spożyciu (do −15, gdy całe jedzenie jest syntetyczne). Widać ją w POLITYCE w składnikach morale.',
     'Syntezator żywności nie robi zapasów: wytwarza tylko tyle żywności, ile brakuje do dziennego spożycia ponad inne źródła, a prąd zużywa proporcjonalnie do wykorzystania – nieużywany nie zużywa go wcale. Wykorzystanie widać w zakładce PRACOWNICY.',
     'Place budowy w BUDOWIE działają jak lista zadań: kolejność zmieniasz przeciąganiem za ≡ (albo ▲ ▼) – wyższy plac dostaje budowniczych wcześniej – a suwak ogranicza liczbę budowniczych na placu (skrajnie w lewo wstrzymuje budowę). Przycisk NAJPIERW zniknął.',
     'Zakładka PRACOWNICY: priorytety NISKI/ŚREDNI/WYSOKI zastąpiła lista zadań – przeciągnij za ≡ (albo ▲ ▼), żeby ustawić kolejność; wyżej znaczy, że zadanie dostaje ludzi wcześniej. Suwak przy każdym zadaniu ustawia limit ludzi (skrajnie w lewo = STOP). Stare zapisy przenoszą się same.',

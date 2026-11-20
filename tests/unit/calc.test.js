@@ -130,4 +130,12 @@ describe('calc – syntezator żywności', () => {
     expect(c.foodProd).toBeLessThanOrEqual(c.foodCons + 1e-9)
     expect(c.enNeed).toBeGreaterThan(calc({ ...s, b: { ...s.b, synth: 0 } }).enNeed)
   })
+  it('syntetyczne jedzenie obniża morale proporcjonalnie do udziału w diecie', () => {
+    const s = newState(); s.pop = 400; s.b.house = 8; s.b.farm = 20; s.b.synth = 1; s.tech.synth = true
+    expect(calc(s).synthMor).toBe(0)
+    s.b.farm = 0
+    const c = calc(s)
+    expect(c.synthMor).toBeCloseTo(15 * c.synthFood / c.foodCons)
+    expect(c.synthMor).toBeGreaterThan(0)
+  })
 })

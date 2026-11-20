@@ -70,7 +70,7 @@ export default {
   'po.camps': 'Advertising campaigns', 'po.campsInfo': 'A campaign costs credits and lasts for a set time. During it new colonists may arrive – how many and how often you will only find out in practice. Newcomers only stay if they have somewhere to live.',
   'po.running': 'running · {d} left', 'po.launch': 'LAUNCH −{n} cr', 'po.got': 'arrived so far: {n}',
   'po.moods': 'Moods', 'po.base': 'Base',
-  'po.m.tax': 'Taxes', 'po.m.ration': 'Rations', 'po.m.rec': 'Recreation', 'po.m.crowd': 'Overcrowding', 'po.m.unemp': 'Unemployment', 'po.m.black': 'Power shortages', 'po.m.starv': 'Famine', 'po.m.debt': 'Debt',
+  'po.m.tax': 'Taxes', 'po.m.ration': 'Rations', 'po.m.rec': 'Recreation', 'po.m.crowd': 'Overcrowding', 'po.m.unemp': 'Unemployment', 'po.m.synth': 'Synthetic food', 'po.m.black': 'Power shortages', 'po.m.starv': 'Famine', 'po.m.debt': 'Debt',
   // technologies
   'rt.info': 'Labs produce {n} pts/day. Add technologies to the queue – scientists research them one by one. Progress on an interrupted project is not lost.',
   'rt.noLab': 'Build a laboratory to do research.', 'rt.active': 'Researching:', 'rt.nothing': 'nothing', 'rt.queue': 'Queue:', 'rt.empty': 'empty',

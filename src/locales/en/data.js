@@ -2,7 +2,7 @@
 export default {
   'bld.farm.n': 'Hydroponic farm', 'bld.farm.d': '+8 t of food per day',
   'bld.farm2.n': 'Aeroponic farm', 'bld.farm2.d': '+12 t of food per day – crops grown in a nutrient mist',
-  'bld.synth.n': 'Food synthesizer', 'bld.synth.d': 'up to 14 t of food per day from protein synthesis – only 2 workers. It makes no stock: it produces just what is missing for the day\'s consumption, and only then uses power (up to 8 kWh)',
+  'bld.synth.n': 'Food synthesizer', 'bld.synth.d': 'up to 14 t of food per day from protein synthesis – only 2 workers. It makes no stock: it produces just what is missing for the day\'s consumption, and only then uses power (up to 8 kWh). People dislike synthetic food – the bigger its share of the diet, the lower the morale',
   'bld.power.n': 'Solar power plant', 'bld.power.d': '+10 kWh of energy per day',
   'bld.power2.n': 'Graphene power plant', 'bld.power2.d': '+16 kWh of energy per day – efficient graphene cells',
   'bld.battery.n': 'Battery', 'bld.battery.d': '+25 kWh of energy storage',
@@ -30,7 +30,7 @@ export default {
 
   'tech.hydro.n': 'Aeroponics', 'tech.hydro.d': 'Unlocks aeroponic farms (+12 t of food instead of +8)',
   'tech.cryo.n': 'Cryo­storage', 'tech.cryo.d': 'Cold stores hold 50% more food',
-  'tech.synth.n': 'Protein synthesis', 'tech.synth.d': 'Unlocks food synthesizers – lots of food from 2 workers, but a lot of power',
+  'tech.synth.n': 'Protein synthesis', 'tech.synth.d': 'Unlocks food synthesizers – lots of food from 2 workers, but at the cost of power and morale',
   'tech.graph.n': 'Graphene cells', 'tech.graph.d': 'Unlocks graphene power plants (+16 kWh instead of +10)',
   'tech.drill.n': 'Deep drills', 'tech.drill.d': 'Unlocks deep mines (+10 t of minerals instead of +6)',
   'tech.supercap.n': 'Super­capacitors', 'tech.supercap.d': 'Batteries hold twice as much energy',

@@ -9,6 +9,8 @@ import { lawFx } from './laws.js'
 import { siteCap } from './jobs.js'
 
 // Wylicza wszystko, co dzieje się w ciągu jednego dnia, bez zmieniania stanu.
+export const SYNTH_MOR = 15
+
 export function calc(s) {
   const t = s.tech, b = s.b, cap = houseCapOf(s), workRateV = workRate(s), workforce = s.pop * workRateV, enCap = batCapOf(s)
   const af = t.auto ? 0.75 : 1, wNeed = {}, E = {}
@@ -117,11 +119,13 @@ export function calc(s) {
   const def = (b.gun || 0) * M.gun * f * (t.targeting ? 1.5 : 1) * (1 + lawFx(s, 'def')), defRed = 1 - Math.pow(0.75, def)
   const crowd = s.pop > cap ? Math.min(40, (s.pop - cap) / Math.max(cap, 1) * 60) : 0
   const unempPen = s.pop > 0 ? unemp / s.pop * 30 : 0, black = (1 - f) * 30, starv = shortRatio * 40
-  let mt = 55 - (s.tax - 10) * 1.5 + (s.ration - 1) * 40 + recB + tameMor - crowd - unempPen - black - starv - (s.cr < 0 ? 10 : 0) + lawFx(s, 'mor')
+  // syntetyczne jedzenie nie smakuje: kara proporcjonalna do jego udziału w diecie (do −15, gdy całe jest z syntezatorów)
+  const synthMor = foodCons > 0 ? SYNTH_MOR * Math.min(1, synthFood / foodCons) : 0
+  let mt = 55 - (s.tax - 10) * 1.5 + (s.ration - 1) * 40 + recB + tameMor - crowd - unempPen - black - starv - synthMor - (s.cr < 0 ? 10 : 0) + lawFx(s, 'mor')
   mt = Math.max(0, Math.min(100, mt))
   const foodCap = capOf(s, 'food'), minCap = capOf(s, 'min'), foodWaste = Math.max(0, foodAfter - foodCap), minWaste = Math.max(0, s.min + minProd - minCap)
   const enStore = Math.max(0, Math.min(enCap, s.energy + enProd - enNeed * f)), enWaste = Math.max(0, s.energy + enProd - enNeed * f - enCap)
-  return { faunaRed, tameRate, tameMor, iceProd, huntFood, season: seasonOf(s),  repairPts, E, M, specA, ordA, wCap, synthPot, synthUse, synthFood, sciMissing, train, hospRed, spTot, wNeed, builders, sites, foodCap, minCap, foodWaste, minWaste, enCap, enStore, enWaste, cap, workforce, workRate: workRateV, needed, e, f, enProd, enNeed, foodProd, foodCons, minPot, deps, minProd, resProd, taxInc, trade, maint, unemp, shortRatio, hungerNext, hungerDeaths, mt, crowd, unempPen, black, starv, recB, def, defRed }
+  return { faunaRed, tameRate, tameMor, iceProd, huntFood, season: seasonOf(s),  repairPts, E, M, specA, ordA, wCap, synthPot, synthUse, synthFood, synthMor, sciMissing, train, hospRed, spTot, wNeed, builders, sites, foodCap, minCap, foodWaste, minWaste, enCap, enStore, enWaste, cap, workforce, workRate: workRateV, needed, e, f, enProd, enNeed, foodProd, foodCons, minPot, deps, minProd, resProd, taxInc, trade, maint, unemp, shortRatio, hungerNext, hungerDeaths, mt, crowd, unempPen, black, starv, recB, def, defRed }
 }
 
 export const nextTech = s => Object.entries(TECH).filter(([k]) => !s.tech[k]).map(e => e[1]).sort((a, b) => a.c - b.c)[0]

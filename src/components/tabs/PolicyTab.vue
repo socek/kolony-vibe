@@ -16,7 +16,7 @@ const fxText = fx => Object.entries(fx).map(([k, v]) => t('law.fx.' + k, { v: (v
 const s = computed(() => game.s)
 const moods = computed(() => {
   const st = s.value, cc = c.value
-  return [[t('po.m.tax'), -(st.tax - 10) * 1.5], [t('po.m.ration'), (st.ration - 1) * 40], [t('po.m.rec'), cc.recB], [t('po.m.crowd'), -cc.crowd], [t('po.m.unemp'), -cc.unempPen], [t('po.m.black'), -cc.black], [t('po.m.starv'), -cc.starv], [t('po.m.debt'), st.cr < 0 ? -10 : 0], [t('po.m.laws'), lawFx(st, 'mor')]]
+  return [[t('po.m.tax'), -(st.tax - 10) * 1.5], [t('po.m.ration'), (st.ration - 1) * 40], [t('po.m.rec'), cc.recB], [t('po.m.crowd'), -cc.crowd], [t('po.m.unemp'), -cc.unempPen], [t('po.m.black'), -cc.black], [t('po.m.starv'), -cc.starv], [t('po.m.synth'), -cc.synthMor], [t('po.m.debt'), st.cr < 0 ? -10 : 0], [t('po.m.laws'), lawFx(st, 'mor')]]
     .filter(x => Math.round(x[1]))
 })
 </script>

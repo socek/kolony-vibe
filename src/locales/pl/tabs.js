@@ -70,7 +70,7 @@ export default {
   'po.camps': 'Kampanie reklamowe', 'po.campsInfo': 'Kampania kosztuje kredyty i trwa określony czas. W tym czasie mogą przybyć nowi koloniści – ile i jak często, okaże się dopiero w praktyce. Przybysze zostają tylko, jeśli mają gdzie mieszkać.',
   'po.running': 'trwa · jeszcze {d}', 'po.launch': 'URUCHOM −{n} kr', 'po.got': 'przybyło dotąd: {n}',
   'po.moods': 'Nastroje', 'po.base': 'Bazowo',
-  'po.m.tax': 'Podatki', 'po.m.ration': 'Racje', 'po.m.rec': 'Rekreacja', 'po.m.crowd': 'Przeludnienie', 'po.m.unemp': 'Bezrobocie', 'po.m.black': 'Braki energii', 'po.m.starv': 'Głód', 'po.m.debt': 'Dług',
+  'po.m.tax': 'Podatki', 'po.m.ration': 'Racje', 'po.m.rec': 'Rekreacja', 'po.m.crowd': 'Przeludnienie', 'po.m.unemp': 'Bezrobocie', 'po.m.synth': 'Syntetyczne jedzenie', 'po.m.black': 'Braki energii', 'po.m.starv': 'Głód', 'po.m.debt': 'Dług',
   // technologie
   'rt.info': 'Laboratoria dają {n} pkt/dzień. Dodawaj technologie do kolejki – naukowcy badają je po kolei. Postęp przerwanego projektu nie przepada.',
   'rt.noLab': 'Zbuduj laboratorium, żeby prowadzić badania.', 'rt.active': 'Badana:', 'rt.nothing': 'nic', 'rt.queue': 'Kolejka:', 'rt.empty': 'pusta',
