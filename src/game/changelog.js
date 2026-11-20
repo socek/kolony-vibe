@@ -9,7 +9,9 @@ export const versionLabel = (upper = false) => {
 
 export const CHANGELOG = [
   {
-    v: '0.4 (in development)', d: 'w przygotowaniu', items: []
+    v: '0.4 (in development)', d: 'w przygotowaniu', items: [
+      'Naprawiono: na telefonie technologie w zakładce TECHNOLOGIE nachodziły na dolny pasek z przyciskiem KONIEC DNIA.'
+    ]
   },
   {
     v: '0.3 „Merveil”', d: '20.11.2026', items: [

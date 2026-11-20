@@ -292,3 +292,21 @@ test('O GRZE: wstążka GitHub i linki do YouTube i Twitcha', async ({ page }) =
   await expect(page.getByRole('link', { name: /YouTube/ })).toHaveAttribute('href', 'https://www.youtube.com/user/socek')
   await expect(page.getByRole('link', { name: /Twitch/ })).toHaveAttribute('href', 'https://www.twitch.tv/wujeksocek')
 })
+
+test('na telefonie dolny pasek jest nad listą technologii', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 })
+  await newGame(page)
+  await tab(page, 'TECHNOLOGIE')
+  // przewiń tak, żeby kafelek technologii znalazł się dokładnie pod dolnym paskiem
+  const hit = await page.evaluate(() => {
+    const bar = document.querySelector('.bar').getBoundingClientRect()
+    const blocks = [...document.querySelectorAll('.tblock')]
+    const b = blocks[blocks.length - 1]
+    window.scrollBy(0, b.getBoundingClientRect().top - bar.top - 4)
+    const r = document.querySelector('.bar').getBoundingClientRect(), br = b.getBoundingClientRect()
+    const y = (Math.max(r.top, br.top) + Math.min(r.bottom, br.bottom)) / 2
+    return { under: br.top < r.bottom && br.bottom > r.top, onBar: document.elementFromPoint(r.left + 20, y).closest('.bar') !== null }
+  })
+  expect(hit.under).toBe(true)
+  expect(hit.onBar).toBe(true)
+})
