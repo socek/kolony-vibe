@@ -1,4 +1,4 @@
-import { plForm } from '../../i18n.js'
+import { plForm } from '../../plural.js'
 
 // Zakładki: raport (prognoza)
 export default {

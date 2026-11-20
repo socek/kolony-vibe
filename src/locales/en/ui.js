@@ -1,4 +1,4 @@
-import { enForm } from '../../i18n.js'
+import { enForm } from '../../plural.js'
 
 // UI: formats, status bar, resource tiles, bottom bar
 export default {

@@ -1,0 +1,98 @@
+import { enForm } from '../../plural.js'
+
+// Game logic texts: daily report, fast-forward stop reasons, tutorial hints
+const R = Math.round, ws = d => d > 1 ? 'a total of ' : '', dd = (d, t) => d > 1 ? ' (over ' + t('fmt.days', { n: d }) + ')' : ''
+
+export default {
+  // daily report: p = { v – data, d – number of days }
+  'rep.nobat': (p, t) => 'No batteries' + dd(p.d, t) + ' – surplus energy is lost.', 'rep.nobat.tip': 'Build batteries to store it.',
+  'rep.batFull': (p, t) => 'Batteries charged' + dd(p.d, t) + '.',
+  'rep.waste': ({ v, d }, t) => R(v.a) < 1 ? null : 'Batteries full – ' + ws(d) + R(v.a) + ' kWh of energy wasted' + dd(d, t) + '.',
+  'rep.hunger': ({ v, d, max }, t) => 'FAMINE – day ' + v._day + '/' + max + '! ' + ws(d).replace(/^a/, 'A') + R(v.a) + ' ' + enForm(R(v.a), 'colonist', 'colonists') + ' died' + dd(d, t) + '.',
+  'rep.hunger.tip': 'A day of full food (without starvation rations) ends the famine.',
+  'rep.hungerHold': ({ v, d, max }, t) => 'Starvation rations' + dd(d, t) + ' – nobody dies, but the famine goes on (day ' + v._day + '/' + max + ').',
+  'rep.hungerHold.tip': 'Restore at least normal rations to end it.',
+  'rep.stall': (p, t) => 'Construction stalled' + dd(p.d, t) + ' – nobody is working on the construction sites.', 'rep.stall.tip': 'Change the builders\' priority in the WORKERS tab.',
+  'rep.short': ({ v, d }, t) => 'Labour shortage' + dd(d, t) + ' – ' + v._miss + ' ' + enForm(v._miss, 'worker', 'workers') + ' missing. Understaffed: ' + v._low + '.',
+  'rep.short.tip': 'Set the priorities in the WORKERS tab.',
+  'rep.black': ({ v, d }, t) => 'BLACKOUT' + dd(d, t) + '! Power covers ' + (d > 1 ? 'on average ' : '') + R(v.p / d) + '% of demand.',
+  'rep.crowd': (p, t) => 'Overcrowding' + dd(p.d, t) + '.', 'rep.crowd.tip': 'Build housing modules.',
+  'rep.born': ({ v, d }, t) => R(v.a) < 1 ? null : (R(v.a) === 1 ? ws(d).replace(/^a/, 'A') + '1 new colonist was born.' : ws(d).replace(/^a/, 'A') + R(v.a) + ' new colonists were born.'),
+  'rep.imm': ({ v, d }, t) => R(v.a) < 1 ? null : 'Spaceport: ' + ws(d) + R(v.a) + ' ' + enForm(R(v.a), 'immigrant', 'immigrants') + ' arrived.',
+  'rep.emig': ({ v, d }, t) => R(v.a) < 1 ? null : 'Unhappy colonists are leaving: ' + ws(d) + '−' + R(v.a) + dd(d, t) + '.',
+  'rep.debt': (p, t) => 'The colony is in debt' + dd(p.d, t) + '! Morale is falling.',
+  'rep.loss': ({ v, d }, t) => {
+    const f = R(v.f), m = R(v.m)
+    if (f < 1 && m < 1) return null
+    const where = f >= 1 && m >= 1 ? 'Cold stores and mineral warehouses full' : f >= 1 ? 'Cold stores full' : 'Mineral warehouses full'
+    return where + ' – ' + ws(d) + (f >= 1 ? f + ' t of food' : '') + (f >= 1 && m >= 1 ? ' and ' : '') + (m >= 1 ? m + ' t of minerals' : '') + ' lost.'
+  },
+  'rep.nodep': (p, t) => 'The mines are idle' + dd(p.d, t) + ' – all deposits are exhausted.', 'rep.nodep.tip': 'Send an expedition in the EXPEDITIONS tab.',
+  'rep.trained': ({ v, d }, t) => 'Schools trained ' + ws(d) + v.a + ' ' + enForm(v.a, 'specialist', 'specialists') + ' (latest: ' + t('spec.' + v._k + '.n').toLowerCase() + ').',
+  'rep.nosci': ({ v, d }, t) => 'Scientists missing' + dd(d, t) + ' (' + v._n + ' short).',
+  'rep.nosci.tip': 'Only they can staff labs and hospitals. Schools train them according to the target (WORKERS tab) – build a school or raise the scientist target.',
+  'rep.broke': ({ v, d }, t) => (v.a === 1 ? 'Building breakdown: ' + v._n : 'Building breakdowns: ' + v.a + ' (latest: ' + v._n + ')') + dd(d, t) + '.',
+  'rep.broke.tip': 'A broken building does not work until the maintenance crews repair it (WORKERS tab).',
+  'rep.tamed': ({ v, d }, t) => 'The pens tamed ' + ws(d) + v.a + ' ' + enForm(v.a, 'purrling', 'purrlings') + '.',
+  'rep.ice': ({ v, d }, t) => 'Shipped ' + ws(d) + R(v.a) + ' t of Ceremonial Ice to the Emperor.',
+  'rep.nores': (p, t) => 'The labs have no project' + dd(p.d, t) + '.', 'rep.nores.tip': 'Choose a technology in the TECHNOLOGIES tab.',
+  'rep.dayPrefix': 'Day {d}: ', 'rep.calmDay': 'A quiet day in the colony.', 'rep.calmDays': 'Quiet days in the colony.',
+
+  // fast-forward stop reasons: n – name in settings, why – reason in the report
+  'stop.build.n': 'Construction completed', 'stop.build.why': 'construction completed',
+  'stop.research.n': 'Research completed', 'stop.research.why': 'research completed',
+  'stop.exp.n': 'Expedition returned', 'stop.exp.why': 'an expedition returned',
+  'stop.camp.n': 'Colonists arriving from an advertising campaign', 'stop.camp.why': 'colonists arrived from a campaign',
+  'stop.order.n': 'New HUU order offer', 'stop.order.why': 'new HUU order offer',
+  'stop.orderFail.n': 'HUU order deadline passed', 'stop.orderFail.why': 'an order deadline passed',
+  'stop.broke.n': 'Building breakdown', 'stop.broke.why': 'building breakdown',
+  'stop.collapse.n': 'A building collapsed from old age', 'stop.collapse.why': 'a building collapsed',
+  'stop.faunaBad.n': 'Harmful fauna (Purrburg)', 'stop.faunaBad.why': 'fauna attack',
+  'stop.faunaGood.n': 'Helpful fauna (Purrburg)', 'stop.faunaGood.why': 'helpful fauna',
+  'stop.anomalyBad.n': 'Dangerous time anomaly (Tick-Tock)', 'stop.anomalyBad.why': 'time anomaly',
+  'stop.anomalyGood.n': 'Helpful time anomaly (Tick-Tock)', 'stop.anomalyGood.why': 'time anomaly',
+  'stop.storm.n': 'Storm (Splashy)', 'stop.storm.why': 'storm',
+  'stop.breach.n': 'Hull breach (Windowsill-3)', 'stop.breach.why': 'hull breach',
+  'stop.depleted.n': 'Deposit exhausted', 'stop.depleted.why': 'a deposit ran out',
+  'stop.nodep.n': 'Mines stopped (no deposits)', 'stop.nodep.why': 'the mines stopped',
+  'stop.evBad.n': 'Bad random events (meteorites, epidemic, pirates, flare, failure)', 'stop.evBad.why': 'dangerous event',
+  'stop.evGood.n': 'Good random events (supplies, deposit, comet, refugees, holiday)', 'stop.evGood.why': 'random event',
+  'stop.hunger.n': 'Start of a famine', 'stop.hunger.why': 'a famine began',
+  'stop.black.n': 'Start of a blackout', 'stop.black.why': 'a blackout began',
+  'stop.emig.n': 'Start of departures (morale below 25%)', 'stop.emig.why': 'colonists began to leave',
+  'stop.short.n': 'Start of a labour shortage', 'stop.short.why': 'a labour shortage began',
+  'stop.stall.n': 'Construction stalled (no builders)', 'stop.stall.why': 'construction stalled',
+  'stop.nores.n': 'Labs without a project', 'stop.nores.why': 'the labs have no project',
+  'stop.loss.n': 'Cold stores or warehouses full – losses began', 'stop.loss.why': 'the stores are full',
+  'stop.crowd.n': 'Overcrowding', 'stop.crowd.why': 'overcrowding',
+  'stop.debt.n': 'Debt', 'stop.debt.why': 'the colony is in debt',
+  'stop.over': 'game over', 'stop.choice': 'a decision to make',
+
+  // tutorial hints
+  'hint.short.t': 'Labour shortage',
+  'hint.short.d': 'Buildings need more workers than you have. Set priorities in the WORKERS tab – the most important buildings will get people first. New colonists (housing modules, advertising campaigns) will give you more workers.',
+  'hint.hunger.t': 'A famine has begun',
+  'hint.hunger.d': 'More people die with each day of famine, and on day 12 everyone dies. Buy food in the EMPIRE tab or build farms. A day of full food on at least normal rations ends the famine.',
+  'hint.black.t': 'Blackout',
+  'hint.black.d': 'Buildings use more energy than you produce. Build power plants, or batteries for a reserve, or switch off (STOP in the WORKERS tab) the buildings you can do without for now.',
+  'hint.depleted.t': 'A deposit has run out',
+  'hint.depleted.d': 'Mines extract from deposits that run out. Send an expedition (EXPEDITIONS tab) with the “DEPOSITS” target to find new ones.',
+  'hint.nodep.t': 'The mines are idle',
+  'hint.nodep.d': 'There are no deposits left. Send an expedition to look for new ones, and until then buy minerals in the EMPIRE tab.',
+  'hint.nores.t': 'The labs have no project',
+  'hint.nores.d': 'The scientists are waiting for a task. In the TECHNOLOGIES tab, click a technology and add it to the research queue.',
+  'hint.choice.t': 'A decision to make',
+  'hint.choice.d': 'Some events need your decision – until then no days are played. If a decision keeps coming back, you can set an automatic answer in the menu → SETTINGS.',
+  'hint.broke.t': 'Building breakdown',
+  'hint.broke.d': 'Buildings wear out and break. A broken building does not work until the maintenance crews repair it – check their priority in the WORKERS tab.',
+  'hint.order.t': 'An order from the HUU',
+  'hint.order.d': 'The Human Union of Unity is offering an order (EMPIRE tab). Once accepted it has a deadline and a penalty for failure, but completing it brings a reward and reputation.',
+  'hint.crowd.t': 'Overcrowding',
+  'hint.crowd.d': 'More people live in the colony than the housing modules can hold. This lowers morale – build more modules.',
+  'hint.debt.t': 'The colony is in debt',
+  'hint.debt.d': 'Credits have dropped below zero. This lowers morale, and a debt of more than 500 cr ends the game in bankruptcy. Raise taxes, sell surpluses in the EMPIRE tab or complete an HUU order.',
+  'hint.build.t': 'First construction completed',
+  'hint.build.d': 'Congratulations! The more builders (priority in the WORKERS tab), the faster new buildings go up – but the fewer people work in production.',
+  'hint.exp.t': 'An expedition has returned',
+  'hint.exp.d': 'Expeditions search for the chosen target, but sometimes they find something else. Soldiers in the team lower the risk of losses, and engineers increase the gain.'
+}

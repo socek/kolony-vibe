@@ -6,4 +6,5 @@ import story from './story.js'
 import misc from './misc.js'
 import data from './data.js'
 import tabs from './tabs.js'
-export default { ...ui, ...screens, ...end, ...help, ...story, ...misc, ...data, ...tabs }
+import game from './game.js'
+export default { ...ui, ...screens, ...end, ...help, ...story, ...misc, ...data, ...tabs, ...game }

@@ -1,42 +1,21 @@
-import { daysTxt } from './format.js'
-import { HUNGER_MAX, SPEC } from './constants.js'
+import { t, has } from '../i18n.js'
+import { HUNGER_MAX } from './constants.js'
 
 // Raport przechowuje dane zamiast gotowych zdań, żeby przy wielu dniach liczby się sumowały.
 // Pola zaczynające się od "_" nie są sumowane – zostaje wartość z ostatniego dnia.
-const R = Math.round, ws = d => d > 1 ? 'w sumie ' : '', dd = d => d > 1 ? ' (przez ' + daysTxt(d) + ')' : ''
-
-// f – co się stało; tip – co można z tym zrobić (pomijane w trybie skróconych komunikatów)
+// Treść: słownik rep.<k> (funkcja od { v, d }: v – dane, d – liczba dni), rada: rep.<k>.tip
+// (pomijana w trybie skróconych komunikatów). c – kolor wpisu.
 export const REP = {
-  // stan baterii: brak – ostrzeżenie, pełne – informacja (bez ilości zmarnowanej energii)
-  nobat: { c: 'warn', f: (v, d) => 'Brak baterii' + dd(d) + ' – nadwyżka energii przepada.', tip: 'Zbuduj baterie, żeby ją magazynować.' },
-  batFull: { c: '', f: (v, d) => 'Baterie naładowane' + dd(d) + '.' },
-  // dawny wpis (zapisy sprzed 0.4 mogą go jeszcze mieć w raporcie)
-  waste: { c: 'warn', f: (v, d) => R(v.a) < 1 ? null : 'Baterie pełne – zmarnowano ' + ws(d) + R(v.a) + ' kWh energii' + dd(d) + '.' },
-  hunger: { c: 'neg', f: (v, d) => 'GŁÓD – dzień ' + v._day + '/' + HUNGER_MAX + '! ' + (R(v.a) === 1 ? 'Zmarł ' + ws(d) + '1 kolonista' : 'Zmarło ' + ws(d) + R(v.a) + ' kolonistów') + dd(d) + '.', tip: 'Dzień pełnego jedzenia (bez racji głodowych) kończy głód.' },
-  hungerHold: { c: 'warn', f: (v, d) => 'Racje głodowe' + dd(d) + ' – nikt nie umiera, ale głód trwa (dzień ' + v._day + '/' + HUNGER_MAX + ').', tip: 'Przywróć co najmniej normalne racje, żeby go zakończyć.' },
-  stall: { c: 'warn', f: (v, d) => 'Budowa stoi' + dd(d) + ' – nikt nie pracuje na placach budowy.', tip: 'Zmień priorytet budowniczych w zakładce PRACOWNICY.' },
-  short: { c: 'warn', f: (v, d) => 'Brak rąk do pracy' + dd(d) + ' – brakuje ' + v._miss + ' ' + (v._miss === 1 ? 'pracownika' : 'pracowników') + '. Niedoobsadzone: ' + v._low + '.', tip: 'Priorytety ustawisz w zakładce PRACOWNICY.' },
-  black: { c: 'neg', f: (v, d) => 'BLACKOUT' + dd(d) + '! Zasilanie pokrywa ' + (d > 1 ? 'średnio ' : '') + R(v.p / d) + '% potrzeb.' },
-  crowd: { c: 'warn', f: (v, d) => 'Przeludnienie' + dd(d) + '.', tip: 'Zbuduj moduły mieszkalne.' },
-  born: { c: '', f: (v, d) => R(v.a) < 1 ? null : (R(v.a) === 1 ? 'Urodził się ' + ws(d) + '1 nowy kolonista.' : 'Urodziło się ' + ws(d) + R(v.a) + ' nowych kolonistów.') },
-  imm: { c: '', f: (v, d) => R(v.a) < 1 ? null : 'Port: ' + (R(v.a) === 1 ? 'przybył ' + ws(d) + '1 imigrant.' : 'przybyło ' + ws(d) + R(v.a) + ' imigrantów.') },
-  emig: { c: 'neg', f: (v, d) => R(v.a) < 1 ? null : 'Niezadowoleni koloniści odlatują: ' + ws(d) + '−' + R(v.a) + dd(d) + '.' },
-  debt: { c: 'neg', f: (v, d) => 'Kolonia jest zadłużona' + dd(d) + '! Morale spada.' },
-  loss: {
-    c: 'warn', f: (v, d) => {
-      const f = R(v.f), m = R(v.m)
-      if (f < 1 && m < 1) return null
-      const where = f >= 1 && m >= 1 ? 'Chłodnie i magazyny minerałów pełne' : f >= 1 ? 'Chłodnie pełne' : 'Magazyny minerałów pełne'
-      return where + ' – stracono ' + ws(d) + (f >= 1 ? f + ' t żywności' : '') + (f >= 1 && m >= 1 ? ' i ' : '') + (m >= 1 ? m + ' t minerałów' : '') + '.'
-    }
-  },
-  nodep: { c: 'neg', f: (v, d) => 'Kopalnie stoją' + dd(d) + ' – wszystkie złoża są wyczerpane.', tip: 'Wyślij wyprawę w zakładce WYPRAWY.' },
-  trained: { c: 'pos', f: (v, d) => 'Szkoły wykształciły ' + ws(d) + v.a + ' ' + (v.a === 1 ? 'specjalistę' : 'specjalistów') + ' (ostatnio: ' + SPEC[v._k].n.toLowerCase() + ').' },
-  nosci: { c: 'warn', f: (v, d) => 'Brakuje naukowców' + dd(d) + ' (brakuje ' + v._n + ').', tip: 'Laboratoria i szpitale obsadzają tylko oni. Szkoły kształcą ich według celu (zakładka PRACOWNICY) – zbuduj szkołę albo podnieś cel naukowców.' },
-  broke: { c: 'warn', f: (v, d) => (v.a === 1 ? 'Awaria budynku: ' + v._n : 'Awarie budynków: ' + v.a + ' (ostatnia: ' + v._n + ')') + dd(d) + '.', tip: 'Zepsuty budynek nie pracuje, dopóki konserwatorzy go nie naprawią (zakładka PRACOWNICY).' },
-  tamed: { c: 'pos', f: (v, d) => 'Zagrody oswoiły ' + ws(d) + v.a + ' ' + (v.a === 1 ? 'mruczka' : 'mruczki') + '.' },
-  ice: { c: 'pos', f: (v, d) => 'Wysłano ' + ws(d) + R(v.a) + ' t Lodu Ceremonialnego do Imperatora.' },
-  nores: { c: 'warn', f: (v, d) => 'Laboratoria nie mają projektu' + dd(d) + '.', tip: 'Wybierz technologię w zakładce TECHNOLOGIE.' }
+  nobat: { c: 'warn' }, batFull: { c: '' },
+  waste: { c: 'warn' }, // dawny wpis (zapisy sprzed 0.4 mogą go jeszcze mieć w raporcie)
+  hunger: { c: 'neg' }, hungerHold: { c: 'warn' }, stall: { c: 'warn' }, short: { c: 'warn' }, black: { c: 'neg' },
+  crowd: { c: 'warn' }, born: { c: '' }, imm: { c: '' }, emig: { c: 'neg' }, debt: { c: 'neg' }, loss: { c: 'warn' },
+  nodep: { c: 'neg' }, trained: { c: 'pos' }, nosci: { c: 'warn' }, broke: { c: 'warn' }, tamed: { c: 'pos' }, ice: { c: 'pos' },
+  nores: { c: 'warn' }
+}
+for (const k in REP) {
+  REP[k].f = (v, d) => t('rep.' + k, { v, d, max: HUNGER_MAX })
+  Object.defineProperty(REP[k], 'tip', { get: () => has('rep.' + k + '.tip') ? t('rep.' + k + '.tip') : null })
 }
 
 export function mergeRep(old, neu) {
@@ -54,9 +33,9 @@ export function repLines(s, short = false) {
   const D = s.repDays || 1, rp = s.report || []
   const L = [...rp.filter(e => e.top), ...rp.filter(e => !e.top)].map(e => {
     if (typeof e === 'string') return { cls: '', text: e.replace(/<[^>]+>/g, '') }
-    if (e.k === 'txt') return { cls: e.c || '', text: (D > 1 && e.day ? 'Dzień ' + e.day + ': ' : '') + withTip(e.t, e.tip, short) }
-    const t = withTip(REP[e.k].f(e.v, e.d), REP[e.k].tip, short)
-    return t && { cls: REP[e.k].c, text: t }
+    if (e.k === 'txt') return { cls: e.c || '', text: (D > 1 && e.day ? t('rep.dayPrefix', { d: e.day }) : '') + withTip(e.t, e.tip, short) }
+    const x = withTip(REP[e.k].f(e.v, e.d), REP[e.k].tip, short)
+    return x && { cls: REP[e.k].c, text: x }
   }).filter(Boolean)
-  return L.length ? L : [{ cls: '', text: D > 1 ? 'Spokojne dni w kolonii.' : 'Spokojny dzień w kolonii.' }]
+  return L.length ? L : [{ cls: '', text: t(D > 1 ? 'rep.calmDays' : 'rep.calmDay') }]
 }

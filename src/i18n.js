@@ -34,7 +34,8 @@ const fill = (s, p) => p ? s.replace(/\{(\w+)\}/g, (m, k) => (p[k] ?? m)) : s
 export function t(key, p) {
   const v = LANGS[i18n.lang].dict[key] ?? LANGS.pl.dict[key]
   if (v == null) return key
-  return typeof v === 'function' ? v(p || {}) : fill(v, p)
+  // funkcja w słowniku dostaje parametry i samo t (do sięgania po inne teksty)
+  return typeof v === 'function' ? v(p || {}, t) : fill(v, p)
 }
 // czy klucz istnieje (np. opcjonalne teksty)
 export const has = key => LANGS[i18n.lang].dict[key] != null || LANGS.pl.dict[key] != null
@@ -48,11 +49,5 @@ export function localize(obj, prefix, fields) {
   return obj
 }
 
-// liczebniki: pl(n, 'dzień', 'dni', 'dni') – 1 / 2–4 (bez 12–14) / reszta; en(n, 'day', 'days')
-export function plForm(n, one, few, many) {
-  n = Math.abs(Math.round(n))
-  if (n === 1) return one
-  const d = n % 10, h = n % 100
-  return d >= 2 && d <= 4 && (h < 12 || h > 14) ? few : many
-}
-export const enForm = (n, one, other) => Math.abs(Math.round(n)) === 1 ? one : other
+// odmiana liczebników – w osobnym module (słowniki nie importują modułu tłumaczeń)
+export { plForm, enForm } from './plural.js'

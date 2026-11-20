@@ -1,4 +1,4 @@
-import { enForm } from '../../i18n.js'
+import { enForm } from '../../plural.js'
 
 // Tabs: report (forecast)
 export default {

@@ -1,4 +1,4 @@
-import { plForm } from '../../i18n.js'
+import { plForm } from '../../plural.js'
 
 // Interfejs: formaty, pasek stanu, kafelki zasobów, dolny pasek
 export default {
