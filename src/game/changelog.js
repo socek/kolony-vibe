@@ -10,6 +10,7 @@ export const versionLabel = (upper = false) => {
 export const CHANGELOG = [
   {
     v: '0.4 (in development)', d: 'w przygotowaniu', items: [
+      'Po zakończeniu dnia (i przewijaniu 7 dni) gra przewija ekran tak, żeby początek raportu był na górze.',
       'Raport: zamiast „Baterie pełne – zmarnowano X kWh” jest informacja „Baterie naładowane”, a gdy kolonia nie ma baterii – ostrzeżenie „Brak baterii”.',
       'Systemowy przycisk „wstecz” na telefonie w trakcie gry otwiera menu gry; dopiero drugie cofnięcie wychodzi z gry.',
       'Zakładki są teraz menu bocznym po lewej stronie (na szerokim ekranie); na telefonie zostają nad treścią.',

@@ -20,7 +20,7 @@ button.bug{background:var(--red)}button.support{background:var(--green)}button.b
 button:disabled{opacity:.35;cursor:not-allowed;background:var(--text)}
 .tabs button{background:transparent;color:var(--text);border:2px solid var(--text)}
 .tabs button.on{background:var(--text);color:var(--screen)}
-.panel{min-height:240px;padding-bottom:90px}
+.panel{min-height:240px;padding-bottom:90px;scroll-margin-top:8px}
 .card{border-top:2px dashed var(--border);padding:8px 0}
 .card .t{color:var(--white);font-size:23px}
 .row{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}

@@ -358,3 +358,14 @@ test('przycisk „wstecz” po powrocie z menu do gry znowu otwiera menu', async
   await page.goBack()
   await expect(page.getByRole('heading', { name: 'MENU' })).toBeVisible()
 })
+
+test('po zakończeniu dnia początek raportu jest na górze ekranu', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 })
+  await newGame(page)
+  await tab(page, 'BUDOWA')
+  await page.mouse.wheel(0, 3000)
+  await page.getByRole('button', { name: '▶ KONIEC DNIA' }).click()
+  await expect(page.locator('.panel')).toContainText('RAPORT')
+  await expect.poll(async () => Math.round((await page.locator('.panel').boundingBox()).y)).toBeLessThan(40)
+  await expect.poll(async () => Math.round((await page.locator('.panel').boundingBox()).y)).toBeGreaterThanOrEqual(0)
+})

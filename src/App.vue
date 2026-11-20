@@ -1,5 +1,5 @@
 <script setup>
-import { watchEffect } from 'vue'
+import { watchEffect, watch, ref, nextTick } from 'vue'
 import { ui, setTab, syncMusic } from './store.js'
 watchEffect(syncMusic)
 import { TABS } from './game/constants.js'
@@ -19,6 +19,16 @@ import StatsTab from './components/tabs/StatsTab.vue'
 
 const PANELS = { raport: ReportTab, budowa: BuildTab, praca: WorkTab, wyprawy: ExpeditionsTab, rynek: MarketTab, polityka: PolicyTab, nauka: ResearchTab, statystyki: StatsTab }
 import ConsentBar from './components/ConsentBar.vue'
+
+// po rozegraniu dni przewiń tak, żeby początek raportu był na górze ekranu
+const panel = ref(null)
+watch(() => ui.turnsDone, async () => {
+  await nextTick()
+  const el = panel.value
+  if (!el || !el.scrollIntoView) return
+  const smooth = !window.matchMedia || !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  el.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'start' })
+})
 </script>
 
 <template>
@@ -31,7 +41,7 @@ import ConsentBar from './components/ConsentBar.vue'
       <nav class="tabs" aria-label="Zakładki">
         <button v-for="[k, l] in TABS" :key="k" :class="{ on: ui.tab === k }" @click="setTab(k)">{{ l }}</button>
       </nav>
-      <div class="panel"><component :is="PANELS[ui.tab]" /></div>
+      <div ref="panel" class="panel"><component :is="PANELS[ui.tab]" /></div>
     </div>
     <BottomBar />
   </div>

@@ -28,7 +28,7 @@ const resumable = saved && !saved.over ? saved : null
 export const game = reactive({ s: resumable || newState() })
 export const ui = reactive({
   tab: 'raport', qty: 50, expRange: 'near', expTeam: 5, expGoal: 'dep', expSol: 0, expEng: 0, screen: 'boot', from: null, bootPlayed: false, busy: false, turn: null, devMsg: '',
-  savedDay: resumable ? resumable.m : null, saveDropped: loaded.dropped, lastPlace: null, hint: null, reasons: []
+  savedDay: resumable ? resumable.m : null, saveDropped: loaded.dropped, lastPlace: null, turnsDone: 0, hint: null, reasons: []
 })
 export const c = computed(() => calc(game.s))
 
@@ -126,7 +126,7 @@ function checkBadges() {
 function afterTurns() {
   checkBadges()
   if (game.s.over) ui.lastPlace = recordGame(game.s) || ui.lastPlace
-  persist(); ui.tab = 'raport'
+  persist(); ui.tab = 'raport'; ui.turnsDone++
   if (game.s.over) { track('game_end', { scenario: game.s.sc || 'moon', result: game.s.over.win ? 'win' : 'lose', reason: game.s.over.t, day: game.s.m, place: ui.lastPlace || 0 }); ui.screen = 'end'; beep(game.s.over.win ? 880 : 150, 0.4) }
   else showHint()
   ui.reasons = []
