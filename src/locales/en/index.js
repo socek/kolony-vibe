@@ -11,4 +11,5 @@ import events from './events.js'
 import choices from './choices.js'
 import expeditions from './expeditions.js'
 import empire from './empire.js'
-export default { ...ui, ...screens, ...end, ...help, ...story, ...misc, ...data, ...tabs, ...game, ...events, ...choices, ...expeditions, ...empire }
+import scenarios from './scenarios.js'
+export default { ...ui, ...screens, ...end, ...help, ...story, ...misc, ...data, ...tabs, ...game, ...events, ...choices, ...expeditions, ...empire, ...scenarios }
