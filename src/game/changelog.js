@@ -1,6 +1,6 @@
 export const VERSION = '0.3', CODENAME = 'Merveil'
 // wersja w trakcie zmian – pokazywane przy numerze wersji
-export const IN_DEV = true
+export const IN_DEV = false
 export const versionLabel = (upper = false) => {
   const t = VERSION + ' „' + CODENAME + '”' + (IN_DEV ? ' (in development)' : '')
   return upper ? t.toUpperCase() : t
@@ -8,7 +8,7 @@ export const versionLabel = (upper = false) => {
 
 export const CHANGELOG = [
   {
-    v: '0.3 „Merveil” (in development)', d: 'w przygotowaniu', items: [
+    v: '0.3 „Merveil”', d: '20.11.2026', items: [
       'Ekran „O grze”: wstążka „Fork me on GitHub” i linki do kanałów autora na YouTube i Twitchu.',
       'Anonimowe statystyki gry (Google Analytics) – tylko za zgodą gracza, zgodę można zmienić w ustawieniach.',
       'Zakładka PRACA nazywa się teraz PRACOWNICY.',
