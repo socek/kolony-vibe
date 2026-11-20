@@ -11,7 +11,7 @@ export const REP = {
   hunger: { c: 'neg' }, hungerHold: { c: 'warn' }, stall: { c: 'warn' }, short: { c: 'warn' }, black: { c: 'neg' },
   crowd: { c: 'warn' }, born: { c: '' }, imm: { c: '' }, emig: { c: 'neg' }, debt: { c: 'neg' }, loss: { c: 'warn' },
   nodep: { c: 'neg' }, trained: { c: 'pos' }, nosci: { c: 'warn' }, broke: { c: 'warn' }, tamed: { c: 'pos' }, ice: { c: 'pos' },
-  nores: { c: 'warn' }
+  nores: { c: 'warn' }, synth: { c: '' }
 }
 for (const k in REP) {
   REP[k].f = (v, d) => t('rep.' + k, { v, d, max: HUNGER_MAX })

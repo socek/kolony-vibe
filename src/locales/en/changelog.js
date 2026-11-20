@@ -3,6 +3,7 @@ export default {
   'log.wip': 'in preparation',
   'log.v.0.4': '0.4 (in development)',
   'log.items.0.4': [
+    'The daily report says how much food the synthesizers produced (and how much it lowered morale), and the forecast shows the synthesizers\' share of food production.',
     'When all technologies are researched, the TECHNOLOGIES button turns green.',
     'Synthetic food lowers morale: the penalty grows with the share of synthesizer food in daily consumption (up to −15 when all food is synthetic). It is listed among the morale factors in POLICY.',
     'The food synthesizer makes no stock: it produces only the food missing for the day\'s consumption beyond other sources, and uses power in proportion to its use – when idle, none at all. Its usage is shown in the WORKERS tab.',

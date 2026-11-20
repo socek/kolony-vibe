@@ -17,6 +17,7 @@ export default {
   'rep.short.tip': 'Kolejność zadań i limity ustawisz w zakładce PRACOWNICY.',
   'rep.black': ({ v, d }, t) => 'BLACKOUT' + dd(d, t) + '! Zasilanie pokrywa ' + (d > 1 ? 'średnio ' : '') + R(v.p / d) + '% potrzeb.',
   'rep.crowd': (p, t) => 'Przeludnienie' + dd(p.d, t) + '.', 'rep.crowd.tip': 'Zbuduj moduły mieszkalne.',
+  'rep.synth': ({ v, d }, t) => 'Syntezatory wytworzyły ' + ws(d) + R(v.a) + ' t żywności' + dd(d, t) + (R(v._m) > 0 ? ' – syntetyczne jedzenie obniża morale (−' + R(v._m) + ').' : '.'),
   'rep.born': ({ v, d }, t) => R(v.a) < 1 ? null : (R(v.a) === 1 ? 'Urodził się ' + ws(d) + '1 nowy kolonista.' : 'Urodziło się ' + ws(d) + R(v.a) + ' nowych kolonistów.'),
   'rep.imm': ({ v, d }, t) => R(v.a) < 1 ? null : 'Port: ' + (R(v.a) === 1 ? 'przybył ' + ws(d) + '1 imigrant.' : 'przybyło ' + ws(d) + R(v.a) + ' imigrantów.'),
   'rep.emig': ({ v, d }, t) => R(v.a) < 1 ? null : 'Niezadowoleni koloniści odlatują: ' + ws(d) + '−' + R(v.a) + dd(d, t) + '.',

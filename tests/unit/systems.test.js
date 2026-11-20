@@ -148,6 +148,13 @@ describe('komunikaty o bateriach', async () => {
     expect(keys(s)).not.toContain('waste')
     expect(REP.batFull.f({}, 1)).toBe('Baterie naładowane.')
   })
+  it('raport podaje żywność z syntezatorów i spadek morale', () => {
+    const s = newState(); s.pop = 400; s.b.house = 8; s.b.farm = 0; s.b.synth = 1; s.tech.synth = true
+    endTurn(s)
+    const e = s.report.find(x => x.k === 'synth')
+    expect(e.v.a).toBeGreaterThan(0)
+    expect(REP.synth.f({ a: 12.4, _m: 3 }, 1)).toBe('Syntezatory wytworzyły 12 t żywności – syntetyczne jedzenie obniża morale (−3).')
+  })
   it('„Baterie naładowane” tylko w pierwszym dniu pełnych baterii', () => {
     const s = newState('moon'); s.energy = 1e6; s.b.power = 20
     endTurn(s); expect(keys(s)).toContain('batFull')

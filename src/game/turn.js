@@ -51,6 +51,7 @@ export function endTurn(s, acc, auto = {}) {
   // „Baterie naładowane” tylko w pierwszym dniu, w którym baterie się zapełniły
   else if ((now.batFull = c.enStore >= c.enCap - 0.01) && !was.batFull) add('batFull')
   s.food += c.foodProd - c.foodCons
+  if (c.synthFood >= 0.5) add('synth', { a: c.synthFood, _m: c.synthMor })
   if (s.food < 0) s.food = 0
   const deaths = c.hungerDeaths, hdPrev = s.hungerDays || 0
   s.hungerDays = c.hungerNext

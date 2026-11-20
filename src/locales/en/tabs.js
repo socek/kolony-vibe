@@ -9,7 +9,7 @@ export default {
   'rp.eta': '{d} to go', 'rp.sites': 'construction sites: {n}',
   'rp.famine': 'FAMINE', 'rp.famineDeaths': p => 'day ' + p.d + '/' + p.max + ' – about ' + p.n + ' ' + enForm(p.n, 'person', 'people') + ' will die',
   'rp.famineEnds': 'ends tomorrow', 'rp.famineHeld': 'held off by starvation rations (day {d}/{max})',
-  'rp.prodUse': '{p} prod. / {u} used', 'rp.season': 'Season: {n}', 'rp.sun': 'sun ×{x}', 'rp.crops': 'crops ×{x}', 'rp.heat': 'heating {n} kWh',
+  'rp.synth': 'of which synthesizers {n}', 'rp.prodUse': '{p} prod. / {u} used', 'rp.season': 'Season: {n}', 'rp.sun': 'sun ×{x}', 'rp.crops': 'crops ×{x}', 'rp.heat': 'heating {n} kWh',
   'rp.battery': 'Energy storage', 'rp.noBat': 'no batteries', 'rp.charged': 'charged',
   'rp.deps': p => p.t + ' t in deposits' + (p.d ? ', for ' + p.d : ''), 'rp.noDeps': 'no deposits',
   'rp.exp': '{n} in the field', 'rp.expBack': 'next return in {d}',

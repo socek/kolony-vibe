@@ -62,7 +62,7 @@ const depDays = computed(() => c.value.minProd > 0 ? Math.floor(c.value.deps / c
       <span v-else-if="!c.hungerNext" class="pos">{{ t('rp.famineEnds') }}</span>
       <span v-else class="warn">{{ t('rp.famineHeld', { d: c.hungerNext, max: HUNGER_MAX }) }}</span>
     </div>
-    <div class="row"><span><PixelIcon name="food" />{{ t('tile.food') }}</span><span><SignedNum :n="c.foodProd - c.foodCons" /> t <span class="small">({{ t('rp.prodUse', { p: R(c.foodProd), u: R(c.foodCons) }) }})</span></span></div>
+    <div class="row"><span><PixelIcon name="food" />{{ t('tile.food') }}</span><span><SignedNum :n="c.foodProd - c.foodCons" /> t <span class="small">({{ t('rp.prodUse', { p: R(c.foodProd), u: R(c.foodCons) }) }}<template v-if="s.b.synth">, {{ t('rp.synth', { n: R(c.synthFood) }) }}</template>)</span></span></div>
     <div v-if="c.season" class="row"><span><PixelIcon name="energy" />{{ t('rp.season', { n: c.season.n.toLowerCase() }) }}</span><span class="small">{{ t('rp.sun', { x: c.season.solar }) }}<template v-if="c.season.food !== 1"> · {{ t('rp.crops', { x: c.season.food }) }}</template><template v-if="c.season.heat"> · {{ t('rp.heat', { n: R(s.pop * c.season.heat) }) }}</template></span></div>
     <div class="row"><span><PixelIcon name="energy" />{{ t('tile.energy') }}</span><span><SignedNum :n="c.enProd - c.enNeed" /> kWh <span class="small">({{ t('rp.prodUse', { p: R(c.enProd), u: R(c.enNeed) }) }})</span></span></div>
     <div class="row"><span><PixelIcon name="battery" />{{ t('rp.battery') }}</span><span>{{ R(c.enStore) }}/{{ c.enCap }} kWh<span v-if="!c.enCap" class="small warn"> ({{ t('rp.noBat') }})</span><span v-else-if="c.enStore >= c.enCap - 0.01" class="small"> ({{ t('rp.charged') }})</span></span></div>

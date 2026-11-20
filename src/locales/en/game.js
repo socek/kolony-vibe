@@ -17,6 +17,7 @@ export default {
   'rep.short.tip': 'Set the job order and limits in the WORKERS tab.',
   'rep.black': ({ v, d }, t) => 'BLACKOUT' + dd(d, t) + '! Power covers ' + (d > 1 ? 'on average ' : '') + R(v.p / d) + '% of demand.',
   'rep.crowd': (p, t) => 'Overcrowding' + dd(p.d, t) + '.', 'rep.crowd.tip': 'Build housing modules.',
+  'rep.synth': ({ v, d }, t) => 'Synthesizers produced ' + ws(d) + R(v.a) + ' t of food' + dd(d, t) + (R(v._m) > 0 ? ' – synthetic food lowers morale (−' + R(v._m) + ').' : '.'),
   'rep.born': ({ v, d }, t) => R(v.a) < 1 ? null : (R(v.a) === 1 ? ws(d).replace(/^a/, 'A') + '1 new colonist was born.' : ws(d).replace(/^a/, 'A') + R(v.a) + ' new colonists were born.'),
   'rep.imm': ({ v, d }, t) => R(v.a) < 1 ? null : 'Spaceport: ' + ws(d) + R(v.a) + ' ' + enForm(R(v.a), 'immigrant', 'immigrants') + ' arrived.',
   'rep.emig': ({ v, d }, t) => R(v.a) < 1 ? null : 'Unhappy colonists are leaving: ' + ws(d) + '−' + R(v.a) + dd(d, t) + '.',

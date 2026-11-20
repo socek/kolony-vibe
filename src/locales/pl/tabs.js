@@ -9,7 +9,7 @@ export default {
   'rp.eta': 'jeszcze {d}', 'rp.sites': 'placów budowy: {n}',
   'rp.famine': 'GŁÓD', 'rp.famineDeaths': p => 'dzień ' + p.d + '/' + p.max + ' – zginie ok. ' + p.n + ' ' + plForm(p.n, 'osoba', 'osoby', 'osób'),
   'rp.famineEnds': 'jutro się skończy', 'rp.famineHeld': 'wstrzymany racjami głodowymi (dzień {d}/{max})',
-  'rp.prodUse': '{p} prod. / {u} zuż.', 'rp.season': 'Pora roku: {n}', 'rp.sun': 'słońce ×{x}', 'rp.crops': 'plony ×{x}', 'rp.heat': 'ogrzewanie {n} kWh',
+  'rp.synth': 'w tym z syntezatorów {n}', 'rp.prodUse': '{p} prod. / {u} zuż.', 'rp.season': 'Pora roku: {n}', 'rp.sun': 'słońce ×{x}', 'rp.crops': 'plony ×{x}', 'rp.heat': 'ogrzewanie {n} kWh',
   'rp.battery': 'Magazyn energii', 'rp.noBat': 'brak baterii', 'rp.charged': 'naładowane',
   'rp.deps': p => 'w złożach ' + p.t + ' t' + (p.d ? ', na ' + p.d : ''), 'rp.noDeps': 'brak złóż',
   'rp.exp': '{n} w terenie', 'rp.expBack': 'najbliższy powrót za {d}',
