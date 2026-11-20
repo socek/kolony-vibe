@@ -18,8 +18,8 @@ export const SERIES = [
 export const MARKS = [
   { k: 'build', n: 'Ukończone budowy', color: '#A6E08F', of: ['build'] },
   { k: 'research', n: 'Odkryte technologie', color: '#9ADCE8', of: ['research'] },
-  { k: 'bad', n: 'Groźne zdarzenia', color: '#FF9F90', of: ['evBad', 'hunger', 'black', 'emig', 'depleted', 'nodep', 'orderFail', 'broke', 'collapse'] },
-  { k: 'good', n: 'Dobre zdarzenia', color: '#E3EA9A', of: ['evGood', 'exp', 'camp', 'order'] },
+  { k: 'bad', n: 'Groźne zdarzenia', color: '#FF9F90', of: ['evBad', 'hunger', 'black', 'emig', 'depleted', 'nodep', 'orderFail', 'broke', 'collapse', 'faunaBad', 'anomalyBad', 'storm', 'breach'] },
+  { k: 'good', n: 'Dobre zdarzenia', color: '#E3EA9A', of: ['evGood', 'exp', 'camp', 'order', 'faunaGood', 'anomalyGood'] },
   { k: 'choice', n: 'Decyzje', color: '#ffffff', of: ['choice'] }
 ]
 const markOf = reason => MARKS.find(m => m.of.includes(reason))

@@ -18,13 +18,15 @@ export function newState(sc = 'moon') {
     b: { ...Object.fromEntries(Object.keys(BLD).map(k => [k, 0])), farm: 3, power: 2, battery: 1, fridge: 1, store: 1, mine: 1, house: 2 },
     tax: 10, ration: 1, tech: {}, prio: {},
     pr: { food: 4, min: 6 }, prev: null, over: null,
-    report: [
-      { k: 'txt', t: 'Witaj, gubernatorze! Kolonia ' + scen.n + ' liczy 100 osadników.' },
-      { k: 'txt', t: 'Cel: ' + scen.goal.text + ' w ciągu roku (' + DAYS + ' dni).' }
-    ],
+    report: [],
     repDays: 0
   }
   if (scen.start) scen.start(s)
+  // powitanie po zmianach scenariusza (liczba osadników może być inna niż 100)
+  s.report = [
+    { k: 'txt', t: 'Witaj, gubernatorze! Twoja kolonia (' + scen.n + ') liczy ' + s.pop + ' osadników.' },
+    { k: 'txt', t: 'Cel: ' + scen.goal.text + ' w ciągu roku (' + DAYS + ' dni).' }
+  ]
   return s
 }
 

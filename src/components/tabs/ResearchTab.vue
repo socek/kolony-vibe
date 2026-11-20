@@ -5,6 +5,8 @@ import { TECH, TECH_BRANCHES } from '../../game/constants.js'
 import { num } from '../../game/format.js'
 import { techPct, techEta } from '../../game/calc.js'
 import { techState, canQueue, techDepth } from '../../game/research.js'
+import { techAvail } from '../../game/scenarios.js'
+const techKeys = () => Object.keys(TECH).filter(k => techAvail(game.s, k))
 import MeterBar from '../MeterBar.vue'
 
 const s = computed(() => game.s)
@@ -27,7 +29,7 @@ const info = k => {
 // Układ schematu: kolumny = gałęzie, wiersze = poziom w drzewie (technologie z tym samym poziomem
 // w jednej gałęzi dostają kolejne wiersze)
 const layout = computed(() => {
-  const ks = Object.keys(TECH), depths = Object.fromEntries(ks.map(k => [k, techDepth(k)]))
+  const ks = techKeys(), depths = Object.fromEntries(ks.map(k => [k, techDepth(k)]))
   const maxD = Math.max(...Object.values(depths))
   const rowsAt = d => Math.max(...TECH_BRANCHES.map(b => ks.filter(k => TECH[k].g === b.k && depths[k] === d).length), 1)
   const start = []
@@ -64,7 +66,7 @@ function drawArrows() {
   const lanes = {}
   const lane = (row, src) => { const l = lanes[row] || (lanes[row] = []); if (!l.includes(src)) l.push(src); return l.indexOf(src) }
   const out = []
-  for (const k of Object.keys(TECH)) {
+  for (const k of techKeys()) {
     const to = rect(k), pt = pos[k]
     for (const r of TECH[k].req) {
       const from = rect(r), pf = pos[r]
@@ -129,7 +131,7 @@ onUnmounted(() => ro && ro.disconnect())
   <template v-else>
     <template v-for="b in TECH_BRANCHES" :key="b.k">
       <div class="grph" :style="{ '--g': b.color }">{{ b.n }}</div>
-      <button v-for="k in Object.keys(TECH).filter(x => TECH[x].g === b.k)" :key="k" :data-tech="k" class="tblock tlist" :class="[info(k).state, { sel: sel === k }]" @click="sel = sel === k ? null : k">
+      <button v-for="k in techKeys().filter(x => TECH[x].g === b.k)" :key="k" :data-tech="k" class="tblock tlist" :class="[info(k).state, { sel: sel === k }]" @click="sel = sel === k ? null : k">
         <span class="tname">{{ TECH[k].n }}</span>
         <span class="tmeta">{{ TECH[k].c }} pkt · {{ info(k).qpos ? 'KOLEJKA #' + info(k).qpos : STATE_TXT[info(k).state] }}<template v-if="TECH[k].req.length"> · wymaga: {{ TECH[k].req.map(r => TECH[r].n).join(', ') }}</template></span>
         <MeterBar v-if="info(k).state !== 'done' && info(k).pct > 0" :value="info(k).pct" :max="100" />

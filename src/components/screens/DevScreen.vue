@@ -2,13 +2,14 @@
 import { computed } from 'vue'
 import { game, ui, closeScreen, devAct, devSet, devTech } from '../../store.js'
 import { BLD, TECH } from '../../game/constants.js'
+import { bldAvail } from '../../game/scenarios.js'
 import { EVNAMES } from '../../game/events.js'
 import { CHOICES } from '../../game/choices.js'
 
 // Menu deweloperskie / cheaty – edycja całego stanu gry
 const s = computed(() => game.s)
 const r2 = v => Math.round((v || 0) * 100) / 100
-const stateFields = [['Dzień', 'm'], ['Koloniści', 'pop'], ['Morale %', 'mor'], ['Żywność t', 'food'], ['Energia kWh', 'energy'], ['Minerały t', 'min'], ['Kredyty', 'cr'], ['Podatki %', 'tax'], ['Dni głodu', 'hungerDays']]
+const stateFields = [['Dzień', 'm'], ['Koloniści', 'pop'], ['Morale %', 'mor'], ['Żywność t', 'food'], ['Energia kWh', 'energy'], ['Minerały t', 'min'], ['Kredyty', 'cr'], ['Podatki %', 'tax'], ['Dni głodu', 'hungerDays'], ['Oswojone mruczki', 'tamed'], ['Lód wysłany t', 'iceSent']]
 const ACTIONS = [['finish', 'UKOŃCZ BUDOWY'], ['fill', 'NAPEŁNIJ MAGAZYNY'], ['cash', '+1000 KR'], ['alltech', 'WSZYSTKIE TECHNOLOGIE'], ['skip7', '+7 DNI'], ['skip30', '+30 DNI'], ['dep', '+ZŁOŻE 1000 T'], ['order', '+ZLECENIE LUJ'], ['repairall', 'NAPRAW WSZYSTKO'], ['expback', 'WYPRAWY WRACAJĄ'], ['revive', 'WZNÓW GRĘ PO KOŃCU']]
 </script>
 
@@ -25,7 +26,7 @@ const ACTIONS = [['finish', 'UKOŃCZ BUDOWY'], ['fill', 'NAPEŁNIJ MAGAZYNY'], [
 
   <div class="devh">BUDYNKI</div>
   <div class="dev">
-    <label v-for="(b, k) in BLD" :key="k">{{ b.n }}<input type="number" :value="s.b[k]" @change="devSet(s.b, k, $event.target.value)"></label>
+    <label v-for="(b, k) in BLD" v-show="bldAvail(s, k)" :key="k">{{ b.n }}<input type="number" :value="s.b[k]" @change="devSet(s.b, k, $event.target.value)"></label>
   </div>
 
   <template v-if="s.q.length">

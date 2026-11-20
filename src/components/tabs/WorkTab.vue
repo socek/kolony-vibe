@@ -3,6 +3,7 @@ import { computed } from 'vue'
 import { game, c, setPrio } from '../../store.js'
 import { INFRA, JOBS, PRIO, SPEC, prioOf, jobName } from '../../game/constants.js'
 import { saveNow } from '../../store.js'
+import { scenarioOf } from '../../game/scenarios.js'
 const setTrain = T => { game.s.train = T; saveNow() }
 import { fmt } from '../../game/format.js'
 import PixelIcon from '../PixelIcon.vue'
@@ -11,7 +12,7 @@ import MeterBar from '../MeterBar.vue'
 const s = computed(() => game.s)
 const infra = computed(() => INFRA.reduce((a, k) => a + c.value.wNeed[k], 0))
 const missing = computed(() => Math.max(0, Math.ceil(c.value.needed - c.value.workforce)))
-const jobs = computed(() => JOBS.filter(k => k === 'build' || k === 'repair' || s.value.b[k]).map(k => {
+const jobs = computed(() => JOBS.filter(k => k === 'build' || k === 'repair' || (k === 'hunt' ? scenarioOf(s.value).hunt : s.value.b[k])).map(k => {
   const n = c.value.wNeed[k], E = c.value.E[k], p = prioOf(s.value, k)
   return { k, p, n, E, w: n * E, isB: k === 'build' }
 }))
@@ -43,7 +44,7 @@ const jobs = computed(() => JOBS.filter(k => k === 'build' || k === 'repair' || 
   <div v-for="j in jobs" :key="j.k" class="card">
     <div class="row">
       <span class="t"><PixelIcon :name="j.k" />{{ jobName(j.k) }}
-        <span v-if="j.isB" class="small">(placów budowy: {{ s.q.length }})</span><span v-else-if="j.k === 'repair'" class="small">(naprawy: {{ Math.round(c.repairPts) }} pkt/dzień)</span><template v-else> ×{{ s.b[j.k] }}</template>
+        <span v-if="j.isB" class="small">(placów budowy: {{ s.q.length }})</span><span v-else-if="j.k === 'repair'" class="small">(naprawy: {{ Math.round(c.repairPts) }} pkt/dzień)</span><span v-else-if="j.k === 'hunt'" class="small">(+{{ Math.round(c.huntFood) }} t żywności, ale fauna jest agresywniejsza)</span><template v-else> ×{{ s.b[j.k] }}</template>
       </span>
       <span v-if="j.p">{{ fmt(j.w) }}/{{ fmt(j.n) }} prac.<template v-if="j.n"> ({{ Math.round(j.E * 100) }}%)</template></span>
       <span v-else class="neg">{{ j.isB ? 'WSTRZYMANE' : 'ZATRZYMANY' }}</span>

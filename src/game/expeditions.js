@@ -1,6 +1,6 @@
 // Złoża minerałów i wyprawy poszukiwawcze
 import { bumpStat } from './badges.js'
-import { TECH, techReady, houseCapOf } from './constants.js'
+import { TECH, techReady, techIn, houseCapOf } from './constants.js'
 
 export const START_DEPOSIT = 1200
 export const MIN_POP_LEFT = 20 // tylu kolonistów musi zostać w kolonii
@@ -86,7 +86,7 @@ export function sendExpedition(s, rk, team, goal = 'dep', sol = 0, eng = 0) {
 
 // punkty badań: do bieżącego projektu albo pierwszej dostępnej technologii (inaczej – kredyty)
 function addResearch(s, pts) {
-  const k = s.rs || Object.keys(TECH).find(t => !s.tech[t] && techReady(s, t))
+  const k = s.rs || Object.keys(TECH).find(t => techIn(s, t) && !s.tech[t] && techReady(s, t))
   if (!k) { s.cr += pts * 5; return pts * 5 + ' kr (nie było czego badać)' }
   s.rp[k] = (s.rp[k] || 0) + pts
   return pts + ' pkt badań (' + TECH[k].n + ')'
@@ -96,8 +96,11 @@ function addResearch(s, pts) {
 function find(s, kind, x, r, t) {
   const rnd = Math.random, eng = x.eng || 0, scale = t.mult * (r.days / 10)
   if (kind === 'dep') {
+    const mods = s.mods || {}, amount = (r.size[0] + rnd() * (r.size[1] - r.size[0])) * t.mult * (1 + 0.1 * eng) * (mods.depMul || 1)
+    // na stacji bez kopalń wyprawa przywozi minerały z asteroidy prosto do magazynu
+    if (mods.noMines) { const v = Math.round(amount * 0.5); s.min += v; return 'z asteroidy przywieziono ' + v + ' t minerałów' }
     const name = depositName(r.places[Math.floor(rnd() * r.places.length)])
-    const size = addDeposit(s, name, (r.size[0] + rnd() * (r.size[1] - r.size[0])) * t.mult * (1 + 0.1 * eng))
+    const size = addDeposit(s, name, amount)
     return 'odkryto ' + name + ' – ' + size + ' t'
   }
   if (kind === 'ruins') return 'w ruinach znaleziono zapiski: ' + addResearch(s, Math.round((20 + rnd() * 60) * scale))

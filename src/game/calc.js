@@ -2,6 +2,7 @@ import { BLD, TECH, MAINT, INFRA, JOBS, HUNGER_MAX, SPEC, SPEC_REQ, SPEC_BONUS, 
 import { daysTxt } from './format.js'
 import { depTotal } from './expeditions.js'
 import { condMul, repairNeed, REPAIR_PER_WORKER } from './wear.js'
+import { scenarioOf, seasonOf } from './scenarios.js'
 
 // Wylicza wszystko, co dzieje się w ciągu jednego dnia, bez zmieniania stanu.
 export function calc(s) {
@@ -13,6 +14,8 @@ export function calc(s) {
   for (const k in BLD) { wNeed[k] = b[k] * BLD[k].w * af * wMul(k); nb += b[k] }
   wNeed.build = s.q.reduce((a, x) => a + BLD[x.k].crew * af, 0)
   wNeed.repair = repairNeed(s) * af
+  const scen = scenarioOf(s), sea = seasonOf(s) || { solar: 1, food: 1, heat: 0 }, mods = s.mods || {}
+  wNeed.hunt = scen.hunt ? 8 * af : 0 // myśliwi (Mruczysko)
 
   // 1) specjaliści trafiają na swoje stanowiska wg priorytetów (gdy ich za dużo – liczeni proporcjonalnie)
   const sp = s.spec || { sci: 0, eng: 0, sol: 0 }
@@ -65,15 +68,16 @@ export function calc(s) {
     return { a, need, rate, pct: Math.min(100, x.d / B.bt * 100), eta: rate > 0 ? Math.ceil((B.bt - x.d) / rate) : Infinity }
   })
 
-  let needed = 0, enNeed = s.pop * 0.033
+  let needed = 0, enNeed = s.pop * (0.033 + sea.heat) // zimą dochodzi ogrzewanie
   for (const k in wNeed) if (prioOf(s, k) > 0) needed += wNeed[k]
   for (const k in BLD) enNeed += b[k] * BLD[k].en * E[k]
   const e = needed > 0 ? Math.min(1, workforce / needed) : 1
   // produkcja z budynku: liczba × wydajność × obsada
   const out = k => (b[k] || 0) * BLD[k].p * M[k]
-  const enProd = out('power') + out('power2')
+  const enProd = (out('power') + out('power2')) * sea.solar + out('geo') // słońce zależy od pory roku
   const f = enNeed > 0 ? Math.min(1, (s.energy + enProd) / enNeed) : 1
-  const foodProd = (out('farm') + out('farm2') + out('synth')) * f, foodCons = s.pop * 0.2 * s.ration
+  const huntFood = wNeed.hunt * (M.hunt || 0) / af * 1.3 // 1,3 t na myśliwego dziennie
+  const foodProd = ((out('farm') + out('farm2')) * sea.food * (mods.farmMul || 1) + out('synth') + out('kelp') + huntFood) * f, foodCons = s.pop * 0.2 * s.ration
   const minPot = (out('mine') + out('mine2')) * f, deps = depTotal(s), minProd = Math.min(minPot, deps), resProd = b.lab * BLD.lab.p * M.lab * f
   const taxInc = s.pop * s.tax * 0.0167, trade = b.port * BLD.port.p * M.port * f, maint = nb * MAINT
   const unemp = avail
@@ -92,14 +96,17 @@ export function calc(s) {
   const sciMissing = SPEC_REQ.reduce((a, k) => a + wNeed[k] - (specA[k] || 0), 0)
   const recB = 20 * (1 - Math.pow(0.75, b.rec * E.rec * f * (t.holo ? 2 : 1)))
   // obrona: obsadzone i zasilone działa; każde kolejne daje coraz mniej
+  // fauna (Mruczysko): ogrodzenia soniczne zmniejszają straty; zagrody oswajają mruczki
+  const faunaRed = 1 - Math.pow(0.7, (b.fence || 0) * (M.fence || 0) * f), tameRate = (b.pen || 0) * (E.pen || 0) * 0.2
+  const tameMor = Math.min(10, (s.tamed || 0) * 0.2), iceProd = out('icefac') * f
   const def = (b.gun || 0) * M.gun * f * (t.targeting ? 1.5 : 1), defRed = 1 - Math.pow(0.75, def)
   const crowd = s.pop > cap ? Math.min(40, (s.pop - cap) / Math.max(cap, 1) * 60) : 0
   const unempPen = s.pop > 0 ? unemp / s.pop * 30 : 0, black = (1 - f) * 30, starv = shortRatio * 40
-  let mt = 55 - (s.tax - 10) * 1.5 + (s.ration - 1) * 40 + recB - crowd - unempPen - black - starv - (s.cr < 0 ? 10 : 0)
+  let mt = 55 - (s.tax - 10) * 1.5 + (s.ration - 1) * 40 + recB + tameMor - crowd - unempPen - black - starv - (s.cr < 0 ? 10 : 0)
   mt = Math.max(0, Math.min(100, mt))
   const foodCap = capOf(s, 'food'), minCap = capOf(s, 'min'), foodWaste = Math.max(0, foodAfter - foodCap), minWaste = Math.max(0, s.min + minProd - minCap)
   const enStore = Math.max(0, Math.min(enCap, s.energy + enProd - enNeed * f)), enWaste = Math.max(0, s.energy + enProd - enNeed * f - enCap)
-  return { repairPts, E, M, specA, ordA, sciMissing, train, hospRed, spTot, wNeed, builders, sites, foodCap, minCap, foodWaste, minWaste, enCap, enStore, enWaste, cap, workforce, needed, e, f, enProd, enNeed, foodProd, foodCons, minPot, deps, minProd, resProd, taxInc, trade, maint, unemp, shortRatio, hungerNext, hungerDeaths, mt, crowd, unempPen, black, starv, recB, def, defRed }
+  return { faunaRed, tameRate, tameMor, iceProd, huntFood, season: seasonOf(s),  repairPts, E, M, specA, ordA, sciMissing, train, hospRed, spTot, wNeed, builders, sites, foodCap, minCap, foodWaste, minWaste, enCap, enStore, enWaste, cap, workforce, needed, e, f, enProd, enNeed, foodProd, foodCons, minPot, deps, minProd, resProd, taxInc, trade, maint, unemp, shortRatio, hungerNext, hungerDeaths, mt, crowd, unempPen, black, starv, recB, def, defRed }
 }
 
 export const nextTech = s => Object.entries(TECH).filter(([k]) => !s.tech[k]).map(e => e[1]).sort((a, b) => a.c - b.c)[0]

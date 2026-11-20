@@ -15,6 +15,7 @@ import { resolveChoice } from './game/choices.js'
 import { syncCond } from './game/wear.js'
 import { pickHint } from './game/hints.js'
 import { playTheme, themeFor } from './game/music.js'
+import { buildBlock } from './game/scenarios.js'
 import { BADGES, newBadges } from './game/badges.js'
 import { hall, recordGame, grantBadges } from './game/scores.js'
 
@@ -41,6 +42,7 @@ export function startScenario(k) { game.s = newState(k); ui.tab = 'raport'; ui.s
 
 export function build(k) {
   const s = game.s, x = BLD[k]
+  if (buildBlock(s, k)) return
   s.cr -= x.cr; s.min -= x.mi; s.q.push({ k, d: 0 })
   beep(520, 0.08); persist()
 }

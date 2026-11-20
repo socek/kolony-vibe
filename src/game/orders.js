@@ -1,4 +1,4 @@
-import { BLD, TECH, techReady, houseCapOf } from './constants.js'
+import { BLD, TECH, techReady, techIn, houseCapOf } from './constants.js'
 
 // Zlecenia Ludzkiej Unii Jedności (LUJ). Co jakiś czas przychodzi oferta; przyjęte zlecenie
 // ma termin, nagrodę i karę za niewykonanie. Reputacja u LUJ zmienia wysokość nagród.
@@ -35,7 +35,7 @@ export function makeOffer(s) {
   const kinds = ['food', 'min', 'people', 'tech', ...(s.b.port ? ['energy'] : [])]
   let kind = pick(kinds), tech = null
   if (kind === 'tech') {
-    tech = pick(Object.keys(TECH).filter(k => !s.tech[k] && k !== s.rs)) || null
+    tech = pick(Object.keys(TECH).filter(k => techIn(s, k) && !s.tech[k] && k !== s.rs)) || null
     if (!tech) kind = 'food'
   }
   const amount = { food: R(120 * scale / 10) * 10, min: R(100 * scale / 10) * 10, energy: R(80 * scale / 10) * 10, people: R(5 + 5 * scale), tech: 0 }[kind]
@@ -94,7 +94,7 @@ function grant(s, x) {
   const r = x.reward, o = s.ord
   s.cr += r.cr
   if (r.pop) s.pop += Math.min(r.pop, Math.max(0, houseCapOf(s) - s.pop))
-  if (r.techpts) { if (s.rs) s.rp[s.rs] = (s.rp[s.rs] || 0) + r.techpts; else { const k = Object.keys(TECH).find(t => !s.tech[t] && techReady(s, t)); if (k) s.rp[k] = (s.rp[k] || 0) + r.techpts } }
+  if (r.techpts) { if (s.rs) s.rp[s.rs] = (s.rp[s.rs] || 0) + r.techpts; else { const k = Object.keys(TECH).find(t => techIn(s, t) && !s.tech[t] && techReady(s, t)); if (k) s.rp[k] = (s.rp[k] || 0) + r.techpts } }
   if (r.building) s.b[r.building]++
   o.rep = Math.min(100, o.rep + 6)
   o.active = o.active.filter(y => y.id !== x.id)

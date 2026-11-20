@@ -1,4 +1,5 @@
 import { TECH, techReady } from './constants.js'
+import { techAvail } from './scenarios.js'
 
 // Kolejka badań: s.rs – badany projekt, s.rq – technologie czekające w kolejce.
 
@@ -12,6 +13,7 @@ export function techState(s, k) {
 
 // technologię można dodać do kolejki, jeśli każde jej wymaganie jest odkryte, badane albo już w kolejce
 export function canQueue(s, k) {
+  if (!techAvail(s, k)) return false
   const st = techState(s, k)
   if (st === 'done' || st === 'active' || st === 'queued') return false
   const planned = new Set([s.rs, ...(s.rq || [])])

@@ -7,6 +7,7 @@ import { extract, tickExpeditions } from './expeditions.js'
 import { tickCampaigns } from './campaigns.js'
 import { nextResearch } from './research.js'
 import { scenarioOf } from './scenarios.js'
+
 import { CHOICES, CHOICE_KEYS, resolveChoice } from './choices.js'
 import { record } from './history.js'
 import { tickOrders } from './orders.js'
@@ -104,6 +105,8 @@ export function endTurn(s, acc, auto = {}) {
   if (tickExpeditions(s, note)) stops.add('exp')
   if (tickCampaigns(s, note)) stops.add('camp')
   for (const r of tickOrders(s, note)) stops.add(r)
+  // zasady właściwe dla scenariusza (fauna, anomalie, sztormy, rozszczelnienia, lód)
+  { const sc = scenarioOf(s); if (sc.tick) for (const r of sc.tick(s, c, note, add)) stops.add(r) }
   // zużycie, awarie, rozpad i naprawy budynków
   { const w = tickWear(s, c.repairPts)
     w.stops.forEach(r => stops.add(r))

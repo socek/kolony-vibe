@@ -9,6 +9,7 @@ export const versionLabel = (upper = false) => {
 export const CHANGELOG = [
   {
     v: '0.3 „Merveil” (in development)', d: 'w przygotowaniu', items: [
+      'Pięć nowych scenariuszy: Planeta Mruczysko (pory roku, fauna, zagrody, myśliwi), Asteroida Tik-Tak (anomalie czasu, cel badawczy: Rozciągacz Doby), Planeta Chlupotka (pływające pole golfowe, sztormy, mało lądu), Stacja Parapet-3 (bez kopalń, rozszczelnienia, Galeria Widokowa) i Glob Kostkolód (wieczna zima, Lód Ceremonialny).',
       'Muzyka chiptune w stylu C64: własne motywy – spokojny, kryzysowy (głód, blackout, dług, niskie morale), zwycięstwo i porażka. Osobny przełącznik muzyki w menu i ustawieniach.',
       'Podpowiedzi kontekstowe: okienko z radą, gdy coś dzieje się pierwszy raz (brak rąk do pracy, głód, blackout, awaria, decyzja…). Przycisk „nie pokazuj więcej” i przełącznik w ustawieniach.',
       'Zużycie budynków: stan spada z czasem, zużyte budynki pracują gorzej i częściej mają awarie, a zużyte do zera się rozpadają. Naprawiają je konserwatorzy – nowa pula pracowników z priorytetem w zakładce PRACA.',

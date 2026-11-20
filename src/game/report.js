@@ -29,6 +29,8 @@ export const REP = {
   trained: { c: 'pos', f: (v, d) => 'Szkoły wykształciły ' + ws(d) + v.a + ' ' + (v.a === 1 ? 'specjalistę' : 'specjalistów') + ' (ostatnio: ' + SPEC[v._k].n.toLowerCase() + ').' },
   nosci: { c: 'warn', f: (v, d) => 'Brakuje naukowców' + dd(d) + ' – laboratoria i szpitale obsadzają tylko oni (brakuje ' + v._n + '). Wybierz kształcenie naukowców w szkole (zakładka PRACA).' },
   broke: { c: 'warn', f: (v, d) => (v.a === 1 ? 'Awaria budynku: ' + v._n : 'Awarie budynków: ' + v.a + ' (ostatnia: ' + v._n + ')') + dd(d) + '. Zepsuty budynek nie pracuje, dopóki konserwatorzy go nie naprawią (zakładka PRACA).' },
+  tamed: { c: 'pos', f: (v, d) => 'Zagrody oswoiły ' + ws(d) + v.a + ' ' + (v.a === 1 ? 'mruczka' : 'mruczki') + '.' },
+  ice: { c: 'pos', f: (v, d) => 'Wysłano ' + ws(d) + R(v.a) + ' t Lodu Ceremonialnego do Imperatora.' },
   nores: { c: 'warn', f: (v, d) => 'Laboratoria nie mają projektu' + dd(d) + ' – wybierz technologię w zakładce TECHNOLOGIE.' }
 }
 
