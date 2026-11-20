@@ -1,5 +1,5 @@
 <script setup>
-import { closeScreen } from '../../store.js'
+import { goBack } from '../../store.js'
 import { computed } from 'vue'
 import { game } from '../../store.js'
 import { BATCAP, STBASE, STCAP, DAYS } from '../../game/constants.js'
@@ -31,5 +31,5 @@ const scen = computed(() => scenarioOf(game.s))
     • Przycisk ▶▶ 7 DNI przewija tydzień i zatrzymuje się przy ważnych wydarzeniach – które to są, ustawisz w menu (≡) → USTAWIENIA.<br>
     • Nadwyżki żywności i minerałów sprzedawaj na rynku, ceny zmieniają się codziennie.
   </p>
-  <div class="btns"><button @click="closeScreen">WRÓĆ</button></div>
+  <div class="btns"><button @click="goBack">WRÓĆ</button></div>
 </template>

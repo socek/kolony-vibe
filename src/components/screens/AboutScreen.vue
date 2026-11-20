@@ -1,5 +1,5 @@
 <script setup>
-import { closeScreen } from '../../store.js'
+import { goBack } from '../../store.js'
 import { versionLabel } from '../../game/changelog.js'
 </script>
 
@@ -17,5 +17,5 @@ import { versionLabel } from '../../game/changelog.js'
     Kod źródłowy: <a href="https://github.com/socek/kolony-vibe" target="_blank" rel="noopener">github.com/socek/kolony-vibe</a><br>
     Czcionki VT323 i Press Start 2P: SIL Open Font License
   </p>
-  <div class="btns"><button @click="closeScreen">WRÓĆ</button></div>
+  <div class="btns"><button @click="goBack">WRÓĆ</button></div>
 </template>

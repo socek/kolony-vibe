@@ -231,3 +231,20 @@ test('zakładka PRACA wyjaśnia odsetek zdolnych do pracy', async ({ page }) => 
   await expect(page.getByText('+2 pkt proc.')).toBeVisible()
   await page.screenshot({ path: process.env.SHOT || 'test-results/work.png' })
 })
+
+test('WRÓĆ z zasad, o grze i zmian wraca tam, skąd je otwarto', async ({ page }) => {
+  await page.goto('/')
+  for (const [open, title] of [['ZASADY', 'ZASADY'], ['O GRZE', 'O GRZE'], ['ZMIANY', null]]) {
+    await page.getByRole('button', { name: open, exact: true }).click()
+    if (title) await expect(page.getByRole('heading', { name: title })).toBeVisible()
+    await page.getByRole('button', { name: 'WRÓĆ', exact: true }).click()
+    await expect(page.getByRole('button', { name: 'NOWA GRA' })).toBeVisible()
+  }
+  await page.getByRole('button', { name: 'NOWA GRA' }).click()
+  await page.getByRole('button', { name: 'ROZPOCZNIJ' }).click()
+  await page.getByRole('button', { name: 'DO DZIEŁA!' }).click()
+  await page.getByTitle('Menu', { exact: true }).click()
+  await page.getByRole('button', { name: 'ZASADY', exact: true }).click()
+  await page.getByRole('button', { name: 'WRÓĆ', exact: true }).click()
+  await expect(page.getByRole('button', { name: 'WRÓĆ DO GRY' })).toBeVisible()
+})

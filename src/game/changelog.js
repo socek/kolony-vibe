@@ -9,6 +9,7 @@ export const versionLabel = (upper = false) => {
 export const CHANGELOG = [
   {
     v: '0.3 „Merveil” (in development)', d: 'w przygotowaniu', items: [
+      'Przycisk WRÓĆ w zasadach, „O grze” i zmianach wraca tam, skąd je otwarto (ekran startowy albo menu), a nie od razu do gry.',
       'Zdolni do pracy: odsetek nie jest już stały (60%). Zmieniają go morale (±10 pkt proc.), szpitale (do +5), nowa technologia Zautomatyzowane żłobki (+5) i epidemie (chorzy przez kilka dni nie pracują). Zakładka PRACA pokazuje, z czego wynika.',
       'Pięć nowych scenariuszy: Planeta Mruczysko (pory roku, fauna, zagrody, myśliwi), Asteroida Tik-Tak (anomalie czasu, cel badawczy: Rozciągacz Doby), Planeta Chlupotka (pływające pole golfowe, sztormy, mało lądu), Stacja Parapet-3 (bez kopalń, rozszczelnienia, Galeria Widokowa) i Glob Kostkolód (wieczna zima, Lód Ceremonialny).',
       'Muzyka chiptune w stylu C64: własne motywy – spokojny, kryzysowy (głód, blackout, dług, niskie morale), zwycięstwo i porażka. Osobny przełącznik muzyki w menu i ustawieniach.',
