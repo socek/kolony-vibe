@@ -13,8 +13,9 @@ import IntroScreen from './screens/IntroScreen.vue'
 import ChoiceScreen from './screens/ChoiceScreen.vue'
 import ScoresScreen from './screens/ScoresScreen.vue'
 import HintScreen from './screens/HintScreen.vue'
+import SavesScreen from './screens/SavesScreen.vue'
 
-const SCREENS = { boot: BootScreen, menu: MenuScreen, help: HelpScreen, about: AboutScreen, log: ChangelogScreen, end: EndScreen, dev: DevScreen, settings: SettingsScreen, scenarios: ScenarioScreen, intro: IntroScreen, choice: ChoiceScreen, scores: ScoresScreen, hint: HintScreen }
+const SCREENS = { boot: BootScreen, menu: MenuScreen, help: HelpScreen, about: AboutScreen, log: ChangelogScreen, end: EndScreen, dev: DevScreen, settings: SettingsScreen, scenarios: ScenarioScreen, intro: IntroScreen, choice: ChoiceScreen, scores: ScoresScreen, hint: HintScreen, saves: SavesScreen }
 </script>
 
 <template>

@@ -3,6 +3,7 @@ export default {
   'log.wip': 'in preparation',
   'log.v.0.4': '0.4 (in development)',
   'log.items.0.4': [
+    'Saved games (menu → SAVED GAMES): 3 slots for manual saves and moving a game between devices with a code or a file (LOAD GAME on the start screen).',
     'Laws (POLICY tab): 8 laws with upsides and downsides, e.g. compulsory overtime, meatless Mondays, night shifts in the labs. At most 3 at once.',
     'New scenario: The Emperor\'s Sandbox – no goal and no day limit, no score in the table; you can still lose.',
     'Accessibility (menu → SETTINGS): larger text and buttons (two levels) and a high-contrast mode.',

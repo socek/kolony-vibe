@@ -38,7 +38,14 @@ export function load() {
   try {
     const v = localStorage.getItem(KEY), o = v ? JSON.parse(v) : null
     if (!o) return { s: null, dropped: false }
-    if ((o.sv || 2) < MIN_SAVE_VERSION || !o.b) return { s: null, dropped: true }
+    return migrate(o)
+  } catch (e) { return { s: null, dropped: true } }
+}
+
+// Uzupełnia zapis (z autozapisu, slotu albo importu) do obecnej wersji; { s, dropped } jak load()
+export function migrate(o) {
+  try {
+    if (!o || typeof o !== 'object' || (o.sv || 2) < MIN_SAVE_VERSION || !o.b) return { s: null, dropped: true }
     // zapisy sprzed wprowadzenia złóż, wypraw, kampanii, kolejki badań i scenariuszy
     if (!o.dep) o.dep = [startDeposit()]
     if (!o.exp) o.exp = []

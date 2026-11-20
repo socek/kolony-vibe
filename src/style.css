@@ -172,3 +172,5 @@ html[data-contrast] button:disabled{opacity:.55}
 html[data-contrast] .locked,html[data-contrast] .tblock.locked{opacity:.75}
 html[data-contrast] .card{border-top-color:#888}
 .law{margin-top:8px;padding:4px 6px;border-left:3px solid transparent}.law.on{border-left-color:var(--yellow);background:var(--deep)}
+.savecode{width:100%;min-height:70px;margin-top:6px;font-family:'VT323',monospace;font-size:15px;background:var(--deep);color:var(--white);border:1px solid var(--text);word-break:break-all}
+.filebtn{font-size:21px;background:var(--text);color:var(--screen);padding:4px 10px;cursor:pointer}.filebtn:hover{background:var(--white)}.filebtn input{display:none}

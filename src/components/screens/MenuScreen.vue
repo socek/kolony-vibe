@@ -12,6 +12,7 @@ const onOff = v => t(v ? 'menu.on' : 'menu.off')
   <h1>{{ t('menu.title') }}</h1>
   <div class="vmenu">
     <button @click="closeScreen">{{ t('menu.back') }}</button>
+    <button @click="showScreen('saves')">{{ t('sv.title') }}</button>
     <button @click="showScreen('settings')">{{ t('menu.settings') }}</button>
     <button @click="showScreen('scores')">{{ t('menu.scores') }}</button>
     <button @click="audio.sound = !audio.sound">{{ t('menu.sound') }}: {{ onOff(audio.sound) }}</button>

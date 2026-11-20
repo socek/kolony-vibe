@@ -33,6 +33,7 @@ import LinkButtons from '../LinkButtons.vue'
       <div class="btns">
         <button v-if="ui.savedDay" @click="closeScreen">{{ t('menu.continue', { d: ui.savedDay }) }}</button>
         <button @click="newGame">{{ t('menu.newGame') }}</button>
+        <button @click="showScreen('saves')">{{ t('sv.loadGame') }}</button>
         <button @click="showScreen('help')">{{ t('menu.help') }}</button>
         <button @click="showScreen('about')">{{ t('menu.about') }}</button>
         <button @click="showScreen('log')">{{ t('menu.log') }}</button>

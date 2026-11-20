@@ -16,6 +16,7 @@ import { resolveChoice } from './game/choices.js'
 import { syncCond } from './game/wear.js'
 import { pickHint } from './game/hints.js'
 import { toggleLaw } from './game/laws.js'
+import { saveSlot, loadSlot, deleteSlot, importText } from './game/saves.js'
 import { track } from './analytics.js'
 import { specTargets, setSpecTarget, dismissSpec } from './game/specialists.js'
 import { playTheme, themeFor } from './game/music.js'
@@ -45,6 +46,17 @@ export function goBack() { ui.screen = ui.from || null; ui.from = null }
 // NOWA GRA prowadzi do wyboru scenariusza, a wybór scenariusza – do wstępu fabularnego
 export function newGame() { ui.screen = 'scenarios' }
 export function startScenario(k) { game.s = newState(k); track('game_start', { scenario: k }); ui.tab = 'raport'; ui.saveDropped = false; persist(); ui.screen = 'intro' }
+
+// zapisy: przejście na wczytaną grę (ze slotu albo importu)
+function useGame(st) {
+  game.s = st; ui.tab = 'raport'; ui.saveDropped = false; ui.savedDay = st.over ? null : st.m
+  persist(); track('game_load')
+  ui.from = null; ui.screen = st.over ? 'end' : null
+}
+export function saveGameSlot(i) { const ok = saveSlot(i, game.s); if (ok) beep(700, 0.08); return ok }
+export function loadGameSlot(i) { const st = loadSlot(i); if (st) useGame(st); return !!st }
+export function deleteGameSlot(i) { deleteSlot(i) }
+export async function importGame(text) { const st = await importText(text); if (st) useGame(st); return !!st }
 
 export function build(k) {
   const s = game.s, x = BLD[k]
