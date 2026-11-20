@@ -2,6 +2,7 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import { ui, newGame, closeScreen, showScreen } from '../../store.js'
 import { versionLabel } from '../../game/changelog.js'
+import { BOOT_STORY } from '../../game/scenarios.js'
 
 // Ekran startowy udający wczytywanie gry na C64
 const LINES = ['KOLONY VIBE', 'WERSJA ' + versionLabel(true).replace(/[„”]/g, '') + ' · (C) 2026', '', 'READY.', 'LOAD "KOLONY VIBE",8,1', 'SEARCHING FOR KOLONY VIBE', 'LOADING', 'READY.']
@@ -22,6 +23,7 @@ import LinkButtons from '../LinkButtons.vue'
     <template v-for="(l, i) in LINES.slice(0, shown)" :key="i">{{ l }}<br></template>
     <template v-if="shown > LINES.length">
       RUN<span class="cursor"></span>
+      <div class="bootstory"><p v-for="(p, i) in BOOT_STORY" :key="i">{{ p }}</p></div>
       <div v-if="ui.saveDropped" class="warn small" style="margin-top:8px">Zapis gry z poprzedniej wersji nie jest zgodny z obecną wersją gry i nie może zostać wczytany. Zacznij nową grę.</div>
       <div class="btns">
         <button v-if="ui.savedDay" @click="closeScreen">KONTYNUUJ (dzień {{ ui.savedDay }})</button>

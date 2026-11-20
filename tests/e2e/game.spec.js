@@ -278,6 +278,7 @@ test('specjaliści: cel, AUTO i zwolnienie w zakładce PRACA', async ({ page }) 
 test('animacja startowa leci tylko raz', async ({ page }) => {
   await page.goto('/')
   await expect(page.getByText('LOAD "KOLONY VIBE",8,1')).toBeVisible()
+  await expect(page.locator('.bootstory')).toContainText('Imperator Gała')
   await page.getByRole('button', { name: 'ZASADY', exact: true }).click()
   await page.getByRole('button', { name: 'WRÓĆ', exact: true }).click()
   // od razu cały ekran z przyciskami, bez ponownego „wczytywania”

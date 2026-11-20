@@ -9,6 +9,14 @@ export const DIFF = {
   hard: { n: 'TRUDNY', mult: 2, color: 'var(--red)' }
 }
 
+// Początek fabuły pokazywany na ekranie startowym (pod „RUN”)
+export const BOOT_STORY = [
+  'Imperator Gała – ojciec Jego Wysokości chciał dać mu na imię Chwała, ale wypełniając akt urodzenia był pijany jak bela, a że słowo imperatora jest świętością, tak już zostało – właśnie awansował ciebie, skromnego Doradcę Uprzejmości Pomiędzy Ambasadami, na stanowisko Gubernatora Ósmego Wielkiego Nusziwegi Obszaru.',
+  'Od dziś zamiast siedzieć w ciepłym pałacu, między złoconymi kolumnami a bufetem z ciasteczkami, dostajesz zaszczytną możliwość zarządzania wspaniałymi, nowymi koloniami. Bez ogrzewania i bez ciepłych dań, za to z prawem do korzystania z Sanitariatów Rzeczywiście Antycznych, Cudownie Zachowanych – dumy całego Obszaru.',
+  'Imperator Gała ogłosił, że najtrudniejsze zadania powierza swoim najsilniejszym wojownikom. To, że podjął tę decyzję zaraz po tym, jak wypiłeś z jego lodówki mleko przeznaczone na imperatorskie śniadanie, jest oczywiście totalnym przypadkiem. Podobnie jak to, że karton był podpisany „NIE RUSZAĆ – IMPERATOR”.',
+  'Pakuj walizkę, gubernatorze. Prom odlatuje o świcie. I pamiętaj motto Obszaru: Spokojnie, Przetrwasz! Ambitnie Działaj, Awansujesz Jutro!'
+]
+
 export const PROLOGUE = 'Jego Wysokość Imperator Ludzkiej Unii Jedności obchodzi wkrótce setne urodziny i zapowiedział „Najwspanialszy Jubileusz w Dziejach Ludzkości”. Każdy z jego dworzan dostał do przygotowania jeden element uroczystości – i każdy uznał, że najlepiej będzie założyć w tym celu nową kolonię. Ty zostajesz jej gubernatorem.'
 
 const R = Math.round, rnd = () => Math.random()
