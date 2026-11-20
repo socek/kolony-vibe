@@ -19,7 +19,7 @@ const rowOf = computed(() => Object.fromEntries(Object.entries(BLD).map(([k, b])
 </script>
 
 <template>
-  <div class="small">Zapłacone budynki trafiają na plac budowy (lista na dole). Im więcej budowniczych, tym szybciej powstają – ich liczbę ustalasz priorytetem w zakładce PRACA. Wolni budowniczowie trafiają najpierw na pierwszy plac w kolejce. Utrzymanie: {{ MAINT }} kr/dzień za budynek.</div>
+  <div class="small">Zapłacone budynki trafiają na plac budowy (lista na dole). Im więcej budowniczych, tym szybciej powstają – ich liczbę ustalasz priorytetem w zakładce PRACOWNICY. Wolni budowniczowie trafiają najpierw na pierwszy plac w kolejce. Utrzymanie: {{ MAINT }} kr/dzień za budynek.</div>
 
   <div v-if="slotsInfo(s)" class="card" style="border-top:0">
     <div class="row"><span>Miejsca na budynki</span><span :class="slotsInfo(s).used >= slotsInfo(s).max ? 'neg' : ''">{{ slotsInfo(s).used }}/{{ slotsInfo(s).max }}</span></div>

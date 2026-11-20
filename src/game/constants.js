@@ -12,7 +12,7 @@ export const BLD = {
   mine: { n: 'Kopalnia', cr: 140, mi: 20, w: 12, en: 2, p: 6, crew: 6, bt: 50, d: '+6 t minerałów dziennie, wydobywane ze złóż' },
   mine2: { n: 'Kopalnia głębinowa', cr: 230, mi: 40, w: 14, en: 3, p: 10, crew: 8, bt: 70, d: '+10 t minerałów dziennie, wydobywane ze złóż', req: 'drill' },
   house: { n: 'Moduł mieszkalny', cr: 100, mi: 50, w: 2, en: 1, crew: 4, bt: 20, d: '+60 miejsc' },
-  school: { n: 'Szkoła', cr: 260, mi: 80, w: 4, en: 1.5, crew: 6, bt: 45, d: 'kształci specjalistów: 1 osoba co 4 dni – tych, których najbardziej brakuje do celu (cele ustawiasz w zakładce PRACA)' },
+  school: { n: 'Szkoła', cr: 260, mi: 80, w: 4, en: 1.5, crew: 6, bt: 45, d: 'kształci specjalistów: 1 osoba co 4 dni – tych, których najbardziej brakuje do celu (cele ustawiasz w zakładce PRACOWNICY)' },
   hosp: { n: 'Szpital', cr: 280, mi: 90, w: 3, en: 2, crew: 6, bt: 50, d: 'osłabia epidemie, zmniejsza zgony z głodu, przyspiesza przyrost, więcej osób zdolnych do pracy – obsadzają go tylko naukowcy' },
   rec: { n: 'Centrum rekreacji', cr: 200, mi: 60, w: 6, en: 1.5, crew: 6, bt: 50, d: 'podnosi morale' },
   lab: { n: 'Laboratorium', cr: 250, mi: 80, w: 8, en: 2, p: 2, crew: 8, bt: 80, d: '+2 pkt badań dziennie' },
@@ -84,7 +84,7 @@ export const DAYS = 365, YEAR = 2150, KEY = 'kolony-vibe-v2'
 export const INFRA = ['battery', 'fridge', 'store', 'house', 'shield', 'platform', 'module', 'golf']
 export const JOBS = ['build', 'repair', 'farm', 'farm2', 'synth', 'power', 'power2', 'mine', 'mine2', 'school', 'hosp', 'rec', 'lab', 'port', 'gun', 'hunt', 'kelp', 'geo', 'icefac', 'fence', 'pen', 'gallery']
 export const PRIO = [[0, 'STOP'], [1, 'NISKI'], [2, 'ŚREDNI'], [3, 'WYSOKI']]
-export const TABS = [['raport', 'RAPORT'], ['budowa', 'BUDOWA'], ['praca', 'PRACA'], ['wyprawy', 'WYPRAWY'], ['rynek', 'IMPERIUM'], ['polityka', 'POLITYKA'], ['nauka', 'TECHNOLOGIE'], ['statystyki', 'STATYSTYKI']]
+export const TABS = [['raport', 'RAPORT'], ['budowa', 'BUDOWA'], ['praca', 'PRACOWNICY'], ['wyprawy', 'WYPRAWY'], ['rynek', 'IMPERIUM'], ['polityka', 'POLITYKA'], ['nauka', 'TECHNOLOGIE'], ['statystyki', 'STATYSTYKI']]
 export const RATIONS = [[0.75, 'Głodowe'], [1, 'Normalne'], [1.25, 'Obfite']]
 export const MDAYS = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 export const MNAMES = ['STY', 'LUT', 'MAR', 'KWI', 'MAJ', 'CZE', 'LIP', 'SIE', 'WRZ', 'PAŹ', 'LIS', 'GRU']

@@ -179,7 +179,7 @@ test('wyprawa do ruin z żołnierzem', async ({ page }) => {
 
 test('konserwatorzy i stan budynków', async ({ page }) => {
   await newGame(page)
-  await tab(page, 'PRACA')
+  await tab(page, 'PRACOWNICY')
   await expect(page.locator('.card', { hasText: 'Konserwatorzy (naprawy' })).toBeVisible()
   await tab(page, 'RAPORT')
   await expect(page.getByText('Stan budynków')).toBeVisible()
@@ -207,7 +207,7 @@ test('scenariusz Mruczysko: pora roku, zagroda i myśliwi', async ({ page }) => 
   await expect(page.getByText('PORA ROKU: ZIMA', { exact: true })).toBeVisible()
   await tab(page, 'BUDOWA')
   await expect(page.locator('.card', { hasText: 'Zagroda' })).toBeVisible()
-  await tab(page, 'PRACA')
+  await tab(page, 'PRACOWNICY')
   await expect(page.locator('.card', { hasText: 'Myśliwi (+' })).toBeVisible()
 })
 
@@ -223,9 +223,9 @@ test('scenariusz Chlupotka: limit miejsc na budynki', async ({ page }) => {
   await expect(page.locator('.card', { hasText: 'Kopalnia głębinowa' })).toBeVisible()
 })
 
-test('zakładka PRACA wyjaśnia odsetek zdolnych do pracy', async ({ page }) => {
+test('zakładka PRACOWNICY wyjaśnia odsetek zdolnych do pracy', async ({ page }) => {
   await newGame(page)
-  await tab(page, 'PRACA')
+  await tab(page, 'PRACOWNICY')
   await expect(page.getByText('Zdolni do pracy (62% kolonistów)')).toBeVisible()
   await expect(page.getByText('Bazowo (dzieci, seniorzy i opiekunowie nie pracują)')).toBeVisible()
   await expect(page.getByText('+2 pkt proc.')).toBeVisible()
@@ -258,9 +258,9 @@ test('przyciski ZGŁOŚ BŁĄD i WESPRZYJ otwierają strony w nowej karcie', asy
   await page.screenshot({ path: process.env.SHOT || 'test-results/links.png' })
 })
 
-test('specjaliści: cel, AUTO i zwolnienie w zakładce PRACA', async ({ page }) => {
+test('specjaliści: cel, AUTO i zwolnienie w zakładce PRACOWNICY', async ({ page }) => {
   await newGame(page)
-  await tab(page, 'PRACA')
+  await tab(page, 'PRACOWNICY')
   const sol = page.locator('.spec', { hasText: 'Żołnierze' })
   await expect(sol).toContainText('Żołnierze: 2')
   await expect(sol).toContainText('AUTO,')
