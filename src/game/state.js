@@ -3,7 +3,8 @@ import { START_DEPOSIT } from './expeditions.js'
 import { SCENARIOS, scenarioOf, diffOf } from './scenarios.js'
 
 // Wersja formatu zapisu. Zapisy starsze niż MIN_SAVE_VERSION nie dają się wczytać.
-export const SAVE_VERSION = 3, MIN_SAVE_VERSION = 2
+// 4: bateria mieści 25 kWh zamiast 100
+export const SAVE_VERSION = 4, MIN_SAVE_VERSION = 2
 
 const startDeposit = () => ({ n: 'Złoże macierzyste', t: START_DEPOSIT, max: START_DEPOSIT })
 
@@ -15,7 +16,7 @@ export function newState(sc = 'moon') {
     // specjaliści (część pracowników) i szkolenie w szkołach
     spec: { sci: 6, eng: 4, sol: 2 }, specTgt: {}, trainProg: 0, dep: [startDeposit()], exp: [], camp: [],
     // każdy budynek z listy ma licznik (0, jeśli nie ma go na starcie)
-    b: { ...Object.fromEntries(Object.keys(BLD).map(k => [k, 0])), farm: 3, power: 2, battery: 1, fridge: 1, store: 1, mine: 1, house: 2 },
+    b: { ...Object.fromEntries(Object.keys(BLD).map(k => [k, 0])), farm: 3, power: 2, battery: 4, fridge: 1, store: 1, mine: 1, house: 2 },
     tax: 10, ration: 1, tech: {}, prio: {},
     pr: { food: 4, min: 6 }, prev: null, over: null,
     report: [],
@@ -47,6 +48,8 @@ export function load() {
     if (!o.spec) { o.spec = { sci: Math.max(6, (o.b.lab || 0) * 8), eng: 4, sol: Math.max(2, (o.b.gun || 0) * 4) }; o.trainProg = 0 }
     // zapisy sprzed rozdzielenia magazynów: dotychczasowe magazyny trzymały oba surowce
     if (o.b.fridge == null) o.b.fridge = o.b.store || 0
+    // zapisy sprzed 0.4: bateria mieściła 100 kWh, teraz 25 – cztery razy więcej baterii daje tę samą pojemność
+    if ((o.sv || 2) < 4 && o.b.battery) o.b.battery *= 4
     // brakujące budynki w starych zapisach
     for (const k in BLD) if (o.b[k] == null) o.b[k] = 0
     o.sv = SAVE_VERSION

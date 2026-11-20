@@ -6,7 +6,7 @@ export const BLD = {
   synth: { n: 'Syntezator żywności', cr: 300, mi: 120, w: 2, en: 8, p: 14, crew: 6, bt: 60, d: '+14 t żywności dziennie z syntezy białka – tylko 2 pracowników, ale 8 kWh prądu', req: 'synth' },
   power: { n: 'Elektrownia słoneczna', cr: 150, mi: 60, w: 6, en: 0, p: 10, crew: 5, bt: 35, d: '+10 kWh energii dziennie' },
   power2: { n: 'Elektrownia grafenowa', cr: 240, mi: 90, w: 6, en: 0, p: 16, crew: 6, bt: 50, d: '+16 kWh energii dziennie – wydajne ogniwa grafenowe', req: 'graph' },
-  battery: { n: 'Bateria', cr: 130, mi: 70, w: 1, en: 0, crew: 3, bt: 15, d: '+100 kWh pojemności magazynu energii' },
+  battery: { n: 'Bateria', cr: 130, mi: 70, w: 1, en: 0, crew: 3, bt: 15, d: '+25 kWh pojemności magazynu energii' },
   fridge: { n: 'Chłodnia', cr: 110, mi: 40, w: 2, en: 1, crew: 4, bt: 20, d: '+250 t miejsca na żywność' },
   store: { n: 'Magazyn minerałów', cr: 100, mi: 30, w: 2, en: 0, crew: 4, bt: 20, d: '+250 t miejsca na minerały' },
   mine: { n: 'Kopalnia', cr: 140, mi: 20, w: 12, en: 2, p: 6, crew: 6, bt: 50, d: '+6 t minerałów dziennie, wydobywane ze złóż' },
@@ -77,7 +77,7 @@ export const TECH = {
 
 export const RES = { food: { n: 'Żywność', base: 4 }, min: { n: 'Minerały', base: 6 } }
 
-export const BATCAP = 100, STBASE = 150, STCAP = 250, MAINT = 1, MORK = 0.11
+export const BATCAP = 25, STBASE = 150, STCAP = 250, MAINT = 1, MORK = 0.11
 export const HUNGER_MAX = 12 // po tylu dniach głodu kolonia wymiera
 export const DAYS = 365, YEAR = 2150, KEY = 'kolony-vibe-v2'
 

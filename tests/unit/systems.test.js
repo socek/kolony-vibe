@@ -164,3 +164,23 @@ describe('skrócone komunikaty', async () => {
     expect(t).toContain('★ LUJ: nowa oferta.')
   })
 })
+
+describe('baterie po 25 kWh', async () => {
+  const { newState, load, SAVE_VERSION } = await import('../../src/game/state.js')
+  const { batCapOf } = await import('../../src/game/constants.js')
+  it('bateria daje 25 kWh, nowa gra ma 4 baterie (100 kWh)', () => {
+    const s = newState('moon')
+    expect(s.b.battery).toBe(4)
+    expect(batCapOf(s)).toBe(100)
+  })
+  it('stary zapis dostaje 4 baterie za każdą dawną – pojemność się nie zmniejsza', () => {
+    const old = newState('moon'); old.sv = 3; old.b.battery = 3 // dawniej 300 kWh
+    localStorage.setItem('kolony-vibe-v2', JSON.stringify(old))
+    const { s } = load()
+    expect(s.b.battery).toBe(12)
+    expect(batCapOf(s)).toBe(300)
+    expect(s.sv).toBe(SAVE_VERSION)
+    localStorage.setItem('kolony-vibe-v2', JSON.stringify(s))
+    expect(load().s.b.battery).toBe(12) // drugi odczyt nie mnoży ponownie
+  })
+})

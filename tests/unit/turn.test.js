@@ -21,7 +21,7 @@ describe('endTurn – podstawy', () => {
     fixRandom(0.5)
     const s = newState(); s.pop = 400; s.b.house = 8; s.q = [{ k: 'battery', d: 14 }]
     const stops = endTurn(s)
-    expect(s.b.battery).toBe(2)
+    expect(s.b.battery).toBe(5)
     expect(s.q).toHaveLength(0)
     expect(stops).toContain('build')
     expect(texts(s)).toContain('Ukończono budowę: Bateria')
