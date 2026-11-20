@@ -1,12 +1,16 @@
-export const VERSION = '0.3', CODENAME = 'Merveil'
+// CODENAME może być pusty – wtedy etykieta pokazuje sam numer wersji
+export const VERSION = '0.4', CODENAME = ''
 // wersja w trakcie zmian – pokazywane przy numerze wersji
-export const IN_DEV = false
+export const IN_DEV = true
 export const versionLabel = (upper = false) => {
-  const t = VERSION + ' „' + CODENAME + '”' + (IN_DEV ? ' (in development)' : '')
+  const t = VERSION + (CODENAME ? ' „' + CODENAME + '”' : '') + (IN_DEV ? ' (in development)' : '')
   return upper ? t.toUpperCase() : t
 }
 
 export const CHANGELOG = [
+  {
+    v: '0.4 (in development)', d: 'w przygotowaniu', items: []
+  },
   {
     v: '0.3 „Merveil”', d: '20.11.2026', items: [
       'Ekran „O grze”: wstążka „Fork me on GitHub” i linki do kanałów autora na YouTube i Twitchu.',
