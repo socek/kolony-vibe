@@ -3,6 +3,7 @@ export default {
   'log.wip': 'w przygotowaniu',
   'log.v.0.4': '0.4 (in development)',
   'log.items.0.4': [
+    'Udostępnianie wyniku po końcu gry: systemowe okno udostępniania (na komputerze – kopiowanie do schowka) i obrazek z wynikiem w stylu C64.',
     'Zapisy gry (menu → ZAPISY GRY): 3 sloty na ręczne zapisy oraz przenoszenie gry między urządzeniami kodem albo plikiem (WCZYTAJ GRĘ na ekranie startowym).',
     'Ustawy (zakładka POLITYKA): 8 ustaw z zaletami i wadami, np. obowiązkowe nadgodziny, bezmięsne poniedziałki, nocne zmiany w laboratoriach. Naraz najwyżej 3.',
     'Nowy scenariusz: Piaskownica Imperatora – bez celu i bez limitu dni, bez wyniku w tabeli; przegrać można nadal.',

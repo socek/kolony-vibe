@@ -15,4 +15,5 @@ import scenarios from './scenarios.js'
 import changelog from './changelog.js'
 import laws from './laws.js'
 import saves from './saves.js'
-export default { ...ui, ...screens, ...end, ...help, ...story, ...misc, ...data, ...tabs, ...game, ...events, ...choices, ...expeditions, ...empire, ...scenarios, ...changelog, ...laws, ...saves }
+import share from './share.js'
+export default { ...ui, ...screens, ...end, ...help, ...story, ...misc, ...data, ...tabs, ...game, ...events, ...choices, ...expeditions, ...empire, ...scenarios, ...changelog, ...laws, ...saves, ...share }
