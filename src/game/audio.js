@@ -10,6 +10,15 @@ export function initAudio() {
 }
 export const audioCtx = () => actx
 
+// zgaszony ekran, przełączona karta albo zminimalizowana przeglądarka: wstrzymaj dźwięk (muzykę i efekty);
+// po powrocie gra dalej od miejsca, w którym przerwała (zatrzymany kontekst zatrzymuje też czas muzyki)
+export function onVisibility(hidden) {
+  if (!actx) return
+  if (hidden) { if (actx.state === 'running') actx.suspend() }
+  else if (actx.state === 'suspended') actx.resume()
+}
+if (typeof document !== 'undefined') document.addEventListener('visibilitychange', () => onVisibility(document.hidden))
+
 export function beep(f, d) {
   if (!audio.sound || !actx) return
   try {

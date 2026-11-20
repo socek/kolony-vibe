@@ -10,6 +10,7 @@ export const versionLabel = (upper = false) => {
 export const CHANGELOG = [
   {
     v: '0.4 (in development)', d: 'w przygotowaniu', items: [
+      'Muzyka i dźwięki milkną, gdy ekran telefonu zgaśnie albo gra trafi do tła (inna karta, zminimalizowana przeglądarka), i wracają po powrocie do gry.',
       'Naprawiono: na telefonie technologie w zakładce TECHNOLOGIE nachodziły na dolny pasek z przyciskiem KONIEC DNIA.'
     ]
   },
