@@ -1,4 +1,4 @@
-// Game data: buildings, technologies, groups, tabs, priorities, rations, specialists, jobs
+// Game data: buildings, technologies, groups, tabs, rations, specialists, jobs
 export default {
   'bld.farm.n': 'Hydroponic farm', 'bld.farm.d': '+8 t of food per day',
   'bld.farm2.n': 'Aeroponic farm', 'bld.farm2.d': '+12 t of food per day – crops grown in a nutrient mist',
@@ -52,12 +52,12 @@ export default {
 
   'bldgrp.food': 'FOOD', 'bldgrp.ind': 'INDUSTRY AND SCIENCE', 'bldgrp.pop': 'POPULATION', 'bldgrp.def': 'DEFENCE', 'bldgrp.goal': 'SCENARIO GOAL',
   'branch.food': 'FOOD', 'branch.ind': 'INDUSTRY AND ENERGY', 'branch.pop': 'POPULATION', 'branch.def': 'DEFENCE', 'branch.exp': 'EXPEDITIONS', 'branch.trade': 'TRADE AND POLICY',
+  'tab.count.budowa': 'under construction: {n}', 'tab.count.wyprawy': 'expeditions away: {n}',
   'tab.raport': 'REPORT', 'tab.budowa': 'BUILD', 'tab.praca': 'WORKERS', 'tab.wyprawy': 'EXPEDITIONS', 'tab.rynek': 'EMPIRE', 'tab.polityka': 'POLICY', 'tab.nauka': 'TECHNOLOGIES', 'tab.statystyki': 'STATISTICS',
   'tab.kolonia': 'COLONY',
   'map.info': 'A top-down view of the colony. Buildings arrange themselves in zones; broken ones blink red, worn ones are darker, and construction sites show their progress. Hover over a building to see its condition.',
   'map.totals': p => 'buildings: ' + p.b + ' · construction sites: ' + p.q + ' · breakdowns: ' + p.br,
   'map.broken': 'breakdown', 'map.site': 'construction {n}%', 'map.empty': 'The colony has no buildings yet.',
-  'prio.0': 'STOP', 'prio.1': 'LOW', 'prio.2': 'MEDIUM', 'prio.3': 'HIGH',
   'ration.0.75': 'Starvation', 'ration.1': 'Normal', 'ration.1.25': 'Generous',
   'spec.sci.n': 'Scientists', 'spec.sci.one': 'scientist', 'spec.eng.n': 'Engineers', 'spec.eng.one': 'engineer', 'spec.sol.n': 'Soldiers', 'spec.sol.one': 'soldier',
   'job.build': 'Builders', 'job.repair': 'Maintenance crews', 'job.hunt': 'Hunters'

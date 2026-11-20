@@ -1,5 +1,5 @@
 import { t } from '../i18n.js'
-import { BLD, TECH, RES, MORK, DAYS, SPEC, HUNGER_MAX, prioOf, jobName, capOf, batCapOf } from './constants.js'
+import { BLD, TECH, RES, MORK, DAYS, SPEC, HUNGER_MAX, jobOn, jobName, capOf, batCapOf } from './constants.js'
 import { calc, nextTech } from './calc.js'
 import { EVENTS, EVENT_BAD } from './events.js'
 import { mergeRep } from './report.js'
@@ -77,7 +77,7 @@ export function endTurn(s, acc, auto = {}) {
   if (c.e < 1) {
     const miss = Math.ceil(c.needed - c.workforce)
     const low = [...Object.keys(BLD).filter(k => s.b[k]), ...(c.wNeed.build ? ['build'] : [])]
-      .filter(k => prioOf(s, k) > 0 && c.E[k] < 1).map(k => jobName(k) + ' ' + Math.floor(c.E[k] * 100) + '%')
+      .filter(k => jobOn(s, k) && c.E[k] * c.wNeed[k] < c.wCap[k] - 0.01).map(k => jobName(k) + ' ' + Math.floor(c.E[k] * 100) + '%')
     add('short', { _miss: miss, _low: low.join(', ') })
   }
   edge('black', c.f < 1)

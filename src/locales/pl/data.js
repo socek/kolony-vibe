@@ -1,4 +1,4 @@
-// Dane gry: budynki, technologie, grupy, zakładki, priorytety, racje, specjaliści, stanowiska
+// Dane gry: budynki, technologie, grupy, zakładki, racje, specjaliści, stanowiska
 export default {
   'bld.farm.n': 'Farma hydroponiczna',
   'bld.farm.d': '+8 t żywności dziennie',
@@ -97,12 +97,12 @@ export default {
   'tech.propa.n': 'Propaganda holo\u00adgraficzna',
   'tech.propa.d': 'Kampanie reklamowe są o 30% tańsze. Odblokowuje kampanię: Loteria biletów kolonijnych',  'bldgrp.food': 'ŻYWNOŚĆ', 'bldgrp.ind': 'PRZEMYSŁ I NAUKA', 'bldgrp.pop': 'LUDNOŚĆ', 'bldgrp.def': 'OBRONA', 'bldgrp.goal': 'CEL SCENARIUSZA',
   'branch.food': 'ŻYWNOŚĆ', 'branch.ind': 'PRZEMYSŁ I ENERGIA', 'branch.pop': 'LUDNOŚĆ', 'branch.def': 'OBRONA', 'branch.exp': 'WYPRAWY', 'branch.trade': 'HANDEL I POLITYKA',
+  'tab.count.budowa': 'w budowie: {n}', 'tab.count.wyprawy': 'wypraw w drodze: {n}',
   'tab.raport': 'RAPORT', 'tab.budowa': 'BUDOWA', 'tab.praca': 'PRACOWNICY', 'tab.wyprawy': 'WYPRAWY', 'tab.rynek': 'IMPERIUM', 'tab.polityka': 'POLITYKA', 'tab.nauka': 'TECHNOLOGIE', 'tab.statystyki': 'STATYSTYKI',
   'tab.kolonia': 'KOLONIA',
   'map.info': 'Widok kolonii z góry. Budynki ustawiają się same w strefach; zepsute migają na czerwono, zużyte są ciemniejsze, a place budowy pokazują postęp. Najedź na budynek, żeby zobaczyć jego stan.',
   'map.totals': p => 'budynki: ' + p.b + ' · place budowy: ' + p.q + ' · awarie: ' + p.br,
   'map.broken': 'awaria', 'map.site': 'budowa {n}%', 'map.empty': 'Kolonia nie ma jeszcze żadnych budynków.',
-  'prio.0': 'STOP', 'prio.1': 'NISKI', 'prio.2': 'ŚREDNI', 'prio.3': 'WYSOKI',
   'ration.0.75': 'Głodowe', 'ration.1': 'Normalne', 'ration.1.25': 'Obfite',
   'spec.sci.n': 'Naukowcy', 'spec.sci.one': 'naukowiec', 'spec.eng.n': 'Inżynierowie', 'spec.eng.one': 'inżynier', 'spec.sol.n': 'Żołnierze', 'spec.sol.one': 'żołnierz',
   'job.build': 'Budowniczowie', 'job.repair': 'Konserwatorzy', 'job.hunt': 'Myśliwi'

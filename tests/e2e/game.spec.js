@@ -512,3 +512,20 @@ test('prognoza pokazuje braki pracowników i specjalistów', async ({ page }) =>
   await expect(f.locator('.row', { hasText: 'Pracownicy' })).toContainText('brakuje 1 pracownika')
   await expect(f.locator('.row', { hasText: 'Specjaliści' })).toContainText('inżynierowie −20')
 })
+
+test('PRACOWNICY: przeciąganie zmienia kolejność zadań', async ({ page }) => {
+  await newGame(page)
+  await page.getByRole('button', { name: 'PRACOWNICY', exact: true }).click()
+  const order = () => page.locator('[data-job]').evaluateAll(els => els.map(e => e.dataset.job))
+  const before = await order()
+  const last = before[1]
+  const h = page.locator(`[data-job="${last}"] .drag`), top = page.locator(`[data-job="${before[0]}"]`)
+  await top.scrollIntoViewIfNeeded()
+  const hb = await h.boundingBox(), tb = await top.boundingBox()
+  await page.mouse.move(hb.x + hb.width / 2, hb.y + hb.height / 2)
+  await page.mouse.down()
+  await page.mouse.move(tb.x + 20, tb.y + 4, { steps: 12 })
+  await page.mouse.up()
+  expect((await order())[0]).toBe(last)
+  expect(await page.evaluate(() => JSON.parse(localStorage.getItem('kolony-vibe-v2')).order.indexOf(document.querySelector('[data-job]').dataset.job))).toBeLessThan(2)
+})

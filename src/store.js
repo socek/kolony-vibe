@@ -1,3 +1,4 @@
+import { moveJob, shiftJob, setLim } from './game/jobs.js'
 import { t } from './i18n.js'
 import { reactive, computed } from 'vue'
 import { BLD, TECH, DAYS, batCapOf } from './game/constants.js'
@@ -100,7 +101,10 @@ export function specTarget(T, d) {
   beep(600, 0.03); persist()
 }
 export function dismiss(T) { if (dismissSpec(game.s, T)) { beep(300, 0.06); persist() } }
-export function setPrio(k, l) { game.s.prio[k] = l; beep(600, 0.03); persist() }
+// kolejność zadań i limity ludzi
+export function moveTo(k, before) { moveJob(game.s, k, before); beep(600, 0.03); persist() }
+export function shift(k, d, visible) { if (shiftJob(game.s, k, d, visible)) { beep(600, 0.03); persist() } }
+export function limit(k, v) { setLim(game.s, k, v); persist() }
 export function sendExp() { if (sendExpedition(game.s, ui.expRange, ui.expTeam, ui.expGoal, ui.expSol, ui.expEng)) { track('expedition', { range: ui.expRange, goal: ui.expGoal, team: ui.expTeam }); ui.expSol = 0; ui.expEng = 0; beep(440, 0.12); persist() } }
 export function neighborTrade(k) { if (nbTrade(game.s, k)) { beep(740, 0.05); persist() } }
 export function law(k) { if (toggleLaw(game.s, k, t)) { track('law', { law: k, on: game.s.laws.includes(k) }); beep(650, 0.08); persist() } }

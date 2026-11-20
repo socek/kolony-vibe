@@ -1,9 +1,9 @@
 <script setup>
 import { t, locale } from '../../i18n.js'
-import { computed } from 'vue'
-import { game, c, setPrio, specTarget, dismiss } from '../../store.js'
+import { computed, ref, onUnmounted } from 'vue'
+import { game, c, specTarget, dismiss, moveTo, shift, limit } from '../../store.js'
 import { specDeficit, specPosts, trainPick, isAuto } from '../../game/specialists.js'
-import { INFRA, JOBS, PRIO, SPEC, prioOf, jobName } from '../../game/constants.js'
+import { INFRA, SPEC, jobOrder, limOf, jobName } from '../../game/constants.js'
 import { scenarioOf } from '../../game/scenarios.js'
 import { fmt } from '../../game/format.js'
 import PixelIcon from '../PixelIcon.vue'
@@ -24,10 +24,49 @@ const catchUp = computed(() => c.value.train > 0 ? Math.ceil(def.value.total / c
 const warnSpec = computed(() => def.value.by.sci > 0 || (Object.keys(SPEC).some(T => !isAuto(s.value, T) && def.value.by[T] > 0) && (c.value.train <= 0 || catchUp.value > 30)))
 const infra = computed(() => INFRA.reduce((a, k) => a + c.value.wNeed[k], 0))
 const missing = computed(() => Math.max(0, Math.ceil(c.value.needed - c.value.workforce)))
-const jobs = computed(() => JOBS.filter(k => k === 'build' || k === 'repair' || (k === 'hunt' ? scenarioOf(s.value).hunt : s.value.b[k])).map(k => {
-  const n = c.value.wNeed[k], E = c.value.E[k], p = prioOf(s.value, k)
-  return { k, p, n, E, w: n * E, isB: k === 'build' }
+// zadania widoczne w tej kolonii, w kolejności gracza (wyżej = pierwsze dostaje ludzi)
+const shown = computed(() => jobOrder(s.value).filter(k => k === 'build' || k === 'repair' || (k === 'hunt' ? scenarioOf(s.value).hunt : s.value.b[k])))
+// podczas przeciągania lista pokazuje kolejność roboczą (view), zapisywaną po puszczeniu
+const drag = ref(null), view = ref(null)
+const jobs = computed(() => (view.value || shown.value).map(k => {
+  const n = c.value.wNeed[k], E = c.value.E[k], lim = limOf(s.value, k)
+  // suwak: od 0 (STOP) do pełnej obsady (bez limitu); przy zerowej potrzebie (np. brak budów) skala 0–1
+  const max = Math.max(1, Math.ceil(n - 1e-9))
+  return { k, n, E, w: n * E, isB: k === 'build', lim, on: lim > 0, max, val: Math.min(lim, max) }
 }))
+const setLimit = (j, v) => limit(j.k, v >= j.max ? null : v)
+
+// przeciąganie myszą i palcem (pointer events – HTML5 drag&drop nie działa na dotyku)
+function onMove(e) {
+  const k = drag.value
+  if (!k) return
+  const others = [...document.querySelectorAll('[data-job]')].filter(el => el.dataset.job !== k)
+  const next = others.find(el => { const r = el.getBoundingClientRect(); return e.clientY < r.top + r.height / 2 })
+  const v = view.value.filter(x => x !== k), i = next ? v.indexOf(next.dataset.job) : v.length
+  v.splice(i, 0, k)
+  if (v.join() !== view.value.join()) view.value = v
+  // przewijanie przy krawędzi ekranu
+  if (e.clientY < 50) window.scrollBy(0, -12)
+  else if (e.clientY > window.innerHeight - 50) window.scrollBy(0, 12)
+}
+function onUp() {
+  const k = drag.value, v = view.value
+  stopDrag()
+  if (!k || !v) return
+  const before = v[v.indexOf(k) + 1] ?? null
+  if (before !== (shown.value[shown.value.indexOf(k) + 1] ?? null)) moveTo(k, before)
+}
+function stopDrag() {
+  drag.value = null; view.value = null
+  window.removeEventListener('pointermove', onMove); window.removeEventListener('pointerup', onUp); window.removeEventListener('pointercancel', stopDrag)
+}
+function startDrag(e, k) {
+  if (e.button > 0) return
+  e.preventDefault()
+  drag.value = k; view.value = [...shown.value]
+  window.addEventListener('pointermove', onMove); window.addEventListener('pointerup', onUp); window.addEventListener('pointercancel', stopDrag)
+}
+onUnmounted(stopDrag)
 </script>
 
 <template>
@@ -68,17 +107,21 @@ const jobs = computed(() => JOBS.filter(k => k === 'build' || k === 'repair' || 
     <MeterBar :value="c.E.house" :max="1" :cls="c.E.house < 1 ? 'neg' : ''" />
   </div>
 
-  <div v-for="j in jobs" :key="j.k" class="card">
+  <div class="small" style="margin:6px 0 2px">{{ t('wt.orderInfo') }}</div>
+  <div v-for="(j, i) in jobs" :key="j.k" class="card job" :class="{ dragging: drag === j.k }" :data-job="j.k">
     <div class="row">
-      <span class="t"><PixelIcon :name="j.k" />{{ jobName(j.k) }}
+      <span class="t"><span class="drag" :title="t('wt.drag')" :aria-label="t('wt.drag')" @pointerdown="startDrag($event, j.k)">≡</span>{{ i + 1 }}. <PixelIcon :name="j.k" />{{ jobName(j.k) }}
         <span v-if="j.isB" class="small">({{ t('rp.sites', { n: s.q.length }) }})</span><span v-else-if="j.k === 'repair'" class="small">({{ t('wt.repairs', { n: Math.round(c.repairPts) }) }})</span><span v-else-if="j.k === 'hunt'" class="small">({{ t('wt.hunt', { n: Math.round(c.huntFood) }) }})</span><template v-else> ×{{ s.b[j.k] }}</template>
       </span>
-      <span v-if="j.p">{{ t('wt.staff', { a: fmt(j.w), b: fmt(j.n) }) }}<template v-if="j.n"> ({{ Math.round(j.E * 100) }}%)</template></span>
+      <span v-if="j.on">{{ t('wt.staff', { a: fmt(j.w), b: fmt(j.n) }) }}<template v-if="j.n"> ({{ Math.round(j.E * 100) }}%)</template></span>
       <span v-else class="neg">{{ t(j.isB ? 'wt.paused' : 'wt.stopped') }}</span>
     </div>
-    <MeterBar :value="j.n ? j.E : 0" :max="1" :cls="j.p === 0 ? 'neg' : j.E < 1 ? 'warn' : ''" />
-    <div class="pr">
-      <button v-for="[l, nm] in PRIO" :key="l" :class="{ on: j.p === l }" @click="setPrio(j.k, l)">{{ nm }}</button>
+    <MeterBar :value="j.n ? j.E : 0" :max="1" :cls="!j.on ? 'neg' : j.E < 1 ? 'warn' : ''" />
+    <div class="pr lim">
+      <button :disabled="i === 0" :title="t('wt.up')" :aria-label="t('wt.up')" @click="shift(j.k, -1, shown)">▲</button>
+      <button :disabled="i === jobs.length - 1" :title="t('wt.down')" :aria-label="t('wt.down')" @click="shift(j.k, 1, shown)">▼</button>
+      <input type="range" min="0" :max="j.max" step="1" :value="j.val" :aria-label="t('wt.limitOf', { n: jobName(j.k) })" @input="setLimit(j, +$event.target.value)">
+      <span class="small" :class="{ neg: !j.on, warn: j.on && j.lim < j.n }">{{ !j.on ? t('wt.stop') : j.lim >= j.n ? t('wt.noLimit') : t('wt.limit', { n: j.lim }) }}</span>
     </div>
   </div>
 </template>

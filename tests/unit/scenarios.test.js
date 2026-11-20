@@ -80,7 +80,7 @@ describe('scenariusze – zasady', () => {
 
   it('zagrody oswajają mruczki, a cel Mruczyska wymaga ich 50', () => {
     fixRandom(0.99)
-    const s = newState('purr'); s.b.pen = 1
+    const s = newState('purr'); s.b.pen = 1; s.order = ['pen']
     for (let i = 0; i < 10; i++) endTurn(s)
     expect(s.tamed).toBeGreaterThanOrEqual(1)
     s.pop = 700; s.tamed = 49

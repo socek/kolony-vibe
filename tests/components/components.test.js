@@ -75,12 +75,31 @@ describe('budowa', () => {
   })
 })
 
+describe('liczniki na zakładkach', () => {
+  it('BUDOWA pokazuje liczbę budów, WYPRAWY liczbę wypraw', async () => {
+    game.s.q = [{ k: 'farm', d: 0 }, { k: 'house', d: 0 }]; game.s.exp = [{ r: 'near', team: 4, left: 3, days: 3 }]
+    const w = mount(App)
+    const tab = n => w.findAll('.tabs button').find(b => b.text().startsWith(n))
+    expect(tab('BUDOWA').find('.tcount').text()).toBe('2')
+    expect(tab('WYPRAWY').find('.tcount').text()).toBe('1')
+    game.s.q = []; game.s.exp = []; await nextTick()
+    expect(tab('BUDOWA').find('.tcount').exists()).toBe(false)
+  })
+})
+
 describe('praca', () => {
-  it('zmiana priorytetu zapisuje się w stanie gry', async () => {
+  it('▲ przesuwa zadanie wyżej, a suwak ustawia limit ludzi', async () => {
     const w = mount(WorkTab)
-    const farm = card(w, 'Farma hydroponiczna')
-    await farm.findAll('.pr button').at(3).trigger('click')
-    expect(game.s.prio.farm).toBe(3)
+    const before = w.findAll('[data-job]').map(x => x.attributes('data-job'))
+    const k = before[2]
+    await w.find(`[data-job="${k}"] button[title="Wyżej (ważniejsze)"]`).trigger('click')
+    expect(w.findAll('[data-job]').map(x => x.attributes('data-job'))[1]).toBe(k)
+    const farm = w.find('[data-job="farm"] input[type=range]')
+    await farm.setValue(0)
+    expect(game.s.lim.farm).toBe(0)
+    expect(w.find('[data-job="farm"]').text()).toContain('STOP')
+    await farm.setValue(farm.attributes('max'))
+    expect(game.s.lim.farm).toBeUndefined()
   })
 })
 

@@ -54,7 +54,7 @@ export const SCENARIOS = [
     season: s => yearSeason(s.m),
     hunt: true,
     // gra zaczyna się zimą: więcej farm i zapasów, żeby przetrwać do wiosny
-    start: s => { s.tamed = 0; s.tameProg = 0; s.prio.hunt = 0; s.b.farm = 4; s.b.power = 3; s.b.fridge = 2; s.food = 600; s.b.house = 3; s.pop = 130 },
+    start: s => { s.tamed = 0; s.tameProg = 0; s.lim.hunt = 0; s.b.farm = 4; s.b.power = 3; s.b.fridge = 2; s.food = 600; s.b.house = 3; s.pop = 130 },
     tick: (s, c, note, add) => {
       const stops = []
       // oswajanie w zagrodach

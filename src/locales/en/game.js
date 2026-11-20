@@ -12,9 +12,9 @@ export default {
   'rep.hunger.tip': 'A day of full food (without starvation rations) ends the famine.',
   'rep.hungerHold': ({ v, d, max }, t) => 'Starvation rations' + dd(d, t) + ' – nobody dies, but the famine goes on (day ' + v._day + '/' + max + ').',
   'rep.hungerHold.tip': 'Restore at least normal rations to end it.',
-  'rep.stall': (p, t) => 'Construction stalled' + dd(p.d, t) + ' – nobody is working on the construction sites.', 'rep.stall.tip': 'Change the builders\' priority in the WORKERS tab.',
+  'rep.stall': (p, t) => 'Construction stalled' + dd(p.d, t) + ' – nobody is working on the construction sites.', 'rep.stall.tip': 'Move the builders up or raise their limit in the WORKERS tab.',
   'rep.short': ({ v, d }, t) => 'Labour shortage' + dd(d, t) + ' – ' + v._miss + ' ' + enForm(v._miss, 'worker', 'workers') + ' missing. Understaffed: ' + v._low + '.',
-  'rep.short.tip': 'Set the priorities in the WORKERS tab.',
+  'rep.short.tip': 'Set the job order and limits in the WORKERS tab.',
   'rep.black': ({ v, d }, t) => 'BLACKOUT' + dd(d, t) + '! Power covers ' + (d > 1 ? 'on average ' : '') + R(v.p / d) + '% of demand.',
   'rep.crowd': (p, t) => 'Overcrowding' + dd(p.d, t) + '.', 'rep.crowd.tip': 'Build housing modules.',
   'rep.born': ({ v, d }, t) => R(v.a) < 1 ? null : (R(v.a) === 1 ? ws(d).replace(/^a/, 'A') + '1 new colonist was born.' : ws(d).replace(/^a/, 'A') + R(v.a) + ' new colonists were born.'),
@@ -70,7 +70,7 @@ export default {
 
   // tutorial hints
   'hint.short.t': 'Labour shortage',
-  'hint.short.d': 'Buildings need more workers than you have. Set priorities in the WORKERS tab – the most important buildings will get people first. New colonists (housing modules, advertising campaigns) will give you more workers.',
+  'hint.short.d': 'Buildings need more workers than you have. Set the job order in the WORKERS tab – jobs at the top of the list get people first. New colonists (housing modules, advertising campaigns) will give you more workers.',
   'hint.hunger.t': 'A famine has begun',
   'hint.hunger.d': 'More people die with each day of famine, and on day 12 everyone dies. Buy food in the EMPIRE tab or build farms. A day of full food on at least normal rations ends the famine.',
   'hint.black.t': 'Blackout',
@@ -84,7 +84,7 @@ export default {
   'hint.choice.t': 'A decision to make',
   'hint.choice.d': 'Some events need your decision – until then no days are played. If a decision keeps coming back, you can set an automatic answer in the menu → SETTINGS.',
   'hint.broke.t': 'Building breakdown',
-  'hint.broke.d': 'Buildings wear out and break. A broken building does not work until the maintenance crews repair it – check their priority in the WORKERS tab.',
+  'hint.broke.d': 'Buildings wear out and break. A broken building does not work until the maintenance crews repair it – check their place in the list and their limit in the WORKERS tab.',
   'hint.order.t': 'An order from the HUU',
   'hint.order.d': 'The Human Union of Unity is offering an order (EMPIRE tab). Once accepted it has a deadline and a penalty for failure, but completing it brings a reward and reputation.',
   'hint.crowd.t': 'Overcrowding',
@@ -92,7 +92,7 @@ export default {
   'hint.debt.t': 'The colony is in debt',
   'hint.debt.d': 'Credits have dropped below zero. This lowers morale, and a debt of more than 500 cr ends the game in bankruptcy. Raise taxes, sell surpluses in the EMPIRE tab or complete an HUU order.',
   'hint.build.t': 'First construction completed',
-  'hint.build.d': 'Congratulations! The more builders (priority in the WORKERS tab), the faster new buildings go up – but the fewer people work in production.',
+  'hint.build.d': 'Congratulations! The more builders (job order and limit in the WORKERS tab), the faster new buildings go up – but the fewer people work in production.',
   'hint.exp.t': 'An expedition has returned',
   'hint.exp.d': 'Expeditions search for the chosen target, but sometimes they find something else. Soldiers in the team lower the risk of losses, and engineers increase the gain.',
   // game day: messages, game over, start

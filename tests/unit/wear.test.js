@@ -59,7 +59,7 @@ describe('zużycie budynków', () => {
     s.pop = 300; s.b.house = 6
     s.spec = { sci: 0, eng: 0, sol: 0 }
     const plain = calc(s).repairPts
-    s.spec.eng = 10; s.prio = { build: 0, power: 0, mine: 0, mine2: 0, power2: 0, synth: 0, port: 0 }
+    s.spec.eng = 10; s.lim = { build: 0, power: 0, mine: 0, mine2: 0, power2: 0, synth: 0, port: 0 }
     expect(calc(s).repairPts).toBeGreaterThan(plain)
   })
 })

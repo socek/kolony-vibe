@@ -3,6 +3,8 @@ export default {
   'log.wip': 'w przygotowaniu',
   'log.v.0.4': '0.4 (in development)',
   'log.items.0.4': [
+    'Zakładka PRACOWNICY: priorytety NISKI/ŚREDNI/WYSOKI zastąpiła lista zadań – przeciągnij za ≡ (albo ▲ ▼), żeby ustawić kolejność; wyżej znaczy, że zadanie dostaje ludzi wcześniej. Suwak przy każdym zadaniu ustawia limit ludzi (skrajnie w lewo = STOP). Stare zapisy przenoszą się same.',
+    'Przyciski BUDOWA i WYPRAWY pokazują, ile budynków jest w budowie i ile wypraw w drodze.',
     'Komunikat „Baterie naładowane” pojawia się tylko w pierwszym dniu pełnych baterii, a nie codziennie.',
     'Z prognozy w raporcie zniknęły wiersze Chłodnie i Magazyny minerałów (pojemność widać na kafelkach zasobów).',
     'Prognoza w raporcie pokazuje braki ludzi: ilu brakuje rąk do pracy i ilu specjalistów każdego rodzaju brakuje do celu.',

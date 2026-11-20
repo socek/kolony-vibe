@@ -85,7 +85,8 @@ export const DAYS = 365, YEAR = 2150, KEY = 'kolony-vibe-v2'
 
 export const INFRA = ['battery', 'fridge', 'store', 'house', 'shield', 'platform', 'module', 'golf']
 export const JOBS = ['build', 'repair', 'farm', 'farm2', 'synth', 'power', 'power2', 'mine', 'mine2', 'school', 'hosp', 'rec', 'lab', 'port', 'gun', 'hunt', 'kelp', 'geo', 'icefac', 'fence', 'pen', 'gallery']
-export const PRIO = [[0], [1], [2], [3]]
+// domyślna kolejność zadań (wyżej = pierwsze dostaje ludzi); gracz zmienia ją w zakładce PRACOWNICY
+export const JOB_ORDER = ['repair', 'farm', 'farm2', 'synth', 'kelp', 'hunt', 'power', 'power2', 'geo', 'build', 'mine', 'mine2', 'icefac', 'lab', 'hosp', 'school', 'rec', 'port', 'gun', 'fence', 'pen', 'gallery']
 export const TABS = [['raport'], ['budowa'], ['praca'], ['wyprawy'], ['rynek'], ['polityka'], ['nauka'], ['statystyki'], ['kolonia']]
 export const RATIONS = [[0.75], [1], [1.25]]
 export const MDAYS = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
@@ -98,7 +99,11 @@ export const SPEC = {
 }
 export const SPEC_BONUS = 1.5 // sprawność specjalisty na swoim stanowisku (zwykły kolonista = 1)
 export const SPEC_REQ = ['lab', 'hosp']
-export const prioOf = (s, k) => INFRA.includes(k) ? 9 : ((s.prio || {})[k] ?? 2)
+// kolejność zadań w tej grze: zapisana przez gracza, a brakujące (np. nowe w wersji gry) – na końcu w domyślnej kolejności
+export const jobOrder = s => { const o = (s.order || []).filter(k => JOBS.includes(k)); return [...o, ...JOB_ORDER.filter(k => !o.includes(k))] }
+// limit ludzi w zadaniu (0 = STOP, Infinity = bez limitu); infrastruktura nie ma limitu
+export const limOf = (s, k) => INFRA.includes(k) ? Infinity : ((s.lim || {})[k] ?? Infinity)
+export const jobOn = (s, k) => limOf(s, k) > 0
 export const jobName = k => k === 'build' || k === 'repair' || k === 'hunt' ? t('job.' + k) : BLD[k].n
 // pojemność magazynu danego surowca: żywność w chłodniach, minerały w magazynach minerałów
 export const capOf = (s, k) => k === 'food'
@@ -123,5 +128,4 @@ for (const b of TECH_BRANCHES) Object.defineProperty(b, 'n', { get: () => t('bra
 // pary [wartość, etykieta] – etykieta jako getter, więc destrukturyzacja [k, l] dalej działa
 const labels = (arr, prefix) => arr.forEach(x => Object.defineProperty(x, 1, { get: () => t(prefix + x[0]), enumerable: true }))
 labels(TABS, 'tab.')
-labels(PRIO, 'prio.')
 labels(RATIONS, 'ration.')

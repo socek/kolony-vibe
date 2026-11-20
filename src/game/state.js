@@ -1,11 +1,11 @@
 import { t } from '../i18n.js'
-import { DAYS, KEY, BLD } from './constants.js'
+import { DAYS, KEY, BLD, JOB_ORDER } from './constants.js'
 import { START_DEPOSIT } from './expeditions.js'
 import { SCENARIOS, scenarioOf, diffOf } from './scenarios.js'
 
 // Wersja formatu zapisu. Zapisy starsze niż MIN_SAVE_VERSION nie dają się wczytać.
 // 4: bateria mieści 25 kWh zamiast 100
-export const SAVE_VERSION = 4, MIN_SAVE_VERSION = 2
+export const SAVE_VERSION = 5, MIN_SAVE_VERSION = 2
 
 const startDeposit = () => ({ n: t('state.homeDeposit'), t: START_DEPOSIT, max: START_DEPOSIT })
 
@@ -18,7 +18,7 @@ export function newState(sc = 'moon') {
     spec: { sci: 6, eng: 4, sol: 2 }, specTgt: {}, trainProg: 0, dep: [startDeposit()], exp: [], camp: [],
     // każdy budynek z listy ma licznik (0, jeśli nie ma go na starcie)
     b: { ...Object.fromEntries(Object.keys(BLD).map(k => [k, 0])), farm: 3, power: 2, battery: 4, fridge: 1, store: 1, mine: 1, house: 2 },
-    tax: 10, ration: 1, tech: {}, prio: {},
+    tax: 10, ration: 1, tech: {}, order: [...JOB_ORDER], lim: {},
     pr: { food: 4, min: 6 }, prev: null, over: null,
     report: [],
     repDays: 0
@@ -58,6 +58,14 @@ export function migrate(o) {
     if (o.b.fridge == null) o.b.fridge = o.b.store || 0
     // zapisy sprzed 0.4: bateria mieściła 100 kWh, teraz 25 – cztery razy więcej baterii daje tę samą pojemność
     if ((o.sv || 2) < 4 && o.b.battery) o.b.battery *= 4
+    // zapisy sprzed 0.4: poziomy priorytetu (0 STOP, 1–3) zamieniają się w kolejność zadań (wyższy wyżej) i limit 0 dla STOP
+    if (!o.order) {
+      const p = o.prio || {}, lv = k => p[k] ?? 2
+      o.order = [...JOB_ORDER].sort((a, b) => lv(b) - lv(a))
+      o.lim = Object.fromEntries(Object.keys(p).filter(k => p[k] === 0).map(k => [k, 0]))
+      delete o.prio
+    }
+    if (!o.lim) o.lim = {}
     // brakujące budynki w starych zapisach
     for (const k in BLD) if (o.b[k] == null) o.b[k] = 0
     o.sv = SAVE_VERSION

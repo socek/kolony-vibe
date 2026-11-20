@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { calc } from '../../src/game/calc.js'
 import { newState } from '../../src/game/state.js'
-import { capOf, BLD } from '../../src/game/constants.js'
+import { capOf, BLD, JOB_ORDER } from '../../src/game/constants.js'
 
 describe('nowa gra', () => {
   it('ma licznik każdego budynku i żadne wyliczenie nie daje NaN', () => {
@@ -27,17 +27,27 @@ describe('calc – przydział pracowników', () => {
     expect(c.E.farm).toBeLessThan(1)
   })
 
-  it('wysoki priorytet dostaje ludzi przed niskim', () => {
-    const s = newState(); s.prio = { mine: 3, farm: 1 }
+  it('zadania wyżej na liście dostają ludzi przed niższymi', () => {
+    const s = newState(); s.pop = 80
+    s.order = ['mine', ...JOB_ORDER.filter(k => k !== 'mine' && k !== 'farm'), 'farm']
     const c = calc(s)
     expect(c.E.mine).toBe(1)
     expect(c.E.farm).toBeLessThan(1)
   })
 
+  it('limit ogranicza obsadę zadania, a wolni ludzie idą do kolejnych', () => {
+    const s = newState(); s.pop = 400; s.b.house = 8
+    const full = calc(s)
+    s.lim = { farm: 2 }
+    const c = calc(s)
+    expect(c.E.farm * c.wNeed.farm).toBeCloseTo(2)
+    expect(c.needed).toBeLessThan(full.needed)
+  })
+
   it('STOP wyłącza budynek i jego zużycie energii', () => {
     const s = newState()
     const before = calc(s).enNeed
-    s.prio = { mine: 0 }
+    s.lim = { mine: 0 }
     const c = calc(s)
     expect(c.E.mine).toBe(0)
     expect(c.minProd).toBe(0)
@@ -80,7 +90,7 @@ describe('calc – produkcja i magazyny', () => {
   it('obsadzone działa zmniejszają straty, nieobsadzone nie', () => {
     const s = newState(); s.pop = 300; s.b.house = 6; s.b.gun = 2; s.spec = { sci: 0, eng: 0, sol: 0 }
     expect(calc(s).defRed).toBeCloseTo(1 - 0.75 ** 2)
-    s.prio = { gun: 0 }
+    s.lim = { gun: 0 }
     expect(calc(s).defRed).toBe(0)
   })
 })

@@ -1,4 +1,4 @@
-import { SPEC, prioOf } from './constants.js'
+import { SPEC, limOf } from './constants.js'
 
 // Szkolenie specjalistów według celów. s.specTgt[T] = liczba (cel ręczny) albo brak (AUTO).
 // AUTO: tylu specjalistów, ile jest dla nich stanowisk w budynkach (bez budów i napraw, których obsada się waha).
@@ -6,7 +6,7 @@ const VARIABLE = ['build', 'repair']
 
 export function specPosts(s, c) {
   const r = {}
-  for (const T in SPEC) r[T] = Math.ceil(SPEC[T].jobs.filter(k => !VARIABLE.includes(k) && prioOf(s, k) > 0).reduce((a, k) => a + (c.wNeed[k] || 0), 0) - 1e-9)
+  for (const T in SPEC) r[T] = Math.ceil(SPEC[T].jobs.filter(k => !VARIABLE.includes(k)).reduce((a, k) => a + Math.min(c.wNeed[k] || 0, limOf(s, k)), 0) - 1e-9)
   return r
 }
 

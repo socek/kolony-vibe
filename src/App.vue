@@ -1,8 +1,11 @@
 <script setup>
-import { watchEffect, watch, ref, nextTick } from 'vue'
-import { ui, setTab, syncMusic } from './store.js'
+import { watchEffect, watch, ref, nextTick, computed } from 'vue'
+import { ui, game, setTab, syncMusic } from './store.js'
+import { t } from './i18n.js'
 watchEffect(syncMusic)
 import { TABS } from './game/constants.js'
+// liczniki na przyciskach zakładek: budynki w budowie i trwające wyprawy
+const counts = computed(() => ({ budowa: game.s.q.length, wyprawy: (game.s.exp || []).length }))
 import TopStatus from './components/TopStatus.vue'
 import ResourceTiles from './components/ResourceTiles.vue'
 import BottomBar from './components/BottomBar.vue'
@@ -40,7 +43,7 @@ watch(() => ui.turnsDone, async () => {
     <!-- zakładki: na szerokim ekranie menu boczne po lewej, na telefonie rząd przycisków nad treścią -->
     <div class="main">
       <nav class="tabs" aria-label="Zakładki">
-        <button v-for="[k, l] in TABS" :key="k" :class="{ on: ui.tab === k }" @click="setTab(k)">{{ l }}</button>
+        <button v-for="[k, l] in TABS" :key="k" :class="{ on: ui.tab === k }" :title="counts[k] ? t('tab.count.' + k, { n: counts[k] }) : null" @click="setTab(k)">{{ l }}<span v-if="counts[k]" class="tcount" aria-hidden="true">{{ counts[k] }}</span></button>
       </nav>
       <div ref="panel" class="panel"><component :is="PANELS[ui.tab]" /></div>
     </div>

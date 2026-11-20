@@ -16,7 +16,7 @@ describe('cele specjalistów', () => {
   it('zatrzymany budynek nie liczy się do stanowisk', () => {
     const s = fresh(); s.b.lab = 2
     const before = specPosts(s, calc(s)).sci
-    s.prio.lab = 0
+    s.lim.lab = 0
     expect(specPosts(s, calc(s)).sci).toBeLessThan(before)
   })
   it('szkoły kształcą specjalizację z największym brakiem', () => {

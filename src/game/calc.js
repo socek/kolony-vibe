@@ -1,5 +1,5 @@
 import { t } from '../i18n.js'
-import { BLD, TECH, MAINT, INFRA, JOBS, HUNGER_MAX, SPEC, SPEC_REQ, SPEC_BONUS, prioOf, capOf, batCapOf, houseCapOf } from './constants.js'
+import { BLD, TECH, MAINT, INFRA, JOBS, HUNGER_MAX, SPEC, SPEC_REQ, SPEC_BONUS, jobOrder, limOf, jobOn, capOf, batCapOf, houseCapOf } from './constants.js'
 import { daysTxt } from './format.js'
 import { depTotal } from './expeditions.js'
 import { condMul, repairNeed, REPAIR_PER_WORKER } from './wear.js'
@@ -20,7 +20,10 @@ export function calc(s) {
   const scen = scenarioOf(s), sea = seasonOf(s) || { solar: 1, food: 1, heat: 0 }, mods = s.mods || {}
   wNeed.hunt = scen.hunt ? 8 * af : 0 // myśliwi (Mruczysko)
 
-  // 1) specjaliści trafiają na swoje stanowiska wg priorytetów (gdy ich za dużo – liczeni proporcjonalnie)
+  // ile ludzi zadanie może dostać: potrzeba ograniczona limitem gracza (suwak w zakładce PRACOWNICY)
+  const order = jobOrder(s), wCap = {}
+  for (const k of [...INFRA, ...JOBS]) wCap[k] = Math.min(wNeed[k] || 0, limOf(s, k))
+  // 1) specjaliści trafiają na swoje stanowiska w kolejności zadań (gdy ich za dużo – liczeni proporcjonalnie)
   const sp = s.spec || { sci: 0, eng: 0, sol: 0 }
   const spTot = sp.sci + sp.eng + sp.sol, spScale = spTot > workforce ? workforce / spTot : 1
   // infrastruktura ma pierwszeństwo: jeśli zwykłych pracowników nie starcza, pomagają w niej specjaliści
@@ -31,16 +34,16 @@ export function calc(s) {
   let specUsed = infraFromSpec
   for (const T in SPEC) {
     let pool = (sp[T] || 0) * spScale * spLeft
-    for (const L of [3, 2, 1]) {
-      const ks = SPEC[T].jobs.filter(k => prioOf(s, k) === L), n = ks.reduce((a, k) => a + wNeed[k], 0)
-      const r = n > 0 ? Math.min(1, pool / n) : 0
-      ks.forEach(k => { specA[k] = wNeed[k] * r }); pool -= n * r; specUsed += n * r
+    for (const k of order) {
+      if (!SPEC[T].jobs.includes(k)) continue
+      const a = Math.min(pool, Math.max(0, wCap[k] - (specA[k] || 0)))
+      specA[k] = (specA[k] || 0) + a; pool -= a; specUsed += a
     }
   }
-  // 2) reszta (zwykli koloniści i wolni specjaliści) – najpierw infrastruktura, potem wg priorytetów;
+  // 2) reszta (zwykli koloniści i wolni specjaliści) – najpierw infrastruktura, potem po kolei wg kolejności zadań;
   //    laboratorium i szpital obsadzają wyłącznie specjaliści
   let avail = workforce - specUsed
-  const need = k => SPEC_REQ.includes(k) ? 0 : wNeed[k] - (specA[k] || 0), ordA = {}
+  const need = k => SPEC_REQ.includes(k) ? 0 : Math.max(0, wCap[k] - (specA[k] || 0)), ordA = {}
   const take = ks => {
     const n = ks.reduce((a, k) => a + need(k), 0), r = n > 0 ? Math.min(1, avail / n) : 1
     ks.forEach(k => { ordA[k] = need(k) * r })
@@ -48,12 +51,12 @@ export function calc(s) {
   }
   avail += infraFromSpec // ci specjaliści pracują w infrastrukturze jak zwykli koloniści
   take(INFRA)
-  for (const L of [3, 2, 1]) take(JOBS.filter(k => prioOf(s, k) === L))
+  for (const k of order) take([k])
   // E – obsada (0..1), M – sprawność z premią specjalistów (stanowiska tylko dla specjalistów bez premii)
   const M = {}
   for (const k of [...INFRA, ...JOBS]) {
     const n = wNeed[k], st = specA[k] || 0, o = ordA[k] || 0
-    if (prioOf(s, k) === 0) { E[k] = 0; M[k] = 0; continue }
+    if (!jobOn(s, k)) { E[k] = 0; M[k] = 0; continue }
     E[k] = n > 0 ? (st + o) / n : 1
     M[k] = n > 0 ? (SPEC_REQ.includes(k) ? E[k] : (o + SPEC_BONUS * st) / n) : 1
     // zużyte i zepsute budynki pracują gorzej
@@ -74,7 +77,7 @@ export function calc(s) {
   })
 
   let needed = 0, enNeed = s.pop * (0.033 + sea.heat) // zimą dochodzi ogrzewanie
-  for (const k in wNeed) if (prioOf(s, k) > 0) needed += wNeed[k]
+  for (const k in wNeed) needed += wCap[k] ?? wNeed[k]
   for (const k in BLD) enNeed += b[k] * BLD[k].en * E[k]
   const e = needed > 0 ? Math.min(1, workforce / needed) : 1
   // produkcja z budynku: liczba × wydajność × obsada
@@ -111,7 +114,7 @@ export function calc(s) {
   mt = Math.max(0, Math.min(100, mt))
   const foodCap = capOf(s, 'food'), minCap = capOf(s, 'min'), foodWaste = Math.max(0, foodAfter - foodCap), minWaste = Math.max(0, s.min + minProd - minCap)
   const enStore = Math.max(0, Math.min(enCap, s.energy + enProd - enNeed * f)), enWaste = Math.max(0, s.energy + enProd - enNeed * f - enCap)
-  return { faunaRed, tameRate, tameMor, iceProd, huntFood, season: seasonOf(s),  repairPts, E, M, specA, ordA, sciMissing, train, hospRed, spTot, wNeed, builders, sites, foodCap, minCap, foodWaste, minWaste, enCap, enStore, enWaste, cap, workforce, workRate: workRateV, needed, e, f, enProd, enNeed, foodProd, foodCons, minPot, deps, minProd, resProd, taxInc, trade, maint, unemp, shortRatio, hungerNext, hungerDeaths, mt, crowd, unempPen, black, starv, recB, def, defRed }
+  return { faunaRed, tameRate, tameMor, iceProd, huntFood, season: seasonOf(s),  repairPts, E, M, specA, ordA, wCap, sciMissing, train, hospRed, spTot, wNeed, builders, sites, foodCap, minCap, foodWaste, minWaste, enCap, enStore, enWaste, cap, workforce, workRate: workRateV, needed, e, f, enProd, enNeed, foodProd, foodCons, minPot, deps, minProd, resProd, taxInc, trade, maint, unemp, shortRatio, hungerNext, hungerDeaths, mt, crowd, unempPen, black, starv, recB, def, defRed }
 }
 
 export const nextTech = s => Object.entries(TECH).filter(([k]) => !s.tech[k]).map(e => e[1]).sort((a, b) => a.c - b.c)[0]
