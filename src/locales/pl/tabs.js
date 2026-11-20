@@ -14,7 +14,7 @@ export default {
   'rp.deps': p => 'w złożach ' + p.t + ' t' + (p.d ? ', na ' + p.d : ''), 'rp.noDeps': 'brak złóż',
   'rp.exp': '{n} w terenie', 'rp.expBack': 'najbliższy powrót za {d}',
   'rp.money': p => 'podatki ' + p.tax + (p.trade != null ? ', handel ' + p.trade : '') + ', utrzymanie −' + p.maint,
-  'rp.noProject': 'brak projektu', 'rp.defence': 'Obrona',
+  'rp.noProject': 'brak projektu', 'rp.allDone': 'wszystko zbadane', 'rp.defence': 'Obrona',
   'rp.defOn': 'straty od piratów i meteorytów −{n}%', 'rp.defOff': 'działa nieobsadzone – nie działają', 'rp.guns': 'sprawne działa: {n}/{max}',
   'rp.cond': 'Stan budynków', 'rp.avg': 'średnio {n}%', 'rp.broken': 'awarie: {n}', 'rp.repairs': 'naprawy {n} pkt/dzień',
   'rp.morale': '{a}% → {b}%; przy obecnych warunkach ustali się na {c}%',

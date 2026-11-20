@@ -1,4 +1,6 @@
 import { workParts, workRate } from '../../src/game/workforce.js'
+import { TECH, techIn } from '../../src/game/constants.js'
+import { nextTech } from '../../src/game/calc.js'
 import { describe, it, expect, afterEach, vi } from 'vitest'
 import { newState, load, score } from '../../src/game/state.js'
 import { EVENTS } from '../../src/game/events.js'
@@ -164,6 +166,13 @@ describe('komunikaty o bateriach', async () => {
     expect(p.sub).toBe(true)
     const sum = workParts(s).filter(x => !x.sub).reduce((a, x) => a + x.v, 0)
     expect(workRate(s)).toBeCloseTo(Math.max(0.4, Math.min(0.8, sum)))
+  })
+  it('brak komunikatu o laboratoriach bez projektu, gdy wszystko w scenariuszu zbadane', () => {
+    const s = newState('moon'); s.b.lab = 2; s.spec.sci = 20
+    endTurn(s); expect(keys(s)).toContain('nores')
+    for (const k of Object.keys(TECH)) if (techIn(s, k)) s.tech[k] = true
+    expect(nextTech(s)).toBeUndefined()
+    endTurn(s); expect(keys(s)).not.toContain('nores')
   })
   it('„Baterie naładowane” tylko w pierwszym dniu pełnych baterii', () => {
     const s = newState('moon'); s.energy = 1e6; s.b.power = 20

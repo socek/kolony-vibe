@@ -14,7 +14,7 @@ export default {
   'rp.deps': p => p.t + ' t in deposits' + (p.d ? ', for ' + p.d : ''), 'rp.noDeps': 'no deposits',
   'rp.exp': '{n} in the field', 'rp.expBack': 'next return in {d}',
   'rp.money': p => 'taxes ' + p.tax + (p.trade != null ? ', trade ' + p.trade : '') + ', upkeep −' + p.maint,
-  'rp.noProject': 'no project', 'rp.defence': 'Defence',
+  'rp.noProject': 'no project', 'rp.allDone': 'everything researched', 'rp.defence': 'Defence',
   'rp.defOn': 'losses from pirates and meteorites −{n}%', 'rp.defOff': 'guns unstaffed – not working', 'rp.guns': 'working guns: {n}/{max}',
   'rp.cond': 'Building condition', 'rp.avg': 'average {n}%', 'rp.broken': 'breakdowns: {n}', 'rp.repairs': 'repairs {n} pts/day',
   'rp.morale': '{a}% → {b}%; under current conditions it will settle at {c}%',

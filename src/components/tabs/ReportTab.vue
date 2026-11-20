@@ -6,7 +6,7 @@ import { BLD, TECH, MORK, HUNGER_MAX } from '../../game/constants.js'
 import { scenarioOf } from '../../game/scenarios.js'
 import { avgCond, brokenCount } from '../../game/wear.js'
 import { num, fmt, daysTxt } from '../../game/format.js'
-import { techPct, techEta } from '../../game/calc.js'
+import { techPct, techEta, nextTech } from '../../game/calc.js'
 import { repLines } from '../../game/report.js'
 import { settings } from '../../game/stops.js'
 import { SPEC } from '../../game/constants.js'
@@ -75,7 +75,8 @@ const depDays = computed(() => c.value.minProd > 0 ? Math.floor(c.value.deps / c
     <div class="row">
       <span><PixelIcon name="res" />{{ t('tile.res') }}</span>
       <span v-if="s.rs"><span class="pos">+{{ num(c.resProd / TECH[s.rs].c * 100) }}%</span> <span class="small">({{ TECH[s.rs].n }}: {{ Math.floor(techPct(s, s.rs)) }}%, {{ techEta(s, s.rs, c) }})</span></span>
-      <span v-else class="warn">{{ t('rp.noProject') }}</span>
+      <span v-else-if="nextTech(s)" class="warn">{{ t('rp.noProject') }}</span>
+      <span v-else class="pos">{{ t('rp.allDone') }}</span>
     </div>
     <div v-if="s.b.gun" class="row">
       <span><PixelIcon name="gun" />{{ t('rp.defence') }}</span>

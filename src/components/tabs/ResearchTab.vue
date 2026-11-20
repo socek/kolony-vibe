@@ -4,7 +4,7 @@ import { computed, ref, onMounted, onUnmounted, nextTick, watch } from 'vue'
 import { game, c, research, unresearch, researchFirst } from '../../store.js'
 import { TECH, TECH_BRANCHES } from '../../game/constants.js'
 import { num } from '../../game/format.js'
-import { techPct, techEta } from '../../game/calc.js'
+import { techPct, techEta, nextTech } from '../../game/calc.js'
 import { techState, canQueue, techDepth } from '../../game/research.js'
 import { techAvail } from '../../game/scenarios.js'
 const techKeys = () => Object.keys(TECH).filter(k => techAvail(game.s, k))
@@ -113,7 +113,7 @@ onUnmounted(() => ro && ro.disconnect())
   </div>
   <div class="card">
     <div class="row">
-      <span>{{ t('rt.active') }} <span :class="s.rs ? 'warn' : 'neg'">{{ s.rs ? TECH[s.rs].n + ' · ' + Math.floor(techPct(s, s.rs)) + '% · ' + techEta(s, s.rs, c) : t('rt.nothing') }}</span></span>
+      <span>{{ t('rt.active') }} <span :class="s.rs ? 'warn' : nextTech(s) ? 'neg' : 'pos'">{{ s.rs ? TECH[s.rs].n + ' · ' + Math.floor(techPct(s, s.rs)) + '% · ' + techEta(s, s.rs, c) : nextTech(s) ? t('rt.nothing') : t('rp.allDone') }}</span></span>
     </div>
     <div class="small">{{ t('rt.queue') }} {{ queueList.length ? queueList.join(' → ') : t('rt.empty') }}</div>
   </div>

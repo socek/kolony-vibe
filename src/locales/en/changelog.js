@@ -3,6 +3,7 @@ export default {
   'log.wip': 'in preparation',
   'log.v.0.4': '0.4 (in development)',
   'log.items.0.4': [
+    'When there is nothing left to research, the report no longer warns that the labs have no project (technologies from other scenarios used to count as unresearched), and the forecast and TECHNOLOGIES tab say “everything researched”.',
     'The able-to-work breakdown (WORKERS) shows under morale how many points synthetic food takes away.',
     'The daily report says how much food the synthesizers produced (and how much it lowered morale), and the forecast shows the synthesizers\' share of food production.',
     'When all technologies are researched, the TECHNOLOGIES button turns green.',

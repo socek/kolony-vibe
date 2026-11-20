@@ -1,5 +1,5 @@
 import { t } from '../i18n.js'
-import { BLD, TECH, MAINT, INFRA, JOBS, HUNGER_MAX, SPEC, SPEC_REQ, SPEC_BONUS, jobOrder, limOf, jobOn, capOf, batCapOf, houseCapOf } from './constants.js'
+import { BLD, TECH, MAINT, INFRA, JOBS, HUNGER_MAX, SPEC, SPEC_REQ, SPEC_BONUS, techIn, jobOrder, limOf, jobOn, capOf, batCapOf, houseCapOf } from './constants.js'
 import { daysTxt } from './format.js'
 import { depTotal } from './expeditions.js'
 import { condMul, repairNeed, REPAIR_PER_WORKER } from './wear.js'
@@ -128,7 +128,8 @@ export function calc(s) {
   return { faunaRed, tameRate, tameMor, iceProd, huntFood, season: seasonOf(s),  repairPts, E, M, specA, ordA, wCap, synthPot, synthUse, synthFood, synthMor, sciMissing, train, hospRed, spTot, wNeed, builders, sites, foodCap, minCap, foodWaste, minWaste, enCap, enStore, enWaste, cap, workforce, workRate: workRateV, needed, e, f, enProd, enNeed, foodProd, foodCons, minPot, deps, minProd, resProd, taxInc, trade, maint, unemp, shortRatio, hungerNext, hungerDeaths, mt, crowd, unempPen, black, starv, recB, def, defRed }
 }
 
-export const nextTech = s => Object.entries(TECH).filter(([k]) => !s.tech[k]).map(e => e[1]).sort((a, b) => a.c - b.c)[0]
+// najtańsza niezbadana technologia dostępna w scenariuszu tej gry (undefined – wszystko zbadane)
+export const nextTech = s => Object.entries(TECH).filter(([k]) => !s.tech[k] && techIn(s, k)).map(e => e[1]).sort((a, b) => a.c - b.c)[0]
 export const techPct = (s, k) => Math.min(100, (s.rp[k] || 0) / TECH[k].c * 100)
 export function techEta(s, k, c) {
   if (c.resProd <= 0) return t('rt.noSci')
