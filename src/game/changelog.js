@@ -9,6 +9,7 @@ export const versionLabel = (upper = false) => {
 export const CHANGELOG = [
   {
     v: '0.3 „Merveil” (in development)', d: 'w przygotowaniu', items: [
+      'Specjaliści: naukowcy, inżynierowie i żołnierze pracują o 50% wydajniej na swoich stanowiskach. Nowe budynki: szkoła (kształci specjalistów) i szpital (słabsze epidemie, mniej zgonów z głodu, tylko naukowcy). Laboratoria obsadzają tylko naukowcy.',
       'Zlecenia Ludzkiej Unii Jedności (zakładka RYNEK): dostawy żywności, minerałów i energii, wysłanie kolonistów, zbadanie technologii. Różne terminy, nagrody i kary; reputacja u LUJ zmienia wysokość nagród.',
       'Zakładka STATYSTYKI: wykresy wszystkich zasobów dzień po dniu, wybór zakresu, znaczniki wydarzeń, ukrywanie serii.',
       'Wyniki i odznaki (menu → WYNIKI I ODZNAKI): tabela najlepszych gier ze wszystkimi szczegółami i 10 odznak wspólnych dla wszystkich scenariuszy. Ekran końca gry pokazuje miejsce w tabeli i ma przycisk do statystyk.',

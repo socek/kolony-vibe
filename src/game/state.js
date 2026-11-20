@@ -11,7 +11,9 @@ export function newState(sc = 'moon') {
   const scen = SCENARIOS.find(x => x.k === sc) || SCENARIOS[0]
   const s = {
     sc: scen.k, sv: SAVE_VERSION,
-    m: 1, pop: 100, food: 300, energy: 100, min: 200, cr: 500, mor: 60, rs: null, rp: {}, rq: [], q: [], dep: [startDeposit()], exp: [], camp: [],
+    m: 1, pop: 100, food: 300, energy: 100, min: 200, cr: 500, mor: 60, rs: null, rp: {}, rq: [], q: [],
+    // specjaliści (część pracowników) i szkolenie w szkołach
+    spec: { sci: 6, eng: 4, sol: 2 }, train: 'sci', trainProg: 0, dep: [startDeposit()], exp: [], camp: [],
     // każdy budynek z listy ma licznik (0, jeśli nie ma go na starcie)
     b: { ...Object.fromEntries(Object.keys(BLD).map(k => [k, 0])), farm: 3, power: 2, battery: 1, fridge: 1, store: 1, mine: 1, house: 2 },
     tax: 10, ration: 1, tech: {}, prio: {},
@@ -39,6 +41,8 @@ export function load() {
     if (!o.camp) o.camp = []
     if (!o.rq) o.rq = []
     if (!o.sc) o.sc = 'moon'
+    // zapisy sprzed specjalistów: tylu, żeby obsadzić istniejące laboratoria, szpitale i działa
+    if (!o.spec) { o.spec = { sci: Math.max(6, (o.b.lab || 0) * 8), eng: 4, sol: Math.max(2, (o.b.gun || 0) * 4) }; o.train = 'sci'; o.trainProg = 0 }
     // zapisy sprzed rozdzielenia magazynów: dotychczasowe magazyny trzymały oba surowce
     if (o.b.fridge == null) o.b.fridge = o.b.store || 0
     // brakujące budynki w starych zapisach

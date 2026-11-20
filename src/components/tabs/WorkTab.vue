@@ -1,7 +1,9 @@
 <script setup>
 import { computed } from 'vue'
 import { game, c, setPrio } from '../../store.js'
-import { INFRA, JOBS, PRIO, prioOf, jobName } from '../../game/constants.js'
+import { INFRA, JOBS, PRIO, SPEC, prioOf, jobName } from '../../game/constants.js'
+import { saveNow } from '../../store.js'
+const setTrain = T => { game.s.train = T; saveNow() }
 import { fmt } from '../../game/format.js'
 import PixelIcon from '../PixelIcon.vue'
 import MeterBar from '../MeterBar.vue'
@@ -22,6 +24,14 @@ const jobs = computed(() => JOBS.filter(k => k === 'build' || s.value.b[k]).map(
     <div class="row"><span>Bezrobotni</span><span :class="{ warn: c.unemp >= 1 }">{{ fmt(c.unemp) }}</span></div>
     <div class="row"><span>Brakuje rąk do pracy</span><span :class="{ neg: c.e < 1 }">{{ fmt(missing) }}</span></div>
     <div class="small" style="margin-top:4px">Pracownicy trafiają najpierw do zadań o wysokim priorytecie. Przy równym priorytecie dzielą się po równo. STOP wyłącza budynek lub wstrzymuje budowy: nic nie produkują i nie zużywają energii, a ich ludzie zostają bez pracy.</div>
+  </div>
+
+  <div class="card">
+    <div class="t">SPECJALIŚCI</div>
+    <div class="small">Specjalista na swoim stanowisku pracuje o 50% wydajniej. Laboratoria i szpitale obsadzają tylko naukowcy. Szkoły kształcą wybraną specjalizację.</div>
+    <div v-for="(x, T) in SPEC" :key="T" class="row small"><span>{{ x.n }}: {{ (s.spec || {})[T] || 0 }}</span><span>{{ x.jobs.map(j => jobName(j)).join(', ') }}</span></div>
+    <div class="small" style="margin-top:4px">Szkoły kształcą ({{ c.train > 0 ? '1 osoba co ' + Math.ceil(1 / c.train) + ' dni' : 'brak obsadzonej szkoły' }}):</div>
+    <div class="pr"><button v-for="(x, T) in SPEC" :key="T" :class="{ on: (s.train || 'sci') === T }" @click="setTrain(T)">{{ x.n.toUpperCase() }}</button></div>
   </div>
 
   <div class="card">

@@ -1,4 +1,4 @@
-import { BLD, TECH, RES, MORK, DAYS, HUNGER_MAX, prioOf, jobName, capOf, batCapOf } from './constants.js'
+import { BLD, TECH, RES, MORK, DAYS, SPEC, HUNGER_MAX, prioOf, jobName, capOf, batCapOf } from './constants.js'
 import { calc, nextTech } from './calc.js'
 import { EVENTS, EVENT_BAD } from './events.js'
 import { mergeRep } from './report.js'
@@ -17,6 +17,8 @@ export function clampStore(s) {
   s.food -= l.food; s.min -= l.min
   return l
 }
+
+export const specCount = s => s.spec ? s.spec.sci + s.spec.eng + s.spec.sol : 0
 
 export const snapshot = s => ({ pop: s.pop, food: s.food, energy: s.energy, min: s.min, cr: s.cr, mor: s.mor })
 
@@ -90,6 +92,13 @@ export function endTurn(s, acc, auto = {}) {
     add('emig', { a: em })
   }
   s.pop -= deaths
+  // szkoły kształcą specjalistów spośród zwykłych pracowników
+  s.trainProg = (s.trainProg || 0) + c.train
+  while (s.trainProg >= 1 && s.pop * 0.6 - specCount(s) >= 1) { s.trainProg -= 1; s.spec[s.train || 'sci']++; add('trained', { a: 1, _k: s.train || 'sci' }) }
+  if (s.trainProg > 1) s.trainProg = 1
+  // gdy ludzi ubywa, specjalistów ubywa proporcjonalnie
+  { const tot = specCount(s), max = s.pop * 0.6; if (tot > max && tot > 0) for (const T in s.spec) s.spec[T] = Math.floor(s.spec[T] * max / tot) }
+  if (c.sciMissing > 0.5) add('nosci', { _n: Math.ceil(c.sciMissing) })
   if (tickExpeditions(s, note)) stops.add('exp')
   if (tickCampaigns(s, note)) stops.add('camp')
   for (const r of tickOrders(s, note)) stops.add(r)

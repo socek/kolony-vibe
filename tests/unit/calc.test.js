@@ -55,7 +55,7 @@ describe('calc – przydział pracowników', () => {
 
 describe('calc – produkcja i magazyny', () => {
   it('nowe budynki z technologii produkują więcej niż podstawowe', () => {
-    const s = newState(); s.pop = 400; s.b.house = 8
+    const s = newState(); s.pop = 400; s.b.house = 8; s.spec = { sci: 0, eng: 0, sol: 0 }
     const base = calc(s)
     s.b.farm2 = 1; s.b.power2 = 1; s.b.mine2 = 1
     const c = calc(s)
@@ -78,7 +78,7 @@ describe('calc – produkcja i magazyny', () => {
   })
 
   it('obsadzone działa zmniejszają straty, nieobsadzone nie', () => {
-    const s = newState(); s.pop = 300; s.b.house = 6; s.b.gun = 2
+    const s = newState(); s.pop = 300; s.b.house = 6; s.b.gun = 2; s.spec = { sci: 0, eng: 0, sol: 0 }
     expect(calc(s).defRed).toBeCloseTo(1 - 0.75 ** 2)
     s.prio = { gun: 0 }
     expect(calc(s).defRed).toBe(0)

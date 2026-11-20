@@ -1,5 +1,5 @@
 import { daysTxt } from './format.js'
-import { HUNGER_MAX } from './constants.js'
+import { HUNGER_MAX, SPEC } from './constants.js'
 
 // Raport przechowuje dane zamiast gotowych zdań, żeby przy wielu dniach liczby się sumowały.
 // Pola zaczynające się od "_" nie są sumowane – zostaje wartość z ostatniego dnia.
@@ -26,6 +26,8 @@ export const REP = {
     }
   },
   nodep: { c: 'neg', f: (v, d) => 'Kopalnie stoją' + dd(d) + ' – wszystkie złoża są wyczerpane. Wyślij wyprawę w zakładce WYPRAWY.' },
+  trained: { c: 'pos', f: (v, d) => 'Szkoły wykształciły ' + ws(d) + v.a + ' ' + (v.a === 1 ? 'specjalistę' : 'specjalistów') + ' (ostatnio: ' + SPEC[v._k].n.toLowerCase() + ').' },
+  nosci: { c: 'warn', f: (v, d) => 'Brakuje naukowców' + dd(d) + ' – laboratoria i szpitale obsadzają tylko oni (brakuje ' + v._n + '). Wybierz kształcenie naukowców w szkole (zakładka PRACA).' },
   nores: { c: 'warn', f: (v, d) => 'Laboratoria nie mają projektu' + dd(d) + ' – wybierz technologię w zakładce TECHNOLOGIE.' }
 }
 

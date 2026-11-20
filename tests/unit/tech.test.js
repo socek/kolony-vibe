@@ -82,7 +82,7 @@ describe('efekty technologii', () => {
   })
 
   it('syntezator żywności produkuje żywność przy 2 pracownikach', () => {
-    const s = newState(); s.pop = 400; s.b.house = 8; s.b.power = 6
+    const s = newState(); s.pop = 400; s.b.house = 8; s.b.power = 6; s.spec = { sci: 0, eng: 0, sol: 0 }
     const base = calc(s).foodProd
     s.b.synth = 1
     expect(calc(s).foodProd - base).toBeCloseTo(14)
@@ -97,7 +97,7 @@ describe('efekty technologii', () => {
   })
 
   it('systemy celownicze: działa potrzebują połowy obsady i są silniejsze', () => {
-    const s = newState(); s.pop = 300; s.b.house = 6; s.b.gun = 2
+    const s = newState(); s.pop = 300; s.b.house = 6; s.b.gun = 2; s.spec = { sci: 0, eng: 0, sol: 0 }
     const before = calc(s)
     s.tech.targeting = 1
     const c = calc(s)
