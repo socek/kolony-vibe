@@ -1,5 +1,7 @@
 <script setup>
-import { ui, setTab } from './store.js'
+import { watchEffect } from 'vue'
+import { ui, setTab, syncMusic } from './store.js'
+watchEffect(syncMusic)
 import { TABS } from './game/constants.js'
 import TopStatus from './components/TopStatus.vue'
 import ResourceTiles from './components/ResourceTiles.vue'

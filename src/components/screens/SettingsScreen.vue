@@ -2,6 +2,7 @@
 import { showScreen } from '../../store.js'
 import { STOPS, settings, stopDefaults } from '../../game/stops.js'
 import { CHOICES } from '../../game/choices.js'
+import { audio } from '../../game/audio.js'
 const setAuto = (k, v) => { if (v === '') delete settings.auto[k]; else settings.auto[k] = +v }
 
 const setAll = v => { for (const x of STOPS) settings.stops[x.k] = v }
@@ -10,6 +11,11 @@ const reset = () => Object.assign(settings.stops, stopDefaults())
 
 <template>
   <h1>USTAWIENIA</h1>
+  <div class="devh">DŹWIĘK</div>
+  <div class="card">
+    <label class="row stopopt"><span>Muzyka w tle (zmienia się zależnie od sytuacji w kolonii)</span><input v-model="settings.music" type="checkbox"></label>
+    <label class="row stopopt"><span>Efekty dźwiękowe</span><input v-model="audio.sound" type="checkbox"></label>
+  </div>
   <div class="devh">PODPOWIEDZI</div>
   <div class="card">
     <label class="row stopopt"><span>Pokazuj podpowiedzi, gdy coś dzieje się pierwszy raz</span><input v-model="settings.hints" type="checkbox"></label>

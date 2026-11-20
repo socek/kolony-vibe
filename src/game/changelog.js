@@ -9,6 +9,7 @@ export const versionLabel = (upper = false) => {
 export const CHANGELOG = [
   {
     v: '0.3 „Merveil” (in development)', d: 'w przygotowaniu', items: [
+      'Muzyka chiptune w stylu C64: własne motywy – spokojny, kryzysowy (głód, blackout, dług, niskie morale), zwycięstwo i porażka. Osobny przełącznik muzyki w menu i ustawieniach.',
       'Podpowiedzi kontekstowe: okienko z radą, gdy coś dzieje się pierwszy raz (brak rąk do pracy, głód, blackout, awaria, decyzja…). Przycisk „nie pokazuj więcej” i przełącznik w ustawieniach.',
       'Zużycie budynków: stan spada z czasem, zużyte budynki pracują gorzej i częściej mają awarie, a zużyte do zera się rozpadają. Naprawiają je konserwatorzy – nowa pula pracowników z priorytetem w zakładce PRACA.',
       'Wyprawy wybierają cel poszukiwań: złoża, ruiny (punkty badań), wraki (kredyty, minerały, części do technologii) albo osadnicy (handel, nowi koloniści, konflikt lub stała osada sąsiedzka z handlem w zakładce RYNEK). Żołnierze i inżynierowie mogą dołączyć do ekipy.',

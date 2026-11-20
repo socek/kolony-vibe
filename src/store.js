@@ -14,6 +14,7 @@ import { queueTech, unqueueTech, researchNow, nextResearch } from './game/resear
 import { resolveChoice } from './game/choices.js'
 import { syncCond } from './game/wear.js'
 import { pickHint } from './game/hints.js'
+import { playTheme, themeFor } from './game/music.js'
 import { BADGES, newBadges } from './game/badges.js'
 import { hall, recordGame, grantBadges } from './game/scores.js'
 
@@ -123,6 +124,8 @@ function showHint() {
   ui.hint = k; ui.screen = 'hint'
 }
 export function closeHint(never) { if (never && ui.hint) settings.hintOff[ui.hint] = true; ui.hint = null; persist(); closeScreen() }
+// muzyka: motyw zależny od sytuacji (spokój / kryzys / zwycięstwo / porażka), wyłączana w ustawieniach
+export function syncMusic() { playTheme(settings.music ? themeFor(game.s, c.value) : null) }
 export function showStats() { ui.tab = 'statystyki'; closeScreen() }
 
 // Rozgrywa n dni z animacją; przy n > 1 zatrzymuje się na ważnych wydarzeniach.

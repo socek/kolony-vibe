@@ -3,10 +3,12 @@ import { reactive } from 'vue'
 export const audio = reactive({ sound: true })
 let actx = null
 
+// kontekst dźwięku powstaje przy pierwszym kliknięciu (wymóg przeglądarek); używają go efekty i muzyka
 export function initAudio() {
-  if (actx || !audio.sound) return
+  if (actx) { if (actx.state === 'suspended') actx.resume(); return }
   try { actx = new (window.AudioContext || window.webkitAudioContext)() } catch (e) { /* brak dźwięku */ }
 }
+export const audioCtx = () => actx
 
 export function beep(f, d) {
   if (!audio.sound || !actx) return
