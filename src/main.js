@@ -1,7 +1,8 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import { initAudio } from './game/audio.js'
-import { syncMusic, ui } from './store.js'
+import { syncMusic, ui, showScreen } from './store.js'
+import { setupBackButton } from './backButton.js'
 import { setupAnalytics } from './analytics.js'
 // czcionki dołączone do gry (działają offline): tylko alfabet łaciński z polskimi znakami
 import '@fontsource/vt323/latin.css'
@@ -15,6 +16,7 @@ document.addEventListener('click', () => { initAudio(); syncMusic() })
 
 createApp(App).mount('#app')
 setupAnalytics(ui)
+setupBackButton(ui, showScreen)
 
 // tryb offline (PWA): tylko w zbudowanej grze serwowanej przez http(s), nie z dysku
 if (import.meta.env.PROD && 'serviceWorker' in navigator && location.protocol.startsWith('http')) {

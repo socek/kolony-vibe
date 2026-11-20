@@ -340,3 +340,21 @@ test('na szerokim ekranie zakładki są menu bocznym po lewej', async ({ page })
   const b = page.locator('.tabs button')
   expect((await b.nth(1).boundingBox()).y).toBeGreaterThan((await b.nth(0).boundingBox()).y)
 })
+
+test('przycisk „wstecz”: pierwszy raz menu gry, drugi raz wyjście z gry', async ({ page }) => {
+  await page.goto('/?poprzednia') // „poprzednia strona”, na którą wychodzi się z gry
+  await newGame(page)
+  await page.goBack()
+  await expect(page.getByRole('heading', { name: 'MENU' })).toBeVisible()
+  await page.goBack()
+  await expect(page).toHaveURL(/poprzednia/)
+})
+
+test('przycisk „wstecz” po powrocie z menu do gry znowu otwiera menu', async ({ page }) => {
+  await page.goto('/?poprzednia') // „poprzednia strona”, na którą wychodzi się z gry
+  await newGame(page)
+  await page.goBack()
+  await page.getByRole('button', { name: 'WRÓĆ DO GRY' }).click()
+  await page.goBack()
+  await expect(page.getByRole('heading', { name: 'MENU' })).toBeVisible()
+})
