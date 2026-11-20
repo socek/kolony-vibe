@@ -1,5 +1,6 @@
 import { watch } from 'vue'
 import { settings } from './game/stops.js'
+import { audio } from './game/audio.js'
 
 // Google Analytics 4. Identyfikator pomiaru jest wstrzykiwany tylko przy budowaniu na GitHubie
 // (zmienna repozytorium GA_ID → VITE_GA_ID w .github/workflows/deploy.yml), więc lokalnie
@@ -16,6 +17,7 @@ function load() {
   window.gtag = function () { window.dataLayer.push(arguments) }
   window.gtag('js', new Date())
   window.gtag('config', ID)
+  userProps()
   const sc = document.createElement('script')
   sc.async = true
   sc.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(ID)
@@ -26,6 +28,13 @@ function load() {
 export function track(name, params = {}) {
   if (!loaded || settings.analytics !== true) return
   window.gtag('event', name, params)
+}
+
+// właściwości gracza: aktualny stan dźwięku i muzyki (raporty „ilu graczy ma wyłączone…”)
+const onOff = v => v ? 'on' : 'off'
+function userProps() {
+  if (!loaded) return
+  window.gtag('set', 'user_properties', { sound: onOff(audio.sound), music: onOff(settings.music) })
 }
 
 // widok: zakładka gry albo ekran (menu, zasady…) jako osobna „strona” w raportach
@@ -39,4 +48,7 @@ export function setupAnalytics(ui) {
   watch(() => settings.analytics, v => { if (v) { load(); view(ui.screen || 'tab:' + ui.tab) } })
   watch(() => ui.screen, v => view(v || 'tab:' + ui.tab))
   watch(() => ui.tab, v => { if (!ui.screen) view('tab:' + v) })
+  // przełączenie dźwięku/muzyki: osobne nazwy zdarzeń (sound_off, music_on…) liczą się w GA bez dodatkowej konfiguracji
+  watch(() => audio.sound, v => { userProps(); track('sound_' + onOff(v)) })
+  watch(() => settings.music, v => { userProps(); track('music_' + onOff(v)) })
 }

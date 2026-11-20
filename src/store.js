@@ -118,6 +118,7 @@ function checkBadges() {
   const s = game.s, nb = newBadges(s, hall.badges)
   if (!nb.length) return
   grantBadges(nb)
+  for (const k of nb) track('badge_earned', { badge: k, scenario: s.sc || 'moon', day: s.m })
   s.earned = [...(s.earned || []), ...nb]
   for (const k of nb) s.report.unshift({ k: 'txt', t: '★ Zdobyto odznakę: ' + BADGES.find(b => b.k === k).n + '!', c: 'pos', top: 1 })
   beep(1200, 0.12)
@@ -149,7 +150,8 @@ export function advance(n) {
   const s = game.s
   if (ui.busy || s.over) return
   ui.busy = true
-  track('advance', { days: n, day: s.m, scenario: s.sc || 'moon' })
+  // KONIEC DNIA i ▶▶ 7 DNI jako osobne zdarzenia
+  track(n === 1 ? 'end_day' : 'skip_7_days', { day: s.m, scenario: s.sc || 'moon' })
   const p0 = snapshot(s)
   const label = () => ({ day: Math.min(game.s.m + 1, DAYS), date: dateOf(game.s.m + 1) })
   ui.turn = { ...label(), fill: 0, out: false }
