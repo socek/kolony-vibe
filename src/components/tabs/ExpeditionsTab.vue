@@ -2,7 +2,7 @@
 import { t } from '../../i18n.js'
 import { computed } from 'vue'
 import { game, c, ui, sendExp } from '../../store.js'
-import { RANGES, TEAMS, GOALS, OTHER_CHANCE, MAX_SPEC_IN_TEAM, rangeOf, teamOf, expChance, expCost, expDays, expRisk, canSend, depTotal, MIN_POP_LEFT } from '../../game/expeditions.js'
+import { RANGES, TEAMS, GOALS, OTHER_CHANCE, MAX_SPEC_IN_TEAM, rangeOf, teamOf, expChance, expCost, expDays, expRisk, canSend, busyRange, depTotal, MIN_POP_LEFT } from '../../game/expeditions.js'
 import { TECH } from '../../game/constants.js'
 import { fmt, daysTxt } from '../../game/format.js'
 import PixelIcon from '../PixelIcon.vue'
@@ -39,7 +39,7 @@ const plan = computed(() => {
     <div class="t"><PixelIcon name="exp" />{{ t('ex.new') }}</div>
     <div class="small" style="margin-top:4px">{{ t('ex.dest') }}</div>
     <div class="pr">
-      <button v-for="r in RANGES" :key="r.k" :class="{ on: ui.expRange === r.k, lockedbtn: r.req && !s.tech[r.req] }" :title="r.req && !s.tech[r.req] ? t('ex.needTech', { n: TECH[r.req].n }) : null" @click="ui.expRange = r.k">{{ r.n.toUpperCase() }}</button>
+      <button v-for="r in RANGES" :key="r.k" :class="{ on: ui.expRange === r.k, lockedbtn: (r.req && !s.tech[r.req]) || busyRange(s, r.k) }" :title="r.req && !s.tech[r.req] ? t('ex.needTech', { n: TECH[r.req].n }) : busyRange(s, r.k) ? t('exp.why.busy') : null" @click="ui.expRange = r.k">{{ r.n.toUpperCase() }}</button>
     </div>
     <div class="small" style="margin-top:6px">{{ t('ex.what') }}</div>
     <div class="pr">

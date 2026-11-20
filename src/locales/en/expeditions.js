@@ -17,7 +17,7 @@ export default {
   'exp.nb.people.n': "Invite settlers' families", 'exp.nb.people.d': '−200 cr, +8 colonists (if there is room)',
   'exp.nbNames': ['New Puddle', 'Under-the-Rock Settlement', 'Stubborn Haven', 'Eternal Monday Colony', 'Lost Luggage Village'],
   'exp.depName': 'Mineral deposit {p}',
-  'exp.why.tech': 'This destination requires a technology.', 'exp.why.cr': 'Not enough credits for equipment.', 'exp.why.food': 'Not enough food for provisions.',
+  'exp.why.busy': 'An expedition is already heading there – wait for it to return.', 'exp.why.tech': 'This destination requires a technology.', 'exp.why.cr': 'Not enough credits for equipment.', 'exp.why.food': 'Not enough food for provisions.',
   'exp.why.sol': 'Not enough soldiers.', 'exp.why.eng': 'Not enough engineers.', 'exp.why.room': 'No room in the housing modules.',
   'exp.resCr': '{n} cr (there was nothing to research)', 'exp.resPts': '{n} research pts ({t})',
   'exp.f.asteroid': '{v} t of minerals were brought back from an asteroid', 'exp.f.dep': 'discovered: {n} – {v} t',

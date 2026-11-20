@@ -3,6 +3,7 @@ export default {
   'log.wip': 'w przygotowaniu',
   'log.v.0.4': '0.4 (in development)',
   'log.items.0.4': [
+    'Do jednego miejsca może naraz iść tylko jedna wyprawa – kolejną wyślesz tam po powrocie poprzedniej.',
     'Gdy nie ma już nic do zbadania, raport nie ostrzega „laboratoria nie mają projektu” (wcześniej technologie z innych scenariuszy liczyły się jako niezbadane), a prognoza i zakładka TECHNOLOGIE piszą „wszystko zbadane”.',
     'W rozbiciu „zdolnych do pracy” (PRACOWNICY) pod morale widać, ile punktów zabiera syntetyczne jedzenie.',
     'Raport dnia podaje, ile żywności wytworzyły syntezatory (i o ile obniżyło to morale), a prognoza – ile z produkcji żywności przypada na syntezatory.',

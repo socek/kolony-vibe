@@ -60,9 +60,13 @@ export const GOALS = [
 export const OTHER_CHANCE = 0.05
 export const MAX_SPEC_IN_TEAM = 2
 
+export const busyRange = (s, rk) => (s.exp || []).some(x => x.r === rk)
+
 export function canSend(s, rk, team, sol = 0, eng = 0) {
   const r = rangeOf(rk), t = teamOf(team), cost = expCost(r, t, s), sp = s.spec || {}
   if (r.req && !s.tech[r.req]) return tr('exp.why.tech')
+  // w jedno miejsce naraz może iść tylko jedna wyprawa
+  if (busyRange(s, rk)) return tr('exp.why.busy')
   if (s.cr < cost.cr) return tr('exp.why.cr')
   if (s.food < cost.food) return tr('exp.why.food')
   if (s.pop - t.n < MIN_POP_LEFT) return tr('ex.minLeft', { n: MIN_POP_LEFT })

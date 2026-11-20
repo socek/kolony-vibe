@@ -17,7 +17,7 @@ export default {
   'exp.nb.people.n': 'Zaproś rodziny osadników', 'exp.nb.people.d': '−200 kr, +8 kolonistów (jeśli jest miejsce)',
   'exp.nbNames': ['Nowe Bajoro', 'Osada Pod Skałą', 'Przystań Uparciuchów', 'Kolonia Wieczny Poniedziałek', 'Wioska Zagubionych Bagaży'],
   'exp.depName': 'Złoże minerałów {p}',
-  'exp.why.tech': 'Ten cel wymaga technologii.', 'exp.why.cr': 'Brakuje kredytów na sprzęt.', 'exp.why.food': 'Brakuje żywności na prowiant.',
+  'exp.why.busy': 'W to miejsce idzie już wyprawa – poczekaj na jej powrót.', 'exp.why.tech': 'Ten cel wymaga technologii.', 'exp.why.cr': 'Brakuje kredytów na sprzęt.', 'exp.why.food': 'Brakuje żywności na prowiant.',
   'exp.why.sol': 'Za mało żołnierzy.', 'exp.why.eng': 'Za mało inżynierów.', 'exp.why.room': 'Brak miejsca w modułach mieszkalnych.',
   'exp.resCr': '{n} kr (nie było czego badać)', 'exp.resPts': '{n} pkt badań ({t})',
   'exp.f.asteroid': 'z asteroidy przywieziono {v} t minerałów', 'exp.f.dep': 'odkryto {n} – {v} t',

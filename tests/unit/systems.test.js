@@ -23,6 +23,16 @@ describe('wyprawy', () => {
     expect(s.exp).toHaveLength(1)
   })
 
+  it('w jedno miejsce naraz idzie tylko jedna wyprawa', () => {
+    const s = newState(); s.cr = 5000; s.food = 1000
+    expect(sendExpedition(s, 'near', 5)).toBe(true)
+    expect(canSend(s, 'near', 5)).toMatch(/już wyprawa/)
+    expect(sendExpedition(s, 'near', 5)).toBe(false)
+    expect(s.exp).toHaveLength(1)
+    s.exp = []
+    expect(canSend(s, 'near', 5)).toBe('')
+  })
+
   it('w kolonii musi zostać minimum ludzi', () => {
     const s = newState(); s.pop = MIN_POP_LEFT + 4
     expect(canSend(s, 'near', 5)).toMatch(/co najmniej/)
