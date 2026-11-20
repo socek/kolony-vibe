@@ -9,6 +9,7 @@ export const versionLabel = (upper = false) => {
 export const CHANGELOG = [
   {
     v: '0.3 „Merveil” (in development)', d: 'w przygotowaniu', items: [
+      'Animacja „wczytywania” na ekranie startowym leci tylko raz, przy uruchomieniu gry – nie przy powrocie z zasad czy „O grze”.',
       'Zakładka RYNEK nazywa się teraz IMPERIUM (rynek, zlecenia LUJ i osada sąsiedzka).',
       'Specjaliści według celów: zamiast wybierać, kogo szkolą szkoły, każda specjalizacja ma docelową liczbę – AUTO (tyle, ile stanowisk w budynkach) albo ręczną. Szkoły kształcą tych, których najbardziej brakuje, a po osiągnięciu celów nie zabierają ludzi. Nowe: zwalnianie specjalistów i ostrzeżenie, gdy szkoły nie nadążają.',
       'Nowe przyciski na ekranie startowym i w menu: ZGŁOŚ BŁĄD (formularz zgłoszenia na GitHubie) i WESPRZYJ (wsparcie autora).',

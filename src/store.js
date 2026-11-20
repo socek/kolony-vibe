@@ -26,7 +26,7 @@ const resumable = saved && !saved.over ? saved : null
 // game.s – stan gry (zapisywany), ui – stan interfejsu
 export const game = reactive({ s: resumable || newState() })
 export const ui = reactive({
-  tab: 'raport', qty: 50, expRange: 'near', expTeam: 5, expGoal: 'dep', expSol: 0, expEng: 0, screen: 'boot', from: null, busy: false, turn: null, devMsg: '',
+  tab: 'raport', qty: 50, expRange: 'near', expTeam: 5, expGoal: 'dep', expSol: 0, expEng: 0, screen: 'boot', from: null, bootPlayed: false, busy: false, turn: null, devMsg: '',
   savedDay: resumable ? resumable.m : null, saveDropped: loaded.dropped, lastPlace: null, hint: null, reasons: []
 })
 export const c = computed(() => calc(game.s))

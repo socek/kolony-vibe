@@ -5,9 +5,14 @@ import { versionLabel } from '../../game/changelog.js'
 
 // Ekran startowy udający wczytywanie gry na C64
 const LINES = ['KOLONY VIBE', 'WERSJA ' + versionLabel(true).replace(/[„”]/g, '') + ' · (C) 2026', '', 'READY.', 'LOAD "KOLONY VIBE",8,1', 'SEARCHING FOR KOLONY VIBE', 'LOADING', 'READY.']
-const shown = ref(0)
+// animacja „wczytywania” leci tylko raz, przy uruchomieniu gry – po powrocie z zasad, „O grze” itp. ekran pokazuje się od razu
+const shown = ref(ui.bootPlayed ? LINES.length + 1 : 0)
 let timer
-onMounted(() => { timer = setInterval(() => { shown.value++; if (shown.value > LINES.length) clearInterval(timer) }, 220) })
+onMounted(() => {
+  if (ui.bootPlayed) return
+  ui.bootPlayed = true
+  timer = setInterval(() => { shown.value++; if (shown.value > LINES.length) clearInterval(timer) }, 220)
+})
 onUnmounted(() => clearInterval(timer))
 import LinkButtons from '../LinkButtons.vue'
 </script>
