@@ -15,6 +15,8 @@ test.afterEach(async ({ page }) => { expect(page.errors).toEqual([]) })
 const newGame = async page => {
   await page.goto('/')
   await page.getByRole('button', { name: 'NOWA GRA' }).click()
+  await page.getByRole('button', { name: 'ROZPOCZNIJ' }).click()
+  await page.getByRole('button', { name: 'DO DZIEŁA!' }).click()
 }
 const tab = (page, name) => page.locator('.tabs').getByRole('button', { name, exact: true }).click()
 const card = (page, text) => page.locator('.card', { hasText: text })
@@ -23,7 +25,12 @@ test('ekran startowy i nowa gra', async ({ page }) => {
   await page.goto('/')
   await expect(page.getByText(/WERSJA \d+\.\d+ /)).toBeVisible()
   await page.getByRole('button', { name: 'NOWA GRA' }).click()
+  await expect(page.getByText('WYBIERZ SCENARIUSZ')).toBeVisible()
+  await page.getByRole('button', { name: 'ROZPOCZNIJ' }).click()
+  await expect(page.getByText('ZLECENIODAWCA')).toBeVisible()
+  await page.getByRole('button', { name: 'DO DZIEŁA!' }).click()
   await expect(page.locator('.tabs button')).toHaveCount(7)
+  await expect(page.getByText('CEL: 1000 OSÓB')).toBeVisible()
   await expect(page.getByText('1 STY 2150 · DZIEŃ 1/365')).toBeVisible()
 })
 

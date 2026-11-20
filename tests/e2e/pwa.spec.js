@@ -14,6 +14,8 @@ test('zbudowana gra działa offline po pierwszym wczytaniu', async ({ page, cont
   await context.setOffline(true)
   await page.reload()
   await page.getByRole('button', { name: 'NOWA GRA' }).click()
+  await page.getByRole('button', { name: 'ROZPOCZNIJ' }).click()
+  await page.getByRole('button', { name: 'DO DZIEŁA!' }).click()
   await page.getByRole('button', { name: '▶ KONIEC DNIA' }).click()
   await expect(page.getByText('DZIEŃ 2/365')).toBeVisible()
   // czcionki wbudowane w grę, nie z internetu

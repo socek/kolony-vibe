@@ -1,7 +1,8 @@
 <script setup>
 import { computed } from 'vue'
 import { game } from '../store.js'
-import { DAYS, GOAL } from '../game/constants.js'
+import { DAYS } from '../game/constants.js'
+import { scenarioOf } from '../game/scenarios.js'
 import { dateOf, plDays } from '../game/format.js'
 import MeterBar from './MeterBar.vue'
 
@@ -14,7 +15,7 @@ const leftTxt = computed(() => left.value <= 1 ? 'OSTATNI DZIEŃ!' : 'ZOSTAŁO '
 <template>
   <div class="row small">
     <span>{{ dateOf(s.m) }} · DZIEŃ {{ Math.min(s.m, DAYS) }}/{{ DAYS }}</span>
-    <span class="warn">CEL: {{ GOAL }} OSÓB</span>
+    <span class="warn">{{ scenarioOf(s).goal.short }}</span>
   </div>
   <div class="row small" style="margin-top:6px">
     <span>KADENCJA GUBERNATORA</span>

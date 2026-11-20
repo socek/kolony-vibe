@@ -1,8 +1,16 @@
 export const VERSION = '0.3', CODENAME = 'Merveil'
+// wersja w trakcie zmian – pokazywane przy numerze wersji
+export const IN_DEV = true
+export const versionLabel = (upper = false) => {
+  const t = VERSION + ' „' + CODENAME + '”' + (IN_DEV ? ' (in development)' : '')
+  return upper ? t.toUpperCase() : t
+}
 
 export const CHANGELOG = [
   {
-    v: '0.3 „Merveil”', d: 'w przygotowaniu', items: [
+    v: '0.3 „Merveil” (in development)', d: 'w przygotowaniu', items: [
+      'Scenariusze: nowa gra zaczyna się od wyboru scenariusza. Każdy ma własny cel, historię i poziom trudności, który mnoży wynik. Pierwszy scenariusz: Księżyc Jowisz-67 (łatwy).',
+      'Wspólna fabuła: przygotowania do setnych urodzin Imperatora Ludzkiej Unii Jedności.',
       'Nowe drzewo technologii: 17 technologii w 6 gałęziach, z wymaganiami, pokazane jako schemat blokowy (na telefonie jako lista).',
       'Kolejka badań – naukowcy badają kolejne technologie po sobie.',
       'Nowe technologie: krioprzechowalnictwo, synteza białka (syntezator żywności), superkondensatory, moduły piętrowe, holorozrywka, systemy celownicze, sonary geologiczne, łaziki terenowe, giełda międzygwiezdna, propaganda holograficzna.',

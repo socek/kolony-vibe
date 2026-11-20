@@ -108,3 +108,9 @@ a{color:var(--cyan)}
 .tarrow.done{stroke:var(--green)}
 .tarrow.hi{stroke:var(--white);stroke-width:3}
 .tblock .tname{overflow-wrap:anywhere}
+.scen{display:flex;flex-direction:column;gap:2px;width:100%;text-align:left;margin-top:6px;background:var(--screen);color:var(--text);border:2px solid var(--text);padding:6px 8px}
+.scen:hover{background:#241b5e}
+.scen.on{border-color:var(--yellow);background:#241b5e}
+.scen.off{opacity:.45}
+.scen .t{font-size:21px}
+.scen:disabled{background:var(--screen);color:var(--text);opacity:.5}

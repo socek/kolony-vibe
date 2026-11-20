@@ -11,14 +11,14 @@ import { sendExpedition, addDeposit } from './game/expeditions.js'
 import { startCampaign } from './game/campaigns.js'
 import { queueTech, unqueueTech, researchNow, nextResearch } from './game/research.js'
 
-const saved = load()
+const loaded = load(), saved = loaded.s
 const resumable = saved && !saved.over ? saved : null
 
 // game.s – stan gry (zapisywany), ui – stan interfejsu
 export const game = reactive({ s: resumable || newState() })
 export const ui = reactive({
   tab: 'raport', qty: 50, expRange: 'near', expTeam: 5, screen: 'boot', busy: false, turn: null, devMsg: '',
-  savedDay: resumable ? resumable.m : null
+  savedDay: resumable ? resumable.m : null, saveDropped: loaded.dropped
 })
 export const c = computed(() => calc(game.s))
 
@@ -28,7 +28,9 @@ export function setTab(t) { ui.tab = t; beep(880, 0.03) }
 export function showScreen(name) { ui.screen = name }
 export function closeScreen() { ui.screen = null }
 
-export function newGame() { game.s = newState(); ui.tab = 'raport'; persist(); closeScreen() }
+// NOWA GRA prowadzi do wyboru scenariusza, a wybór scenariusza – do wstępu fabularnego
+export function newGame() { ui.screen = 'scenarios' }
+export function startScenario(k) { game.s = newState(k); ui.tab = 'raport'; ui.saveDropped = false; persist(); ui.screen = 'intro' }
 
 export function build(k) {
   const s = game.s, x = BLD[k]

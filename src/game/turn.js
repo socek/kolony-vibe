@@ -1,4 +1,4 @@
-import { BLD, TECH, RES, MORK, GOAL, DAYS, HUNGER_MAX, prioOf, jobName, capOf, batCapOf } from './constants.js'
+import { BLD, TECH, RES, MORK, DAYS, HUNGER_MAX, prioOf, jobName, capOf, batCapOf } from './constants.js'
 import { calc, nextTech } from './calc.js'
 import { EVENTS, EVENT_BAD } from './events.js'
 import { mergeRep } from './report.js'
@@ -6,6 +6,7 @@ import { beep } from './audio.js'
 import { extract, tickExpeditions } from './expeditions.js'
 import { tickCampaigns } from './campaigns.js'
 import { nextResearch } from './research.js'
+import { scenarioOf } from './scenarios.js'
 
 export function clampStore(s) {
   const l = { food: Math.max(0, s.food - capOf(s, 'food')), min: Math.max(0, s.min - capOf(s, 'min')) }
@@ -111,7 +112,7 @@ export function endTurn(s, acc) {
   else { s.report = r; s.repDays = 1 }
 
   if (s.hungerDays >= HUNGER_MAX) s.over = { win: false, t: 'ŚMIERĆ GŁODOWA', d: 'Kolonia głodowała przez ' + HUNGER_MAX + ' dni. Nie przeżył nikt.' }
-  else if (s.pop >= GOAL) s.over = { win: true, t: 'ZWYCIĘSTWO!', d: 'Kolonia osiągnęła ' + GOAL + ' mieszkańców. Rada Ziemi przyznaje ci order Pioniera.' }
+  else if (scenarioOf(s).goal.done(s)) s.over = { win: true, t: 'ZWYCIĘSTWO!', d: scenarioOf(s).win || 'Cel scenariusza osiągnięty.' }
   else if (s.pop < 10) s.over = { win: false, t: 'KOLONIA UPADŁA', d: 'Zostało zbyt mało osadników, by przetrwać.' }
   else if (s.mor <= 5) s.over = { win: false, t: 'BUNT!', d: 'Koloniści przejęli władzę i odesłali cię na Ziemię.' }
   else if (s.cr < -500) s.over = { win: false, t: 'BANKRUCTWO', d: 'Długi przekroczyły 500 kredytów. Korporacja przejmuje kolonię.' }

@@ -1,13 +1,13 @@
 <script setup>
 import { closeScreen } from '../../store.js'
-import { VERSION, CODENAME } from '../../game/changelog.js'
+import { versionLabel } from '../../game/changelog.js'
 </script>
 
 <template>
   <h1>O GRZE</h1>
   <p>
     <span style="color:var(--white)">KOLONY VIBE</span><br>
-    Wersja {{ VERSION }} „{{ CODENAME }}”<br><br>
+    Wersja {{ versionLabel() }}<br><br>
     Strategiczna gra ekonomiczna o zarządzaniu kolonią na odległej planecie, w klimacie 8-bitowych komputerów.
   </p>
   <p><span class="sub">POMYSŁ, PROJEKT I TESTY</span><br><span style="color:var(--white)">Dominik "Socek" Długajczyk</span></p>

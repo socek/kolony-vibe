@@ -1,11 +1,15 @@
 <script setup>
 import { closeScreen } from '../../store.js'
-import { BATCAP, STBASE, STCAP, DAYS, GOAL } from '../../game/constants.js'
+import { computed } from 'vue'
+import { game } from '../../store.js'
+import { BATCAP, STBASE, STCAP, DAYS } from '../../game/constants.js'
+import { scenarioOf } from '../../game/scenarios.js'
+const scen = computed(() => scenarioOf(game.s))
 </script>
 
 <template>
   <h1>ZASADY</h1>
-  <p>Jesteś gubernatorem kolonii na odległej planecie. Każda tura to jeden dzień. Masz rok ({{ DAYS }} dni), żeby kolonia urosła do {{ GOAL }} mieszkańców.</p>
+  <p>Jesteś gubernatorem kolonii na odległej planecie. Każda tura to jeden dzień. Gra oferuje kilka scenariuszy – każdy ma własny cel, historię i poziom trudności (trudniejszy scenariusz mnoży wynik). W obecnym scenariuszu ({{ scen.n }}) masz {{ DAYS }} dni na cel: {{ scen.goal.text }}.</p>
   <p>
     • 60% kolonistów pracuje. Najpierw obsadzane są mieszkania, chłodnie, magazyny, baterie i osłony, potem reszta zadań (budynki i budowniczowie) wg priorytetów z zakładki PRACA. Zatrzymany budynek nie produkuje ani nie zużywa energii, a jego pracownicy są bezrobotni.<br>
     • Budowa trwa. Każdy budynek wymaga określonej ilości pracy – im większy, tym więcej. Więcej budowniczych kończy budowę szybciej, ale zabiera ludzi z produkcji. Anulowana budowa zwraca połowę kosztów.<br>

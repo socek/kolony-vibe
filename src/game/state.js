@@ -1,40 +1,53 @@
-import { GOAL, DAYS, KEY, BLD } from './constants.js'
+import { DAYS, KEY, BLD } from './constants.js'
 import { START_DEPOSIT } from './expeditions.js'
+import { SCENARIOS, scenarioOf, diffOf } from './scenarios.js'
+
+// Wersja formatu zapisu. Zapisy starsze niż MIN_SAVE_VERSION nie dają się wczytać.
+export const SAVE_VERSION = 3, MIN_SAVE_VERSION = 2
 
 const startDeposit = () => ({ n: 'Złoże macierzyste', t: START_DEPOSIT, max: START_DEPOSIT })
 
-export function newState() {
-  return {
+export function newState(sc = 'moon') {
+  const scen = SCENARIOS.find(x => x.k === sc) || SCENARIOS[0]
+  const s = {
+    sc: scen.k, sv: SAVE_VERSION,
     m: 1, pop: 100, food: 300, energy: 100, min: 200, cr: 500, mor: 60, rs: null, rp: {}, rq: [], q: [], dep: [startDeposit()], exp: [], camp: [],
     // każdy budynek z listy ma licznik (0, jeśli nie ma go na starcie)
     b: { ...Object.fromEntries(Object.keys(BLD).map(k => [k, 0])), farm: 3, power: 2, battery: 1, fridge: 1, store: 1, mine: 1, house: 2 },
     tax: 10, ration: 1, tech: {}, prio: {},
     pr: { food: 4, min: 6 }, prev: null, over: null,
     report: [
-      { k: 'txt', t: 'Witaj, gubernatorze! Kolonia Nowa Nadzieja liczy 100 osadników.' },
-      { k: 'txt', t: 'Cel: ' + GOAL + ' kolonistów w ciągu roku (' + DAYS + ' dni).' }
+      { k: 'txt', t: 'Witaj, gubernatorze! Kolonia ' + scen.n + ' liczy 100 osadników.' },
+      { k: 'txt', t: 'Cel: ' + scen.goal.text + ' w ciągu roku (' + DAYS + ' dni).' }
     ],
     repDays: 0
   }
+  if (scen.start) scen.start(s)
+  return s
 }
 
 export function save(s) { try { localStorage.setItem(KEY, JSON.stringify(s)) } catch (e) { /* brak zapisu */ } }
+// Zwraca { s, dropped }: s – wczytany stan albo null, dropped – zapis istniał, ale jest niezgodny
 export function load() {
   try {
     const v = localStorage.getItem(KEY), o = v ? JSON.parse(v) : null
-    // zapisy sprzed wprowadzenia złóż i wypraw
-    if (o && !o.dep) o.dep = [startDeposit()]
-    if (o && !o.exp) o.exp = []
-    if (o && !o.camp) o.camp = []
-    if (o && !o.rq) o.rq = []
+    if (!o) return { s: null, dropped: false }
+    if ((o.sv || 2) < MIN_SAVE_VERSION || !o.b) return { s: null, dropped: true }
+    // zapisy sprzed wprowadzenia złóż, wypraw, kampanii, kolejki badań i scenariuszy
+    if (!o.dep) o.dep = [startDeposit()]
+    if (!o.exp) o.exp = []
+    if (!o.camp) o.camp = []
+    if (!o.rq) o.rq = []
+    if (!o.sc) o.sc = 'moon'
     // zapisy sprzed rozdzielenia magazynów: dotychczasowe magazyny trzymały oba surowce
-    if (o && o.b && o.b.fridge == null) o.b.fridge = o.b.store || 0
+    if (o.b.fridge == null) o.b.fridge = o.b.store || 0
     // brakujące budynki w starych zapisach
-    if (o && o.b) for (const k in BLD) if (o.b[k] == null) o.b[k] = 0
-    return o
-  } catch (e) { return null }
+    for (const k in BLD) if (o.b[k] == null) o.b[k] = 0
+    o.sv = SAVE_VERSION
+    return { s: o, dropped: false }
+  } catch (e) { return { s: null, dropped: true } }
 }
 
-export function score(s) {
-  return Math.round(s.pop + s.mor * 5 + Math.max(0, s.cr) / 10 + Object.keys(s.tech).length * 50 + (s.over && s.over.win ? (DAYS - s.m) * 7 : 0))
-}
+// wynik: punkty za stan kolonii pomnożone przez trudność scenariusza
+export const baseScore = s => Math.round(s.pop + s.mor * 5 + Math.max(0, s.cr) / 10 + Object.keys(s.tech).length * 50 + (s.over && s.over.win ? (DAYS - s.m) * 7 : 0))
+export const score = s => Math.round(baseScore(s) * diffOf(s).mult)

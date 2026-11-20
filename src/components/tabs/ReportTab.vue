@@ -1,7 +1,8 @@
 <script setup>
 import { computed } from 'vue'
 import { game, c } from '../../store.js'
-import { BLD, TECH, GOAL, MORK, HUNGER_MAX } from '../../game/constants.js'
+import { BLD, TECH, MORK, HUNGER_MAX } from '../../game/constants.js'
+import { scenarioOf } from '../../game/scenarios.js'
 import { num, fmt, daysTxt } from '../../game/format.js'
 import { techPct, techEta } from '../../game/calc.js'
 import { repLines } from '../../game/report.js'
@@ -17,7 +18,7 @@ const title = computed(() => {
 const lines = computed(() => repLines(s.value))
 const eff = computed(() => c.value.e * c.value.f)
 const nextMor = computed(() => Math.max(0, Math.min(100, s.value.mor + (c.value.mt - s.value.mor) * MORK)))
-const prog = computed(() => Math.min(100, s.value.pop / GOAL * 100))
+const prog = computed(() => scenarioOf(s.value).goal.progress(s.value))
 const site = computed(() => s.value.q.length ? { name: BLD[s.value.q[0].k].n, st: c.value.sites[0] } : null)
 const R = Math.round
 const depDays = computed(() => c.value.minProd > 0 ? Math.floor(c.value.deps / c.value.minProd) : null)
@@ -74,7 +75,7 @@ const depDays = computed(() => c.value.minProd > 0 ? Math.floor(c.value.deps / c
   </div>
 
   <div class="card">
-    <div class="row"><span><PixelIcon name="pop" />Postęp do celu</span><span>{{ R(prog) }}%</span></div>
+    <div class="row"><span><PixelIcon name="pop" />Cel: {{ scenarioOf(s).goal.text }}</span><span>{{ R(prog) }}%</span></div>
     <MeterBar :value="prog" :max="100" />
   </div>
 </template>

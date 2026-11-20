@@ -8,8 +8,10 @@ import ChangelogScreen from './screens/ChangelogScreen.vue'
 import EndScreen from './screens/EndScreen.vue'
 import DevScreen from './screens/DevScreen.vue'
 import SettingsScreen from './screens/SettingsScreen.vue'
+import ScenarioScreen from './screens/ScenarioScreen.vue'
+import IntroScreen from './screens/IntroScreen.vue'
 
-const SCREENS = { boot: BootScreen, menu: MenuScreen, help: HelpScreen, about: AboutScreen, log: ChangelogScreen, end: EndScreen, dev: DevScreen, settings: SettingsScreen }
+const SCREENS = { boot: BootScreen, menu: MenuScreen, help: HelpScreen, about: AboutScreen, log: ChangelogScreen, end: EndScreen, dev: DevScreen, settings: SettingsScreen, scenarios: ScenarioScreen, intro: IntroScreen }
 </script>
 
 <template>

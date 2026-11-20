@@ -105,12 +105,23 @@ describe('zapis gry', () => {
     delete old.dep; delete old.exp; delete old.camp; delete old.b.fridge; delete old.b.gun
     old.b.store = 2
     localStorage.setItem(KEY, JSON.stringify(old))
-    const s = load()
+    const { s, dropped } = load()
+    expect(dropped).toBe(false)
+    expect(s.sc).toBe('moon')
     expect(s.dep).toHaveLength(1)
     expect(s.exp).toEqual([])
     expect(s.camp).toEqual([])
     expect(s.b.fridge).toBe(2)
     expect(s.b.gun).toBe(0)
+  })
+
+  it('zbyt stary albo uszkodzony zapis jest pomijany z informacją', () => {
+    localStorage.setItem(KEY, JSON.stringify({ sv: 1, m: 5 }))
+    expect(load()).toEqual({ s: null, dropped: true })
+    localStorage.setItem(KEY, '{zepsuty')
+    expect(load()).toEqual({ s: null, dropped: true })
+    localStorage.clear()
+    expect(load()).toEqual({ s: null, dropped: false })
   })
 
   it('wygrana daje premię za pozostałe dni', () => {
