@@ -1,6 +1,12 @@
-export const VERSION = '0.2', CODENAME = 'Tukohama'
+export const VERSION = '0.3', CODENAME = 'Merveil'
 
 export const CHANGELOG = [
+  {
+    v: '0.3 „Merveil”', d: 'w przygotowaniu', items: [
+      'Ikonka gry w karcie przeglądarki.',
+      'Gra zapisuje się od razu po każdym dniu, a nie dopiero po animacji.'
+    ]
+  },
   {
     v: '0.2 „Tukohama”', d: '19.11.2026', items: [
       'Zakładka NAUKA nazywa się TECHNOLOGIE.',

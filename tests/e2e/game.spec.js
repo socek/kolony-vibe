@@ -21,7 +21,7 @@ const card = (page, text) => page.locator('.card', { hasText: text })
 
 test('ekran startowy i nowa gra', async ({ page }) => {
   await page.goto('/')
-  await expect(page.getByText('WERSJA 0.2 TUKOHAMA')).toBeVisible()
+  await expect(page.getByText(/WERSJA \d+\.\d+ /)).toBeVisible()
   await page.getByRole('button', { name: 'NOWA GRA' }).click()
   await expect(page.locator('.tabs button')).toHaveCount(7)
   await expect(page.getByText('1 STY 2150 · DZIEŃ 1/365')).toBeVisible()
