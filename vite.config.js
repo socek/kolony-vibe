@@ -6,6 +6,8 @@ import { viteSingleFile } from 'vite-plugin-singlefile'
 export default defineConfig({
   base: './',
   plugins: [vue(), viteSingleFile()],
+  // npm run dev nasłuchuje na wszystkich interfejsach – grę można otworzyć na telefonie w tej samej sieci (adres „Network”)
+  server: { host: true },
   test: {
     environment: 'happy-dom',
     include: ['tests/unit/**/*.test.js', 'tests/components/**/*.test.js']
