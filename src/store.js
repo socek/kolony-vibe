@@ -14,6 +14,7 @@ import { queueTech, unqueueTech, researchNow, nextResearch } from './game/resear
 import { resolveChoice } from './game/choices.js'
 import { syncCond } from './game/wear.js'
 import { pickHint } from './game/hints.js'
+import { track } from './analytics.js'
 import { specTargets, setSpecTarget, dismissSpec } from './game/specialists.js'
 import { playTheme, themeFor } from './game/music.js'
 import { buildBlock } from './game/scenarios.js'
@@ -41,12 +42,13 @@ export function goBack() { ui.screen = ui.from || null; ui.from = null }
 
 // NOWA GRA prowadzi do wyboru scenariusza, a wybór scenariusza – do wstępu fabularnego
 export function newGame() { ui.screen = 'scenarios' }
-export function startScenario(k) { game.s = newState(k); ui.tab = 'raport'; ui.saveDropped = false; persist(); ui.screen = 'intro' }
+export function startScenario(k) { game.s = newState(k); track('game_start', { scenario: k }); ui.tab = 'raport'; ui.saveDropped = false; persist(); ui.screen = 'intro' }
 
 export function build(k) {
   const s = game.s, x = BLD[k]
   if (buildBlock(s, k)) return
   s.cr -= x.cr; s.min -= x.mi; s.q.push({ k, d: 0 })
+  track('build', { building: k, day: s.m })
   beep(520, 0.08); persist()
 }
 export function cancelSite(i) {
@@ -85,28 +87,29 @@ export function specTarget(T, d) {
 }
 export function dismiss(T) { if (dismissSpec(game.s, T)) { beep(300, 0.06); persist() } }
 export function setPrio(k, l) { game.s.prio[k] = l; beep(600, 0.03); persist() }
-export function sendExp() { if (sendExpedition(game.s, ui.expRange, ui.expTeam, ui.expGoal, ui.expSol, ui.expEng)) { ui.expSol = 0; ui.expEng = 0; beep(440, 0.12); persist() } }
+export function sendExp() { if (sendExpedition(game.s, ui.expRange, ui.expTeam, ui.expGoal, ui.expSol, ui.expEng)) { track('expedition', { range: ui.expRange, goal: ui.expGoal, team: ui.expTeam }); ui.expSol = 0; ui.expEng = 0; beep(440, 0.12); persist() } }
 export function neighborTrade(k) { if (nbTrade(game.s, k)) { beep(740, 0.05); persist() } }
-export function campaign(k) { if (startCampaign(game.s, k)) { beep(700, 0.1); persist() } }
+export function campaign(k) { if (startCampaign(game.s, k)) { track('campaign', { campaign: k }); beep(700, 0.1); persist() } }
 // decyzja w zdarzeniu z wyborem
 export function decide(i) {
   const s = game.s
   if (!s.pending) return
-  const txt = resolveChoice(s, s.pending, i)
+  const ev = s.pending, txt = resolveChoice(s, s.pending, i)
   if (!txt) return
+  track('choice', { event: ev, option: i })
   if (!Array.isArray(s.report)) s.report = []
   s.report.unshift({ k: 'txt', t: '★ ' + txt, c: 'sub', day: s.m - 1, top: 1 })
   s.pending = null
   beep(600, 0.08); persist(); closeScreen()
 }
-export function acceptOrder(id) { if (accept(game.s, id)) { beep(700, 0.08); persist() } }
+export function acceptOrder(id) { if (accept(game.s, id)) { track('order_accept'); beep(700, 0.08); persist() } }
 export function deliverOrder(id) {
   const txt = deliver(game.s, id)
   if (!txt) return
   game.s.report.unshift({ k: 'txt', t: '★ LUJ: ' + txt, c: 'pos', day: game.s.m - 1, top: 1 })
   beep(990, 0.12); persist()
 }
-export function research(k) { if (queueTech(game.s, k)) { beep(880, 0.08); persist() } }
+export function research(k) { if (queueTech(game.s, k)) { track('research', { tech: k }); beep(880, 0.08); persist() } }
 export function unresearch(k) { unqueueTech(game.s, k); beep(300, 0.05); persist() }
 export function researchFirst(k) { if (researchNow(game.s, k)) { beep(990, 0.08); persist() } }
 
@@ -123,7 +126,7 @@ function afterTurns() {
   checkBadges()
   if (game.s.over) ui.lastPlace = recordGame(game.s) || ui.lastPlace
   persist(); ui.tab = 'raport'
-  if (game.s.over) { ui.screen = 'end'; beep(game.s.over.win ? 880 : 150, 0.4) }
+  if (game.s.over) { track('game_end', { scenario: game.s.sc || 'moon', result: game.s.over.win ? 'win' : 'lose', reason: game.s.over.t, day: game.s.m, place: ui.lastPlace || 0 }); ui.screen = 'end'; beep(game.s.over.win ? 880 : 150, 0.4) }
   else showHint()
   ui.reasons = []
 }
@@ -146,6 +149,7 @@ export function advance(n) {
   const s = game.s
   if (ui.busy || s.over) return
   ui.busy = true
+  track('advance', { days: n, day: s.m, scenario: s.sc || 'moon' })
   const p0 = snapshot(s)
   const label = () => ({ day: Math.min(game.s.m + 1, DAYS), date: dateOf(game.s.m + 1) })
   ui.turn = { ...label(), fill: 0, out: false }

@@ -9,6 +9,7 @@ export const versionLabel = (upper = false) => {
 export const CHANGELOG = [
   {
     v: '0.3 „Merveil” (in development)', d: 'w przygotowaniu', items: [
+      'Anonimowe statystyki gry (Google Analytics) – tylko za zgodą gracza, zgodę można zmienić w ustawieniach.',
       'Zakładka PRACA nazywa się teraz PRACOWNICY.',
       'Ekran startowy opowiada początek fabuły: jak Imperator Gała awansował cię na Gubernatora Ósmego Wielkiego Nowego Obszaru. Na telefonie przyciski są nad fabułą. Wstęp do scenariuszy i list z kancelarii mówią teraz o Imperatorze Gale.',
       'Animacja „wczytywania” na ekranie startowym leci tylko raz, przy uruchomieniu gry – nie przy powrocie z zasad czy „O grze”.',

@@ -44,7 +44,10 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      # identyfikator Google Analytics (zmienna repozytorium GA_ID) – tylko w opublikowanej grze
       - run: npm run build
+        env:
+          VITE_GA_ID: ${{ vars.GA_ID }}
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

@@ -18,6 +18,7 @@ import ExpeditionsTab from './components/tabs/ExpeditionsTab.vue'
 import StatsTab from './components/tabs/StatsTab.vue'
 
 const PANELS = { raport: ReportTab, budowa: BuildTab, praca: WorkTab, wyprawy: ExpeditionsTab, rynek: MarketTab, polityka: PolicyTab, nauka: ResearchTab, statystyki: StatsTab }
+import ConsentBar from './components/ConsentBar.vue'
 </script>
 
 <template>
@@ -33,4 +34,5 @@ const PANELS = { raport: ReportTab, budowa: BuildTab, praca: WorkTab, wyprawy: E
   </div>
   <ScreenOverlay />
   <TurnOverlay />
+  <ConsentBar />
 </template>

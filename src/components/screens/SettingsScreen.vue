@@ -7,6 +7,7 @@ const setAuto = (k, v) => { if (v === '') delete settings.auto[k]; else settings
 
 const setAll = v => { for (const x of STOPS) settings.stops[x.k] = v }
 const reset = () => Object.assign(settings.stops, stopDefaults())
+import { analyticsOn } from '../../analytics.js'
 </script>
 
 <template>
@@ -21,6 +22,13 @@ const reset = () => Object.assign(settings.stops, stopDefaults())
     <label class="row stopopt"><span>Pokazuj podpowiedzi, gdy coś dzieje się pierwszy raz</span><input v-model="settings.hints" type="checkbox"></label>
     <div v-if="Object.keys(settings.hintOff).length" class="row small"><span>Wyłączone pojedynczo: {{ Object.keys(settings.hintOff).length }}</span><button @click="Object.keys(settings.hintOff).forEach(k => delete settings.hintOff[k])">PRZYWRÓĆ WSZYSTKIE</button></div>
   </div>
+  <template v-if="analyticsOn">
+    <div class="devh">STATYSTYKI</div>
+    <div class="card">
+      <label class="row stopopt"><span>Anonimowe statystyki gry (Google Analytics) – pomagają autorowi rozwijać grę</span><input :checked="settings.analytics === true" type="checkbox" @change="settings.analytics = $event.target.checked"></label>
+      <div class="small">Po wyłączeniu gra od razu przestaje wysyłać zdarzenia; skrypt Google znika całkiem przy następnym uruchomieniu.</div>
+    </div>
+  </template>
   <div class="devh">ZATRZYMYWANIE PRZEWIJANIA</div>
   <div class="small">Wybierz, które wydarzenia zatrzymują przewijanie przyciskiem ▶▶ 7 DNI. Stany długotrwałe (głód, blackout, brak rąk do pracy…) zatrzymują je tylko w dniu, w którym się zaczynają. Koniec gry zawsze zatrzymuje przewijanie. Ustawienia obowiązują we wszystkich grach.</div>
   <div class="card">
