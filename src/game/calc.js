@@ -6,6 +6,7 @@ import { condMul, repairNeed, REPAIR_PER_WORKER } from './wear.js'
 import { scenarioOf, seasonOf } from './scenarios.js'
 import { workRate } from './workforce.js'
 import { lawFx } from './laws.js'
+import { siteCap } from './jobs.js'
 
 // Wylicza wszystko, co dzieje się w ciągu jednego dnia, bez zmieniania stanu.
 export function calc(s) {
@@ -15,7 +16,8 @@ export function calc(s) {
   // systemy celownicze: działa potrzebują połowy obsady
   const wMul = k => k === 'gun' && t.targeting ? 0.5 : 1
   for (const k in BLD) { wNeed[k] = b[k] * BLD[k].w * af * wMul(k); nb += b[k] }
-  wNeed.build = s.q.reduce((a, x) => a + BLD[x.k].crew * af, 0)
+  // budowniczowie: suma obsad placów budowy (z limitami ustawionymi na placach)
+  wNeed.build = s.q.reduce((a, x) => a + siteCap(x, BLD[x.k].crew * af), 0)
   wNeed.repair = repairNeed(s) * af
   const scen = scenarioOf(s), sea = seasonOf(s) || { solar: 1, food: 1, heat: 0 }, mods = s.mods || {}
   wNeed.hunt = scen.hunt ? 8 * af : 0 // myśliwi (Mruczysko)
@@ -67,13 +69,13 @@ export function calc(s) {
   // punkty napraw dziennie (inżynierowie naprawiają szybciej)
   const repairPts = wNeed.repair * (M.repair || 0) / Math.max(af, 0.01) * REPAIR_PER_WORKER
 
-  // budowniczowie trafiają na place budowy w kolejności kolejki
+  // budowniczowie trafiają na place budowy w kolejności kolejki, każdy plac najwyżej do swojego limitu
   const builders = wNeed.build * E.build, bMul = E.build > 0 ? M.build / E.build : 1
   let bl = builders
   const sites = s.q.map(x => {
-    const B = BLD[x.k], need = B.crew * af, a = Math.min(bl, need), r = need > 0 ? a / need : 0, rate = r * B.crew * bMul
+    const B = BLD[x.k], need = B.crew * af, cap = siteCap(x, need), a = Math.min(bl, cap), r = need > 0 ? a / need : 0, rate = r * B.crew * bMul
     bl -= a
-    return { a, need, rate, pct: Math.min(100, x.d / B.bt * 100), eta: rate > 0 ? Math.ceil((B.bt - x.d) / rate) : Infinity }
+    return { a, need, cap, rate, pct: Math.min(100, x.d / B.bt * 100), eta: rate > 0 ? Math.ceil((B.bt - x.d) / rate) : Infinity }
   })
 
   let needed = 0, enNeed = s.pop * (0.033 + sea.heat) // zimą dochodzi ogrzewanie

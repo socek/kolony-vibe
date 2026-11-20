@@ -1,4 +1,4 @@
-import { moveJob, shiftJob, setLim } from './game/jobs.js'
+import { moveJob, shiftJob, setLim, newSite, moveSite, shiftSite, setSiteLim } from './game/jobs.js'
 import { t } from './i18n.js'
 import { reactive, computed } from 'vue'
 import { BLD, TECH, DAYS, batCapOf } from './game/constants.js'
@@ -62,7 +62,7 @@ export async function importGame(text) { const st = await importText(text); if (
 export function build(k) {
   const s = game.s, x = BLD[k]
   if (buildBlock(s, k)) return
-  s.cr -= x.cr; s.min -= x.mi; s.q.push({ k, d: 0 })
+  s.cr -= x.cr; s.min -= x.mi; s.q.push(newSite(s, k))
   track('build', { building: k, day: s.m })
   beep(520, 0.08); persist()
 }
@@ -71,11 +71,10 @@ export function cancelSite(i) {
   if (x) { s.cr += Math.round(BLD[x.k].cr / 2); s.min += Math.round(BLD[x.k].mi / 2); clampStore(s) }
   beep(180, 0.08); persist()
 }
-export function siteFirst(i) {
-  const s = game.s, x = s.q.splice(i, 1)[0]
-  if (x) s.q.unshift(x)
-  beep(600, 0.03); persist()
-}
+// kolejność placów budowy (id placu) i limit budowniczych na placu
+export function siteTo(id, before) { if (moveSite(game.s, id, before)) { beep(600, 0.03); persist() } }
+export function siteShift(id, d) { if (shiftSite(game.s, id, d)) { beep(600, 0.03); persist() } }
+export function siteLimit(id, v) { setSiteLim(game.s, id, v); persist() }
 export function demolish(k) {
   const s = game.s
   s.b[k]--; syncCond(s); s.energy = Math.min(s.energy, batCapOf(s)); clampStore(s)

@@ -64,7 +64,7 @@ describe('budowa', () => {
     const farm = card(w, 'Farma hydroponiczna')
     await farm.findAll('button').at(1).trigger('click')
     expect(game.s.cr).toBe(380)
-    expect(game.s.q).toEqual([{ k: 'farm', d: 0 }])
+    expect(game.s.q).toMatchObject([{ k: 'farm', d: 0 }])
     expect(w.text()).toContain('PLACE BUDOWY')
   })
 
@@ -72,6 +72,21 @@ describe('budowa', () => {
     game.s.cr = 10
     const w = mount(BuildTab)
     expect(card(w, 'Farma hydroponiczna').findAll('button').at(1).attributes('disabled')).toBeDefined()
+  })
+})
+
+describe('place budowy', () => {
+  it('▼ zmienia kolejność placów, a suwak wstrzymuje budowę', async () => {
+    game.s.q = [{ k: 'farm', d: 0 }, { k: 'house', d: 0 }]
+    const w = mount(BuildTab)
+    const names = () => w.findAll('[data-site]').map(x => x.text())
+    expect(names()[0]).toContain('Farma')
+    await w.find('[data-site] button[title="Niżej (mniej ważne)"]').trigger('click')
+    expect(names()[0]).toContain('Moduł')
+    expect(game.s.q[0].k).toBe('house')
+    await w.findAll('[data-site] input[type=range]').at(0).setValue(0)
+    expect(game.s.q[0].lim).toBe(0)
+    expect(w.findAll('[data-site]').at(0).text()).toContain('WSTRZYMANA')
   })
 })
 

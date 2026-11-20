@@ -3,6 +3,7 @@ export default {
   'log.wip': 'in preparation',
   'log.v.0.4': '0.4 (in development)',
   'log.items.0.4': [
+    'Construction sites in BUILD work like the job list: drag by ≡ (or use ▲ ▼) to change the order – a higher site gets builders sooner – and a slider limits the builders on a site (all the way left pauses construction). The FIRST button is gone.',
     'WORKERS tab: the LOW/MEDIUM/HIGH priorities are replaced by a job list – drag by ≡ (or use ▲ ▼) to set the order; higher means the job gets people sooner. A slider on each job sets a limit of people (all the way left = STOP). Old saves convert automatically.',
     'The BUILD and EXPEDITIONS buttons show how many buildings are under construction and how many expeditions are away.',
     'The “Batteries charged” note appears only on the first day the batteries are full, not every day.',

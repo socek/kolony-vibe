@@ -1,6 +1,7 @@
 <script setup>
 import { t, locale } from '../../i18n.js'
-import { computed, ref, onUnmounted } from 'vue'
+import { computed } from 'vue'
+import { useDragList } from '../../dragList.js'
 import { game, c, specTarget, dismiss, moveTo, shift, limit } from '../../store.js'
 import { specDeficit, specPosts, trainPick, isAuto } from '../../game/specialists.js'
 import { INFRA, SPEC, jobOrder, limOf, jobName } from '../../game/constants.js'
@@ -26,8 +27,8 @@ const infra = computed(() => INFRA.reduce((a, k) => a + c.value.wNeed[k], 0))
 const missing = computed(() => Math.max(0, Math.ceil(c.value.needed - c.value.workforce)))
 // zadania widoczne w tej kolonii, w kolejności gracza (wyżej = pierwsze dostaje ludzi)
 const shown = computed(() => jobOrder(s.value).filter(k => k === 'build' || k === 'repair' || (k === 'hunt' ? scenarioOf(s.value).hunt : s.value.b[k])))
-// podczas przeciągania lista pokazuje kolejność roboczą (view), zapisywaną po puszczeniu
-const drag = ref(null), view = ref(null)
+// przeciąganie: podczas niego lista pokazuje kolejność roboczą (view), zapisywaną po puszczeniu
+const { drag, view, start: startDrag } = useDragList(() => shown.value, 'job', moveTo)
 const jobs = computed(() => (view.value || shown.value).map(k => {
   const n = c.value.wNeed[k], E = c.value.E[k], lim = limOf(s.value, k)
   // suwak: od 0 (STOP) do pełnej obsady (bez limitu); przy zerowej potrzebie (np. brak budów) skala 0–1
@@ -35,38 +36,6 @@ const jobs = computed(() => (view.value || shown.value).map(k => {
   return { k, n, E, w: n * E, isB: k === 'build', lim, on: lim > 0, max, val: Math.min(lim, max) }
 }))
 const setLimit = (j, v) => limit(j.k, v >= j.max ? null : v)
-
-// przeciąganie myszą i palcem (pointer events – HTML5 drag&drop nie działa na dotyku)
-function onMove(e) {
-  const k = drag.value
-  if (!k) return
-  const others = [...document.querySelectorAll('[data-job]')].filter(el => el.dataset.job !== k)
-  const next = others.find(el => { const r = el.getBoundingClientRect(); return e.clientY < r.top + r.height / 2 })
-  const v = view.value.filter(x => x !== k), i = next ? v.indexOf(next.dataset.job) : v.length
-  v.splice(i, 0, k)
-  if (v.join() !== view.value.join()) view.value = v
-  // przewijanie przy krawędzi ekranu
-  if (e.clientY < 50) window.scrollBy(0, -12)
-  else if (e.clientY > window.innerHeight - 50) window.scrollBy(0, 12)
-}
-function onUp() {
-  const k = drag.value, v = view.value
-  stopDrag()
-  if (!k || !v) return
-  const before = v[v.indexOf(k) + 1] ?? null
-  if (before !== (shown.value[shown.value.indexOf(k) + 1] ?? null)) moveTo(k, before)
-}
-function stopDrag() {
-  drag.value = null; view.value = null
-  window.removeEventListener('pointermove', onMove); window.removeEventListener('pointerup', onUp); window.removeEventListener('pointercancel', stopDrag)
-}
-function startDrag(e, k) {
-  if (e.button > 0) return
-  e.preventDefault()
-  drag.value = k; view.value = [...shown.value]
-  window.addEventListener('pointermove', onMove); window.addEventListener('pointerup', onUp); window.addEventListener('pointercancel', stopDrag)
-}
-onUnmounted(stopDrag)
 </script>
 
 <template>

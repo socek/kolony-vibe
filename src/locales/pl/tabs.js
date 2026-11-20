@@ -24,7 +24,7 @@ export default {
   'bt.cost': 'koszt {cr} kr, {mi} t min.', 'bt.workers': '{n} prac.', 'bt.workersPer': '1 prac. na {n} budynki', 'bt.energy': '{n} kWh/dzień',
   'bt.time': 'budowa {d} przy {n} budowniczych', 'bt.max': 'maks. {n}', 'bt.cond': 'stan: {n}%', 'bt.eff': 'sprawność {n}%',
   'bt.needTech': 'Wymaga technologii: {n} (zakładka TECHNOLOGIE)', 'bt.credits': 'kredyty {a}/{b}', 'bt.minerals': 'minerały {a}/{b} t',
-  'bt.sites': 'PLACE BUDOWY', 'bt.builders': 'budowniczowie: {a}/{b}', 'bt.first': 'NAJPIERW', 'bt.cancel': 'ANULUJ', 'bt.cancelTitle': 'Zwrot połowy kosztów',
+  'bt.sites': 'PLACE BUDOWY', 'bt.builders': 'budowniczowie: {a}/{b}', 'bt.sitesInfo': 'Budowniczowie trafiają na place od góry listy. Kolejność zmienisz, przeciągając za ≡ (albo ▲ ▼). Suwak ogranicza liczbę budowniczych na placu – skrajnie w lewo wstrzymuje budowę.', 'bt.paused': 'WSTRZYMANA', 'bt.cancel': 'ANULUJ', 'bt.cancelTitle': 'Zwrot połowy kosztów',
   // pracownicy
   'wt.able': 'Zdolni do pracy ({n}% kolonistów)', 'wt.pp': '{v} pkt proc.',
   'wt.range': 'Odsetek mieści się zawsze między {a}% a {b}%. Wysokie morale, szpitale i technologia Zautomatyzowane żłobki go podnoszą, a niskie morale i epidemie obniżają.',

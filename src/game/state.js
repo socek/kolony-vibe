@@ -1,6 +1,7 @@
 import { t } from '../i18n.js'
 import { DAYS, KEY, BLD, JOB_ORDER } from './constants.js'
 import { START_DEPOSIT } from './expeditions.js'
+import { siteIds } from './jobs.js'
 import { SCENARIOS, scenarioOf, diffOf } from './scenarios.js'
 
 // Wersja formatu zapisu. Zapisy starsze niż MIN_SAVE_VERSION nie dają się wczytać.
@@ -66,6 +67,7 @@ export function migrate(o) {
       delete o.prio
     }
     if (!o.lim) o.lim = {}
+    siteIds(o)
     // brakujące budynki w starych zapisach
     for (const k in BLD) if (o.b[k] == null) o.b[k] = 0
     o.sv = SAVE_VERSION

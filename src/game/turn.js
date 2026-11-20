@@ -30,6 +30,9 @@ export const snapshot = s => ({ pop: s.pop, food: s.food, energy: s.energy, min:
 // Rozgrywa jeden dzień. acc = true dokleja raport do raportu z poprzednich dni.
 // Zwraca listę powodów, dla których przewijanie mogłoby się zatrzymać (klucze z STOPS w stops.js).
 // auto – automatyczne odpowiedzi na zdarzenia z wyborem: { klucz zdarzenia: numer opcji }
+// budowa stoi: są place, które nie są wstrzymane przez gracza, a nikt na nich nie pracuje
+const stalled = (s, c) => s.q.some(x => x.lim !== 0) && c.builders < 0.5
+
 export function endTurn(s, acc, auto = {}) {
   if (s.over) return ['over']
   // gra czeka na decyzję gracza – dzień się nie rozgrywa
@@ -70,9 +73,9 @@ export function endTurn(s, acc, auto = {}) {
       note(t('turn.built', { n: BLD[x.k].n }), 'pos'); beep(520, 0.12)
       return false
     })
-    if (s.q.length && c.builders < 0.5) add('stall')
+    if (stalled(s, c)) add('stall')
   }
-  edge('stall', s.q.length && c.builders < 0.5)
+  edge('stall', stalled(s, c))
   edge('short', c.e < 1)
   if (c.e < 1) {
     const miss = Math.ceil(c.needed - c.workforce)

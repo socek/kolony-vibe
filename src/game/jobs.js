@@ -24,3 +24,28 @@ export function setLim(s, k, v) {
   if (v == null) delete s.lim[k]
   else s.lim[k] = Math.max(0, Math.round(v))
 }
+
+// Place budowy: kolejność w kolejce s.q to priorytet (pierwszy dostaje budowniczych jako pierwszy),
+// lim – limit budowniczych na placu (0 = budowa wstrzymana, brak = bez limitu); id – do przeciągania
+export const siteCap = (x, need) => Math.min(need, x.lim ?? Infinity)
+export function newSite(s, k) { s.qid = (s.qid || 0) + 1; return { k, d: 0, id: s.qid } }
+// nadaje id placom ze starych zapisów
+export function siteIds(s) { for (const x of s.q || []) if (x.id == null) x.id = s.qid = (s.qid || 0) + 1 }
+export function moveSite(s, id, before) {
+  const i = s.q.findIndex(x => x.id === id)
+  if (i < 0 || id === before) return false
+  const [x] = s.q.splice(i, 1), j = before == null ? -1 : s.q.findIndex(y => y.id === before)
+  s.q.splice(j < 0 ? s.q.length : j, 0, x)
+  return true
+}
+export function shiftSite(s, id, d) {
+  const i = s.q.findIndex(x => x.id === id), j = i + d
+  if (i < 0 || j < 0 || j >= s.q.length) return false
+  return moveSite(s, id, d < 0 ? s.q[j].id : (s.q[j + 1] ? s.q[j + 1].id : null))
+}
+export function setSiteLim(s, id, v) {
+  const x = s.q.find(y => y.id === id)
+  if (!x) return
+  if (v == null) delete x.lim
+  else x.lim = Math.max(0, Math.round(v))
+}

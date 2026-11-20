@@ -24,7 +24,7 @@ export default {
   'bt.cost': 'cost {cr} cr, {mi} t min.', 'bt.workers': '{n} workers', 'bt.workersPer': '1 worker per {n} buildings', 'bt.energy': '{n} kWh/day',
   'bt.time': 'build time {d} with {n} builders', 'bt.max': 'max. {n}', 'bt.cond': 'condition: {n}%', 'bt.eff': 'efficiency {n}%',
   'bt.needTech': 'Requires technology: {n} (TECHNOLOGIES tab)', 'bt.credits': 'credits {a}/{b}', 'bt.minerals': 'minerals {a}/{b} t',
-  'bt.sites': 'CONSTRUCTION SITES', 'bt.builders': 'builders: {a}/{b}', 'bt.first': 'FIRST', 'bt.cancel': 'CANCEL', 'bt.cancelTitle': 'Refunds half the cost',
+  'bt.sites': 'CONSTRUCTION SITES', 'bt.builders': 'builders: {a}/{b}', 'bt.sitesInfo': 'Builders go to the sites from the top of the list. Drag by ≡ (or use ▲ ▼) to change the order. The slider limits the builders on a site – all the way left pauses construction.', 'bt.paused': 'PAUSED', 'bt.cancel': 'CANCEL', 'bt.cancelTitle': 'Refunds half the cost',
   // workers
   'wt.able': 'Able to work ({n}% of colonists)', 'wt.pp': '{v} pts',
   'wt.range': 'The share always stays between {a}% and {b}%. High morale, hospitals and the Automated Nurseries technology raise it; low morale and epidemics lower it.',

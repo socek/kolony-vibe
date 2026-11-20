@@ -3,6 +3,7 @@ export default {
   'log.wip': 'w przygotowaniu',
   'log.v.0.4': '0.4 (in development)',
   'log.items.0.4': [
+    'Place budowy w BUDOWIE działają jak lista zadań: kolejność zmieniasz przeciąganiem za ≡ (albo ▲ ▼) – wyższy plac dostaje budowniczych wcześniej – a suwak ogranicza liczbę budowniczych na placu (skrajnie w lewo wstrzymuje budowę). Przycisk NAJPIERW zniknął.',
     'Zakładka PRACOWNICY: priorytety NISKI/ŚREDNI/WYSOKI zastąpiła lista zadań – przeciągnij za ≡ (albo ▲ ▼), żeby ustawić kolejność; wyżej znaczy, że zadanie dostaje ludzi wcześniej. Suwak przy każdym zadaniu ustawia limit ludzi (skrajnie w lewo = STOP). Stare zapisy przenoszą się same.',
     'Przyciski BUDOWA i WYPRAWY pokazują, ile budynków jest w budowie i ile wypraw w drodze.',
     'Komunikat „Baterie naładowane” pojawia się tylko w pierwszym dniu pełnych baterii, a nie codziennie.',

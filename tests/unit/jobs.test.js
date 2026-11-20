@@ -1,7 +1,9 @@
 import { describe, it, expect } from 'vitest'
 import { newState, migrate } from '../../src/game/state.js'
 import { jobOrder, JOBS, JOB_ORDER } from '../../src/game/constants.js'
-import { moveJob, shiftJob, setLim } from '../../src/game/jobs.js'
+import { moveJob, shiftJob, setLim, newSite, moveSite, shiftSite, setSiteLim } from '../../src/game/jobs.js'
+import { calc } from '../../src/game/calc.js'
+import { endTurn } from '../../src/game/turn.js'
 
 describe('kolejność zadań i limity', () => {
   it('domyślna kolejność obejmuje wszystkie zadania', () => {
@@ -35,5 +37,41 @@ describe('kolejność zadań i limity', () => {
     expect(s.lim).toEqual({ gun: 0 })
     expect(s.prio).toBeUndefined()
     expect(JOB_ORDER.length).toBe(JOBS.length)
+  })
+})
+
+describe('place budowy: kolejność i limity', () => {
+  const withSites = () => {
+    const s = newState(); s.pop = 400; s.b.house = 8
+    s.q = [newSite(s, 'house'), newSite(s, 'lab'), newSite(s, 'farm')]
+    return s
+  }
+  it('limit placu ogranicza jego budowniczych, a reszta idzie na kolejne place', () => {
+    const s = withSites(), full = calc(s)
+    setSiteLim(s, s.q[0].id, 1)
+    const c = calc(s)
+    expect(c.sites[0].a).toBeCloseTo(1)
+    expect(c.wNeed.build).toBeLessThan(full.wNeed.build)
+    setSiteLim(s, s.q[0].id, 0)
+    expect(calc(s).sites[0].rate).toBe(0)
+  })
+  it('przesuwanie placów w kolejce', () => {
+    const s = withSites(), [a, b, f] = s.q.map(x => x.id)
+    moveSite(s, f, a); expect(s.q.map(x => x.id)).toEqual([f, a, b])
+    shiftSite(s, f, 1); expect(s.q.map(x => x.id)).toEqual([a, f, b])
+    expect(shiftSite(s, a, -1)).toBe(false)
+    moveSite(s, a, null); expect(s.q.map(x => x.id)).toEqual([f, b, a])
+  })
+  it('wstrzymane place nie zgłaszają „budowa stoi”', () => {
+    const s = withSites()
+    for (const x of s.q) setSiteLim(s, x.id, 0)
+    endTurn(s)
+    expect(s.report.some(x => x.k === 'stall')).toBe(false)
+  })
+  it('stare zapisy dostają id placów', () => {
+    const o = newState(); o.q = [{ k: 'farm', d: 3 }, { k: 'house', d: 0 }]; o.sv = 4
+    const { s } = migrate(o)
+    expect(s.q[0].id).toBeTruthy()
+    expect(s.q[0].id).not.toBe(s.q[1].id)
   })
 })
