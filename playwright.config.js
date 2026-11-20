@@ -7,6 +7,8 @@ export default defineConfig({
   timeout: 30000,
   use: {
     baseURL: 'http://localhost:5199',
+    // testy rozgrywki sprawdzają polskie teksty; angielski ma osobny test z locale en
+    locale: 'pl-PL',
     launchOptions: process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {}
   },
   webServer: [

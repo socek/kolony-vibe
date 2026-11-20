@@ -1,4 +1,5 @@
 <script setup>
+import { t } from '../../i18n.js'
 import { computed } from 'vue'
 import { game, decide, closeScreen } from '../../store.js'
 import { CHOICES } from '../../game/choices.js'
@@ -17,6 +18,6 @@ const ev = computed(() => game.s.pending && CHOICES[game.s.pending])
         <span class="small">{{ (o.need && o.need(game.s)) || o.d(game.s) }}</span>
       </button>
     </div>
-    <div class="btns"><button class="small" @click="closeScreen">OBEJRZYJ KOLONIĘ (DECYZJA POCZEKA)</button></div>
+    <div class="btns"><button class="small" @click="closeScreen">{{ t('choice.look') }}</button></div>
   </template>
 </template>

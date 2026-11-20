@@ -1,4 +1,5 @@
 <script setup>
+import { t, locale } from '../../i18n.js'
 import { computed } from 'vue'
 import { game, ui, newGame, closeScreen, showStats } from '../../store.js'
 import { hall } from '../../game/scores.js'
@@ -15,16 +16,16 @@ const s = computed(() => game.s)
   <template v-if="s.over">
     <h1 :class="s.over.win ? 'pos' : 'neg'">{{ s.over.t }}</h1>
     <p>{{ s.over.d }}</p>
-    <p class="small">Scenariusz: {{ scenarioOf(s).n }} ({{ diffOf(s).n.toLowerCase() }})</p>
-    <p>Koloniści: {{ fmt(s.pop) }} · Morale: {{ Math.round(s.mor) }}%<br>Dzień: {{ Math.min(s.m, DAYS) }} · Technologie: {{ Object.keys(s.tech).length }}</p>
-    <p class="t" style="color:var(--yellow)">WYNIK: {{ score(s) }}</p>
-    <p class="small">{{ baseScore(s) }} pkt × {{ String(diffOf(s).mult).replace('.', ',') }} za poziom trudności</p>
-    <p v-if="ui.lastPlace" class="sub">Twój wynik to {{ ui.lastPlace }}. miejsce na {{ hall.scores.length }} {{ hall.scores.length === 1 ? 'grę' : 'gier' }}.</p>
-    <p v-if="s.earned && s.earned.length" class="small pos">Odznaki zdobyte w tej grze: {{ s.earned.map(k => BADGES.find(b => b.k === k).n).join(', ') }}</p>
+    <p class="small">{{ t('end.scen', { n: scenarioOf(s).n, d: diffOf(s).n.toLowerCase() }) }}</p>
+    <p>{{ t('end.stats1', { pop: fmt(s.pop), mor: Math.round(s.mor) }) }}<br>{{ t('end.stats2', { day: Math.min(s.m, DAYS), tech: Object.keys(s.tech).length }) }}</p>
+    <p class="t" style="color:var(--yellow)">{{ t('end.score', { n: score(s) }) }}</p>
+    <p class="small">{{ t('end.mult', { base: baseScore(s), m: diffOf(s).mult.toLocaleString(locale()) }) }}</p>
+    <p v-if="ui.lastPlace" class="sub">{{ t('end.place', { p: ui.lastPlace, n: hall.scores.length }) }}</p>
+    <p v-if="s.earned && s.earned.length" class="small pos">{{ t('end.badges') }} {{ s.earned.map(k => BADGES.find(b => b.k === k).n).join(', ') }}</p>
   </template>
   <div class="btns">
-    <button @click="newGame">NOWA GRA</button>
-    <button @click="showStats">STATYSTYKI</button>
-    <button @click="closeScreen">ZOBACZ KOLONIĘ</button>
+    <button @click="newGame">{{ t('menu.newGame') }}</button>
+    <button @click="showStats">{{ t('end.stats') }}</button>
+    <button @click="closeScreen">{{ t('end.look') }}</button>
   </div>
 </template>

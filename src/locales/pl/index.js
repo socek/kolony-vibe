@@ -1,0 +1,7 @@
+// Słownik polski: łączy pliki z tekstami poszczególnych części gry
+import ui from './ui.js'
+import screens, { end } from './screens.js'
+import help from './help.js'
+import story from './story.js'
+import misc from './misc.js'
+export default { ...ui, ...screens, ...end, ...help, ...story, ...misc }

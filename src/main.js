@@ -3,6 +3,7 @@ import App from './App.vue'
 import { initAudio } from './game/audio.js'
 import { syncMusic, ui, showScreen } from './store.js'
 import { setupBackButton } from './backButton.js'
+import { initLang } from './i18n.js'
 import { setupAnalytics } from './analytics.js'
 // czcionki dołączone do gry (działają offline): tylko alfabet łaciński z polskimi znakami
 import '@fontsource/vt323/latin.css'
@@ -14,6 +15,8 @@ import './style.css'
 // dźwięk można włączyć dopiero po interakcji użytkownika
 document.addEventListener('click', () => { initAudio(); syncMusic() })
 
+// język: zapisany wybór albo język przeglądarki (przed pierwszym wyświetleniem)
+initLang()
 createApp(App).mount('#app')
 setupAnalytics(ui)
 setupBackButton(ui, showScreen)
