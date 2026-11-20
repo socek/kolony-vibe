@@ -36,12 +36,12 @@ describe('endTurn – podstawy', () => {
     expect(stops).toContain('research')
   })
 
-  it('dokleja raport przy przewijaniu i sumuje liczby', () => {
+  it('dokleja raport przy przewijaniu i łączy dni', () => {
     fixRandom(0.5)
     const s = newState()
     endTurn(s); endTurn(s, true); endTurn(s, true)
     expect(s.repDays).toBe(3)
-    expect(texts(s)).toMatch(/zmarnowano w sumie \d+ kWh energii \(przez 3 dni\)/)
+    expect(texts(s)).toMatch(/Baterie naładowane \(przez 3 dni\)\./)
   })
 })
 

@@ -130,3 +130,22 @@ describe('zapis gry', () => {
     expect(score(s)).toBeGreaterThan(score(lose))
   })
 })
+
+describe('komunikaty o bateriach', async () => {
+  const { newState } = await import('../../src/game/state.js')
+  const { endTurn } = await import('../../src/game/turn.js')
+  const { REP } = await import('../../src/game/report.js')
+  const keys = s => s.report.filter(x => x.k !== 'txt').map(x => x.k)
+  it('bez baterii: ostrzeżenie „Brak baterii”', () => {
+    const s = newState('moon'); s.b.battery = 0
+    endTurn(s); expect(keys(s)).toContain('nobat')
+    expect(REP.nobat.c).toBe('warn')
+    expect(REP.nobat.f({}, 1)).toContain('Brak baterii')
+  })
+  it('pełne baterie: informacja „Baterie naładowane” bez ilości zmarnowanej energii', () => {
+    const s = newState('moon'); s.energy = 1e6; s.b.power = 20
+    endTurn(s); expect(keys(s)).toContain('batFull')
+    expect(keys(s)).not.toContain('waste')
+    expect(REP.batFull.f({}, 1)).toBe('Baterie naładowane.')
+  })
+})

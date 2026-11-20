@@ -6,6 +6,10 @@ import { HUNGER_MAX, SPEC } from './constants.js'
 const R = Math.round, ws = d => d > 1 ? 'w sumie ' : '', dd = d => d > 1 ? ' (przez ' + daysTxt(d) + ')' : ''
 
 export const REP = {
+  // stan baterii: brak – ostrzeżenie, pełne – informacja (bez ilości zmarnowanej energii)
+  nobat: { c: 'warn', f: (v, d) => 'Brak baterii' + dd(d) + ' – nadwyżka energii przepada. Zbuduj baterie, żeby ją magazynować.' },
+  batFull: { c: '', f: (v, d) => 'Baterie naładowane' + dd(d) + '.' },
+  // dawny wpis (zapisy sprzed 0.4 mogą go jeszcze mieć w raporcie)
   waste: { c: 'warn', f: (v, d) => R(v.a) < 1 ? null : 'Baterie pełne – zmarnowano ' + ws(d) + R(v.a) + ' kWh energii' + dd(d) + '.' },
   hunger: { c: 'neg', f: (v, d) => 'GŁÓD – dzień ' + v._day + '/' + HUNGER_MAX + '! ' + (R(v.a) === 1 ? 'Zmarł ' + ws(d) + '1 kolonista' : 'Zmarło ' + ws(d) + R(v.a) + ' kolonistów') + dd(d) + '. Dzień pełnego jedzenia (bez racji głodowych) kończy głód.' },
   hungerHold: { c: 'warn', f: (v, d) => 'Racje głodowe' + dd(d) + ' – nikt nie umiera, ale głód trwa (dzień ' + v._day + '/' + HUNGER_MAX + '). Przywróć co najmniej normalne racje, żeby go zakończyć.' },

@@ -49,7 +49,7 @@ const depDays = computed(() => c.value.minProd > 0 ? Math.floor(c.value.deps / c
     <div class="row"><span><PixelIcon name="food" />Żywność</span><span><SignedNum :n="c.foodProd - c.foodCons" /> t <span class="small">({{ R(c.foodProd) }} prod. / {{ R(c.foodCons) }} zuż.)</span></span></div>
     <div v-if="c.season" class="row"><span><PixelIcon name="energy" />Pora roku: {{ c.season.n.toLowerCase() }}</span><span class="small">słońce ×{{ c.season.solar }}<template v-if="c.season.food !== 1"> · plony ×{{ c.season.food }}</template><template v-if="c.season.heat"> · ogrzewanie {{ R(s.pop * c.season.heat) }} kWh</template></span></div>
     <div class="row"><span><PixelIcon name="energy" />Energia</span><span><SignedNum :n="c.enProd - c.enNeed" /> kWh <span class="small">({{ R(c.enProd) }} prod. / {{ R(c.enNeed) }} zuż.)</span></span></div>
-    <div class="row"><span><PixelIcon name="battery" />Magazyn energii</span><span>{{ R(c.enStore) }}/{{ c.enCap }} kWh<span v-if="c.enWaste >= 1" class="small warn"> (strata {{ R(c.enWaste) }} kWh)</span></span></div>
+    <div class="row"><span><PixelIcon name="battery" />Magazyn energii</span><span>{{ R(c.enStore) }}/{{ c.enCap }} kWh<span v-if="!c.enCap" class="small warn"> (brak baterii)</span><span v-else-if="c.enStore >= c.enCap - 0.01" class="small"> (naładowane)</span></span></div>
     <div class="row">
       <span><PixelIcon name="min" />Minerały</span>
       <span><SignedNum :n="c.minProd" /> t <span class="small" :class="{ neg: !s.dep.length && s.b.mine, warn: depDays !== null && depDays < 30 }">({{ s.dep.length ? 'w złożach ' + fmt(c.deps) + ' t' + (depDays !== null ? ', na ' + daysTxt(depDays) : '') : 'brak złóż' }})</span></span>

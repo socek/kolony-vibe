@@ -41,7 +41,8 @@ export function endTurn(s, acc, auto = {}) {
   syncCond(s)
   s.prev = snapshot(s)
   s.energy = c.enStore
-  if (c.enWaste > 0.01) add('waste', { a: c.enWaste })
+  if (!c.enCap) add('nobat')
+  else if (c.enStore >= c.enCap - 0.01) add('batFull')
   s.food += c.foodProd - c.foodCons
   if (s.food < 0) s.food = 0
   const deaths = c.hungerDeaths, hdPrev = s.hungerDays || 0
