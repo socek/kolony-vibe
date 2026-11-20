@@ -1,3 +1,5 @@
+import { t, locale } from '../i18n.js'
+
 // CODENAME może być pusty – wtedy etykieta pokazuje sam numer wersji
 export const VERSION = '0.4', CODENAME = ''
 // wersja w trakcie zmian – pokazywane przy numerze wersji
@@ -7,95 +9,16 @@ export const versionLabel = (upper = false) => {
   return upper ? t.toUpperCase() : t
 }
 
+// Lista zmian: treść w słownikach (log.v.<k> – nazwa wersji, log.items.<k> – punkty), d – data wydania (ISO) albo brak (w przygotowaniu).
+// Nowy punkt dopisuj w obu językach: src/locales/pl/changelog.js i src/locales/en/changelog.js.
 export const CHANGELOG = [
-  {
-    v: '0.4 (in development)', d: 'w przygotowaniu', items: [
-      'Bateria mieści 25 kWh zamiast 100. Nowa gra zaczyna się z 4 bateriami (tak jak dotąd 100 kWh), a w zapisanych grach każda dawna bateria zamienia się w 4 nowe. Bateria kosztuje 35 kr i 20 t minerałów (zamiast 130 kr i 70 t), obsługuje ją 1 pracownik na 4 baterie, a budowa jest 4 razy krótsza.',
-      'Okienko samouczka ma przycisk WYŁĄCZ SAMOUCZEK CAŁKOWICIE i informację, gdzie go potem włączyć.',
-      'Nowa opcja dla zaawansowanych (menu → USTAWIENIA): skrócone komunikaty w raporcie – tylko co się stało, bez rad, co z tym zrobić.',
-      'Po zakończeniu dnia (i przewijaniu 7 dni) gra przewija ekran tak, żeby początek raportu był na górze.',
-      'Raport: zamiast „Baterie pełne – zmarnowano X kWh” jest informacja „Baterie naładowane”, a gdy kolonia nie ma baterii – ostrzeżenie „Brak baterii”.',
-      'Systemowy przycisk „wstecz” na telefonie w trakcie gry otwiera menu gry; dopiero drugie cofnięcie wychodzi z gry.',
-      'Zakładki są teraz menu bocznym po lewej stronie (na szerokim ekranie); na telefonie zostają nad treścią.',
-      'Opis wybranej technologii otwiera się w okienku na wierzchu drzewa technologii, a nie na dole strony. Zamyka go przycisk ZAMKNIJ, kliknięcie obok albo Esc.',
-      'Muzyka i dźwięki milkną, gdy ekran telefonu zgaśnie albo gra trafi do tła (inna karta, zminimalizowana przeglądarka), i wracają po powrocie do gry.',
-      'Naprawiono: na telefonie technologie w zakładce TECHNOLOGIE nachodziły na dolny pasek z przyciskiem KONIEC DNIA.'
-    ]
-  },
-  {
-    v: '0.3 „Merveil”', d: '20.11.2026', items: [
-      'Ekran „O grze”: wstążka „Fork me on GitHub” i linki do kanałów autora na YouTube i Twitchu.',
-      'Anonimowe statystyki gry (Google Analytics) – tylko za zgodą gracza, zgodę można zmienić w ustawieniach.',
-      'Zakładka PRACA nazywa się teraz PRACOWNICY.',
-      'Ekran startowy opowiada początek fabuły: jak Imperator Gała awansował cię na Gubernatora Ósmego Wielkiego Nowego Obszaru. Na telefonie przyciski są nad fabułą. Wstęp do scenariuszy i list z kancelarii mówią teraz o Imperatorze Gale.',
-      'Animacja „wczytywania” na ekranie startowym leci tylko raz, przy uruchomieniu gry – nie przy powrocie z zasad czy „O grze”.',
-      'Zakładka RYNEK nazywa się teraz IMPERIUM (rynek, zlecenia LUJ i osada sąsiedzka).',
-      'Specjaliści według celów: zamiast wybierać, kogo szkolą szkoły, każda specjalizacja ma docelową liczbę – AUTO (tyle, ile stanowisk w budynkach) albo ręczną. Szkoły kształcą tych, których najbardziej brakuje, a po osiągnięciu celów nie zabierają ludzi. Nowe: zwalnianie specjalistów i ostrzeżenie, gdy szkoły nie nadążają.',
-      'Nowe przyciski na ekranie startowym i w menu: ZGŁOŚ BŁĄD (formularz zgłoszenia na GitHubie) i WESPRZYJ (wsparcie autora).',
-      'Przycisk WRÓĆ w zasadach, „O grze” i zmianach wraca tam, skąd je otwarto (ekran startowy albo menu), a nie od razu do gry.',
-      'Zdolni do pracy: odsetek nie jest już stały (60%). Zmieniają go morale (±10 pkt proc.), szpitale (do +5), nowa technologia Zautomatyzowane żłobki (+5) i epidemie (chorzy przez kilka dni nie pracują). Zakładka PRACA pokazuje, z czego wynika.',
-      'Pięć nowych scenariuszy: Planeta Mruczysko (pory roku, fauna, zagrody, myśliwi), Asteroida Tik-Tak (anomalie czasu, cel badawczy: Rozciągacz Doby), Planeta Chlupotka (pływające pole golfowe, sztormy, mało lądu), Stacja Parapet-3 (bez kopalń, rozszczelnienia, Galeria Widokowa) i Glob Kostkolód (wieczna zima, Lód Ceremonialny).',
-      'Muzyka chiptune w stylu C64: własne motywy – spokojny, kryzysowy (głód, blackout, dług, niskie morale), zwycięstwo i porażka. Osobny przełącznik muzyki w menu i ustawieniach.',
-      'Podpowiedzi kontekstowe: okienko z radą, gdy coś dzieje się pierwszy raz (brak rąk do pracy, głód, blackout, awaria, decyzja…). Przycisk „nie pokazuj więcej” i przełącznik w ustawieniach.',
-      'Zużycie budynków: stan spada z czasem, zużyte budynki pracują gorzej i częściej mają awarie, a zużyte do zera się rozpadają. Naprawiają je konserwatorzy – nowa pula pracowników z priorytetem w zakładce PRACA.',
-      'Wyprawy wybierają cel poszukiwań: złoża, ruiny (punkty badań), wraki (kredyty, minerały, części do technologii) albo osadnicy (handel, nowi koloniści, konflikt lub stała osada sąsiedzka z handlem w zakładce RYNEK). Żołnierze i inżynierowie mogą dołączyć do ekipy.',
-      'Szpitale osłabiają też epidemie.',
-      'Specjaliści: naukowcy, inżynierowie i żołnierze pracują o 50% wydajniej na swoich stanowiskach. Nowe budynki: szkoła (kształci specjalistów) i szpital (słabsze epidemie, mniej zgonów z głodu, tylko naukowcy). Laboratoria obsadzają tylko naukowcy.',
-      'Zlecenia Ludzkiej Unii Jedności (zakładka RYNEK): dostawy żywności, minerałów i energii, wysłanie kolonistów, zbadanie technologii. Różne terminy, nagrody i kary; reputacja u LUJ zmienia wysokość nagród.',
-      'Zakładka STATYSTYKI: wykresy wszystkich zasobów dzień po dniu, wybór zakresu, znaczniki wydarzeń, ukrywanie serii.',
-      'Wyniki i odznaki (menu → WYNIKI I ODZNAKI): tabela najlepszych gier ze wszystkimi szczegółami i 10 odznak wspólnych dla wszystkich scenariuszy. Ekran końca gry pokazuje miejsce w tabeli i ma przycisk do statystyk.',
-      'Zdarzenia z wyborem: 11 nowych sytuacji (od 2 do 5 opcji), np. okup piratów, strajk górników, epidemia, list od Imperatora. Czas stoi, dopóki nie podejmiesz decyzji; w ustawieniach można ustawić odpowiedzi automatyczne.',
-      'Scenariusze: nowa gra zaczyna się od wyboru scenariusza. Każdy ma własny cel, historię i poziom trudności, który mnoży wynik. Pierwszy scenariusz: Księżyc Jowisz-67 (łatwy).',
-      'Wspólna fabuła: przygotowania do setnych urodzin Imperatora Gały, władcy Ludzkiej Unii Jedności.',
-      'Nowe drzewo technologii: 18 technologii w 6 gałęziach, z wymaganiami, pokazane jako schemat blokowy (na telefonie jako lista).',
-      'Kolejka badań – naukowcy badają kolejne technologie po sobie.',
-      'Nowe technologie: krioprzechowalnictwo, synteza białka (syntezator żywności), superkondensatory, moduły piętrowe, holorozrywka, systemy celownicze, sonary geologiczne, łaziki terenowe, giełda międzygwiezdna, propaganda holograficzna.',
-      'Pas wulkaniczny, Pole meteorytowe i Loteria biletów kolonijnych wymagają teraz technologii.',
-      'Ikonka gry w karcie przeglądarki.',
-      'Gra zapisuje się od razu po każdym dniu, a nie dopiero po animacji.',
-      'Gra jest otwartoźródłowa (licencja GNU AGPL v3) – link do kodu na ekranie „O grze”.',
-      'Gra działa offline i można ją zainstalować na telefonie jak aplikację (PWA). Czcionki są wbudowane w grę.'
-    ]
-  },
-  {
-    v: '0.2 „Tukohama”', d: '19.11.2026', items: [
-      'Zakładka NAUKA nazywa się TECHNOLOGIE.',
-      'Aeroponika, ogniwa grafenowe i wiertła głębinowe odblokowują nowe budynki (farma aeroponiczna, elektrownia grafenowa, kopalnia głębinowa) zamiast premii +30%.',
-      'Budynki wymagające nieodkrytej technologii są wyszarzone na liście budowy.',
-      'Działa magnetyczne (nowa technologia i budynek obronny) – zmniejszają straty od piratów i meteorytów, ale tylko obsadzone; atak może część z nich zniszczyć.',
-      'Budynki na liście budowy pogrupowane: żywność, przemysł i nauka, ludność, obrona.',
-      'Menu ułożone pionowo.',
-      'Kampanie reklamowe w zakładce POLITYKA – kosztują kredyty i trwają określony czas, w którym mogą przybyć nowi koloniści. Skuteczność każdej kampanii jest ukryta.',
-      'Głód trwa najwyżej 12 dni – z każdym dniem umiera więcej osób, a 12. dnia giną wszyscy. Kończy go dzień pełnego jedzenia; racje głodowe tylko wstrzymują umieranie.',
-      'Złoża minerałów się wyczerpują – kopalnie wydobywają z nich kolejno. Nowe złoża znajdują wyprawy w nowej zakładce WYPRAWY (cel, liczebność ekipy, koszt, szansa, ryzyko).',
-      'Osiem celów wypraw – od bezpiecznej bliskiej okolicy po ryzykowny pas wulkaniczny i odległe pole meteorytowe.',
-      'Osobne magazyny: chłodnie na żywność i magazyny minerałów na minerały.',
-      'Wszystkie odkryte złoża to złoża minerałów.',
-      'Kafelek Minerały pokazuje stan złóż i na ile dni wystarczą.',
-      'Zdarzenie „złoże kryształów” dodaje nowe złoże zamiast jednorazowych minerałów.',
-      'Tura to jeden dzień, gra trwa rok (365 dni). Data i liczba pozostałych dni w nagłówku.',
-      'Budowa trwa – im większy budynek, tym dłużej. Budowniczowie z priorytetem w zakładce PRACA, kolejka placów budowy z przyciskami NAJPIERW i ANULUJ.',
-      'Przycisk ▶▶ 7 DNI – przewija tydzień i zatrzymuje się przy ważnych wydarzeniach.',
-      'Raport z wielu dni sumuje liczby (np. zmarnowana energia, narodziny) i podaje, przez ile dni coś trwało. Tytuł raportu mówi, ilu dni dotyczy.',
-      'Uchodźcy przybywają tylko, gdy jest dla nich miejsce.',
-      'Zdarzenie „awaria systemu podtrzymywania życia” nazywa się teraz „awaria zasilania”.',
-      'Wydajność na górze prognozy, opis paska kadencji.',
-      'Paski kosztu budowy (kredyty i minerały) – przyciski nie skaczą przy klikaniu.',
-      'Gra nazywa się Kolony Vibe (bez „8,1”).',
-      'Lista zmian w menu.',
-      'Komunikat „Przewijanie zatrzymane” jest czerwony, mruga i podaje powód.',
-      'Ustawienia w menu (≡) – wybierasz, które wydarzenia zatrzymują przewijanie (m.in. nowe: brak rąk do pracy, stojąca budowa, pełne magazyny, zadłużenie).'
-    ]
-  },
-  {
-    v: '0.1 Prototyp', d: '19.11.2026', items: [
-      'Pierwsza wersja: kolonia na odległej planecie w stylu C64, tura to miesiąc, 10 lat na 1000 kolonistów.',
-      'Priorytety pracowników (STOP / NISKI / ŚREDNI / WYSOKI) w zakładce PRACA.',
-      'Badania jako projekty – wybierasz technologię, naukowcy dokładają postęp co turę.',
-      'Osłony orbitalne jako budynek odblokowywany technologią; każda chroni przed jednym deszczem meteorytów.',
-      'Pikselowe ikonki budynków i zasobów, jednostki: kWh, tony, kredyty.',
-      'Animacja końca tury, czytelniejsza prognoza morale, liczba brakujących pracowników w raporcie.',
-      'Ekran „O grze”.'
-    ]
-  }
+  { k: '0.4' },
+  { k: '0.3', d: '2026-11-20' },
+  { k: '0.2', d: '2026-11-19' },
+  { k: '0.1', d: '2026-11-19' }
 ]
+for (const e of CHANGELOG) {
+  Object.defineProperty(e, 'v', { get: () => t('log.v.' + e.k), enumerable: true })
+  Object.defineProperty(e, 'items', { get: () => t('log.items.' + e.k), enumerable: true })
+  Object.defineProperty(e, 'date', { get: () => e.d ? new Date(e.d + 'T12:00:00').toLocaleDateString(locale()) : t('log.wip'), enumerable: true })
+}

@@ -40,7 +40,7 @@ const moods = computed(() => {
         <button v-else :disabled="!!canStart(s, x.k)" @click="campaign(x.k)">{{ t('po.launch', { n: campCost(s, x.k) }) }}</button>
       </div>
       <div v-if="x.req && !s.tech[x.req]" class="small neg">{{ t('ex.needTech', { n: TECH[x.req].n }) }}</div>
-      <div class="small">{{ x.d }} · {{ campCost(s, x.k) }} kr · {{ daysTxt(x.days) }}<template v-if="running(s, x.k)"> · {{ t('po.got', { n: running(s, x.k).got }) }}</template></div>
+      <div class="small">{{ x.d }} · {{ t('ord.r.cr', { n: campCost(s, x.k) }) }} · {{ daysTxt(x.days) }}<template v-if="running(s, x.k)"> · {{ t('po.got', { n: running(s, x.k).got }) }}</template></div>
       <MeterBar v-if="running(s, x.k)" :value="x.days - running(s, x.k).left" :max="x.days" />
     </div>
   </div>
