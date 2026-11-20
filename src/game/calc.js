@@ -80,14 +80,19 @@ export function calc(s) {
 
   let needed = 0, enNeed = s.pop * (0.033 + sea.heat) // zimą dochodzi ogrzewanie
   for (const k in wNeed) needed += wCap[k] ?? wNeed[k]
-  for (const k in BLD) enNeed += b[k] * BLD[k].en * E[k]
-  const e = needed > 0 ? Math.min(1, workforce / needed) : 1
   // produkcja z budynku: liczba × wydajność × obsada
   const out = k => (b[k] || 0) * BLD[k].p * M[k]
+  const huntFood = wNeed.hunt * (M.hunt || 0) / af * 1.3 // 1,3 t na myśliwego dziennie
+  const foodCons = s.pop * 0.2 * s.ration * (1 + lawFx(s, 'food'))
+  const otherFood = (out('farm') + out('farm2')) * sea.food * (mods.farmMul || 1) + out('kelp') + huntFood
+  // syntezator nie robi zapasów: wytwarza tylko tyle, ile brakuje do dziennego spożycia ponad inne źródła,
+  // i zużywa prąd proporcjonalnie do wykorzystania (nieużywany – wcale)
+  const synthPot = out('synth'), synthUse = synthPot > 0 ? Math.min(1, Math.max(0, foodCons - otherFood) / synthPot) : 0
+  for (const k in BLD) enNeed += b[k] * BLD[k].en * E[k] * (k === 'synth' ? synthUse : 1)
+  const e = needed > 0 ? Math.min(1, workforce / needed) : 1
   const enProd = (out('power') + out('power2')) * sea.solar + out('geo') // słońce zależy od pory roku
   const f = enNeed > 0 ? Math.min(1, (s.energy + enProd) / enNeed) : 1
-  const huntFood = wNeed.hunt * (M.hunt || 0) / af * 1.3 // 1,3 t na myśliwego dziennie
-  const foodProd = ((out('farm') + out('farm2')) * sea.food * (mods.farmMul || 1) + out('synth') + out('kelp') + huntFood) * f, foodCons = s.pop * 0.2 * s.ration * (1 + lawFx(s, 'food'))
+  const synthFood = synthPot * synthUse * f, foodProd = otherFood * f + synthFood
   const minPot = (out('mine') + out('mine2')) * f, deps = depTotal(s), minProd = Math.min(minPot, deps), resProd = b.lab * BLD.lab.p * M.lab * f * (1 + lawFx(s, 'res'))
   const taxInc = s.pop * s.tax * 0.0167 * (1 + lawFx(s, 'tax')), trade = b.port * BLD.port.p * M.port * f, maint = nb * MAINT + lawFx(s, 'cr')
   const unemp = avail
@@ -116,7 +121,7 @@ export function calc(s) {
   mt = Math.max(0, Math.min(100, mt))
   const foodCap = capOf(s, 'food'), minCap = capOf(s, 'min'), foodWaste = Math.max(0, foodAfter - foodCap), minWaste = Math.max(0, s.min + minProd - minCap)
   const enStore = Math.max(0, Math.min(enCap, s.energy + enProd - enNeed * f)), enWaste = Math.max(0, s.energy + enProd - enNeed * f - enCap)
-  return { faunaRed, tameRate, tameMor, iceProd, huntFood, season: seasonOf(s),  repairPts, E, M, specA, ordA, wCap, sciMissing, train, hospRed, spTot, wNeed, builders, sites, foodCap, minCap, foodWaste, minWaste, enCap, enStore, enWaste, cap, workforce, workRate: workRateV, needed, e, f, enProd, enNeed, foodProd, foodCons, minPot, deps, minProd, resProd, taxInc, trade, maint, unemp, shortRatio, hungerNext, hungerDeaths, mt, crowd, unempPen, black, starv, recB, def, defRed }
+  return { faunaRed, tameRate, tameMor, iceProd, huntFood, season: seasonOf(s),  repairPts, E, M, specA, ordA, wCap, synthPot, synthUse, synthFood, sciMissing, train, hospRed, spTot, wNeed, builders, sites, foodCap, minCap, foodWaste, minWaste, enCap, enStore, enWaste, cap, workforce, workRate: workRateV, needed, e, f, enProd, enNeed, foodProd, foodCons, minPot, deps, minProd, resProd, taxInc, trade, maint, unemp, shortRatio, hungerNext, hungerDeaths, mt, crowd, unempPen, black, starv, recB, def, defRed }
 }
 
 export const nextTech = s => Object.entries(TECH).filter(([k]) => !s.tech[k]).map(e => e[1]).sort((a, b) => a.c - b.c)[0]

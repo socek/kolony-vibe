@@ -5,7 +5,7 @@ export default {
   'bld.farm2.n': 'Farma aeroponiczna',
   'bld.farm2.d': '+12 t żywności dziennie – uprawy w mgle odżywczej',
   'bld.synth.n': 'Syntezator żywności',
-  'bld.synth.d': '+14 t żywności dziennie z syntezy białka – tylko 2 pracowników, ale 8 kWh prądu',
+  'bld.synth.d': 'do 14 t żywności dziennie z syntezy białka – tylko 2 pracowników. Nie robi zapasów: wytwarza tyle, ile brakuje do dziennego spożycia, i tylko wtedy zużywa prąd (do 8 kWh)',
   'bld.power.n': 'Elektrownia słoneczna',
   'bld.power.d': '+10 kWh energii dziennie',
   'bld.power2.n': 'Elektrownia grafenowa',

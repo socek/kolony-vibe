@@ -80,7 +80,7 @@ const setLimit = (j, v) => limit(j.k, v >= j.max ? null : v)
   <div v-for="(j, i) in jobs" :key="j.k" class="card job" :class="{ dragging: drag === j.k }" :data-job="j.k">
     <div class="row">
       <span class="t"><span class="drag" :title="t('wt.drag')" :aria-label="t('wt.drag')" @pointerdown="startDrag($event, j.k)">≡</span>{{ i + 1 }}. <PixelIcon :name="j.k" />{{ jobName(j.k) }}
-        <span v-if="j.isB" class="small">({{ t('rp.sites', { n: s.q.length }) }})</span><span v-else-if="j.k === 'repair'" class="small">({{ t('wt.repairs', { n: Math.round(c.repairPts) }) }})</span><span v-else-if="j.k === 'hunt'" class="small">({{ t('wt.hunt', { n: Math.round(c.huntFood) }) }})</span><template v-else> ×{{ s.b[j.k] }}</template>
+        <span v-if="j.isB" class="small">({{ t('rp.sites', { n: s.q.length }) }})</span><span v-else-if="j.k === 'repair'" class="small">({{ t('wt.repairs', { n: Math.round(c.repairPts) }) }})</span><span v-else-if="j.k === 'hunt'" class="small">({{ t('wt.hunt', { n: Math.round(c.huntFood) }) }})</span><template v-else-if="j.k === 'synth'"> ×{{ s.b.synth }} <span class="small">({{ t('wt.synth', { p: Math.round(c.synthUse * 100), n: fmt(c.synthFood) }) }})</span></template><template v-else> ×{{ s.b[j.k] }}</template>
       </span>
       <span v-if="j.on">{{ t('wt.staff', { a: fmt(j.w), b: fmt(j.n) }) }}<template v-if="j.n"> ({{ Math.round(j.E * 100) }}%)</template></span>
       <span v-else class="neg">{{ t(j.isB ? 'wt.paused' : 'wt.stopped') }}</span>

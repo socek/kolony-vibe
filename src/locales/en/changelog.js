@@ -3,6 +3,7 @@ export default {
   'log.wip': 'in preparation',
   'log.v.0.4': '0.4 (in development)',
   'log.items.0.4': [
+    'The food synthesizer makes no stock: it produces only the food missing for the day\'s consumption beyond other sources, and uses power in proportion to its use – when idle, none at all. Its usage is shown in the WORKERS tab.',
     'Construction sites in BUILD work like the job list: drag by ≡ (or use ▲ ▼) to change the order – a higher site gets builders sooner – and a slider limits the builders on a site (all the way left pauses construction). The FIRST button is gone.',
     'WORKERS tab: the LOW/MEDIUM/HIGH priorities are replaced by a job list – drag by ≡ (or use ▲ ▼) to set the order; higher means the job gets people sooner. A slider on each job sets a limit of people (all the way left = STOP). Old saves convert automatically.',
     'The BUILD and EXPEDITIONS buttons show how many buildings are under construction and how many expeditions are away.',

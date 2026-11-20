@@ -38,7 +38,7 @@ export default {
   'wt.warn': p => '⚠ Specialists short: ' + p.n + (p.sci > 0 ? ' (including ' + p.sci + ' scientists – without them labs and hospitals do not work fully)' : '') + '. ' + (p.days ? 'At the current pace schools will catch up in about ' + p.days + ' days – build another school or move it higher in the job list.' : 'Build a school (or staff an existing one) to train specialists.'),
   'wt.toTarget': p => p.n + ' specialists short of the target' + (p.days ? ' – schools will catch up in about ' + p.days + ' days.' : ' – a school will let you train them.'),
   'wt.infra': 'Infrastructure', 'wt.infraInfo': 'Housing, cold stores, warehouses, batteries and shields are always staffed first.',
-  'wt.repairs': 'repairs: {n} pts/day', 'wt.hunt': '+{n} t of food, but the fauna gets more aggressive',
+  'wt.repairs': 'repairs: {n} pts/day', 'wt.synth': 'in use {p}%: +{n} t/day', 'wt.hunt': '+{n} t of food, but the fauna gets more aggressive',
   'wt.orderInfo': 'Job order: drag by ≡ (or use ▲ ▼) – higher means more important.', 'wt.drag': 'Drag to change the order', 'wt.up': 'Up (more important)', 'wt.down': 'Down (less important)', 'wt.limitOf': 'People limit: {n}', 'wt.limit': 'limit: {n}', 'wt.noLimit': 'no limit', 'wt.stop': 'STOP',
   'wt.staff': '{a}/{b} workers', 'wt.paused': 'PAUSED', 'wt.stopped': 'STOPPED',
   // expeditions

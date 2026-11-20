@@ -115,3 +115,19 @@ describe('calc – głód', () => {
     expect(c.hungerDeaths).toBe(0)
   })
 })
+
+describe('calc – syntezator żywności', () => {
+  it('nie robi zapasów i nieużywany nie zużywa prądu', () => {
+    const s = newState(); s.pop = 400; s.b.house = 8; s.b.farm = 20; s.b.synth = 1; s.tech.synth = true
+    const off = { ...s, b: { ...s.b, synth: 0 } }
+    let c = calc(s)
+    expect(c.synthUse).toBe(0)
+    expect(c.synthFood).toBe(0)
+    expect(c.enNeed).toBeCloseTo(calc(off).enNeed)
+    s.b.farm = 0
+    c = calc(s)
+    expect(c.synthUse).toBeGreaterThan(0)
+    expect(c.foodProd).toBeLessThanOrEqual(c.foodCons + 1e-9)
+    expect(c.enNeed).toBeGreaterThan(calc({ ...s, b: { ...s.b, synth: 0 } }).enNeed)
+  })
+})

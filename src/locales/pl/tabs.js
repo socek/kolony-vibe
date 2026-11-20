@@ -38,7 +38,7 @@ export default {
   'wt.warn': p => '⚠ Brakuje specjalistów: ' + p.n + (p.sci > 0 ? ' (w tym ' + p.sci + ' naukowców – bez nich laboratoria i szpitale nie działają w pełni)' : '') + '. ' + (p.days ? 'Przy obecnym tempie szkoły nadrobią to za ok. ' + p.days + ' dni – zbuduj kolejną szkołę albo przesuń ją wyżej na liście zadań.' : 'Zbuduj szkołę (albo obsadź istniejącą), żeby kształcić specjalistów.'),
   'wt.toTarget': p => 'Do celu brakuje ' + p.n + ' specjalistów' + (p.days ? ' – szkoły nadrobią to za ok. ' + p.days + ' dni.' : ' – szkoła pozwoli ich wykształcić.'),
   'wt.infra': 'Infrastruktura', 'wt.infraInfo': 'Mieszkania, chłodnie, magazyny, baterie i osłony są zawsze obsadzane jako pierwsze.',
-  'wt.repairs': 'naprawy: {n} pkt/dzień', 'wt.hunt': '+{n} t żywności, ale fauna jest agresywniejsza',
+  'wt.repairs': 'naprawy: {n} pkt/dzień', 'wt.synth': 'wykorzystanie {p}%: +{n} t/dzień', 'wt.hunt': '+{n} t żywności, ale fauna jest agresywniejsza',
   'wt.orderInfo': 'Kolejność zadań: przeciągnij za ≡ (albo użyj ▲ ▼) – wyżej znaczy ważniej.', 'wt.drag': 'Przeciągnij, żeby zmienić kolejność', 'wt.up': 'Wyżej (ważniejsze)', 'wt.down': 'Niżej (mniej ważne)', 'wt.limitOf': 'Limit ludzi: {n}', 'wt.limit': 'limit: {n}', 'wt.noLimit': 'bez limitu', 'wt.stop': 'STOP',
   'wt.staff': '{a}/{b} prac.', 'wt.paused': 'WSTRZYMANE', 'wt.stopped': 'ZATRZYMANY',
   // wyprawy

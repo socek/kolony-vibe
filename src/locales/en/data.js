@@ -2,7 +2,7 @@
 export default {
   'bld.farm.n': 'Hydroponic farm', 'bld.farm.d': '+8 t of food per day',
   'bld.farm2.n': 'Aeroponic farm', 'bld.farm2.d': '+12 t of food per day – crops grown in a nutrient mist',
-  'bld.synth.n': 'Food synthesizer', 'bld.synth.d': '+14 t of food per day from protein synthesis – only 2 workers, but 8 kWh of power',
+  'bld.synth.n': 'Food synthesizer', 'bld.synth.d': 'up to 14 t of food per day from protein synthesis – only 2 workers. It makes no stock: it produces just what is missing for the day\'s consumption, and only then uses power (up to 8 kWh)',
   'bld.power.n': 'Solar power plant', 'bld.power.d': '+10 kWh of energy per day',
   'bld.power2.n': 'Graphene power plant', 'bld.power2.d': '+16 kWh of energy per day – efficient graphene cells',
   'bld.battery.n': 'Battery', 'bld.battery.d': '+25 kWh of energy storage',
