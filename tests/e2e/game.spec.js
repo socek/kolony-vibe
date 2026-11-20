@@ -382,3 +382,21 @@ test('samouczek: przycisk WYŁĄCZ SAMOUCZEK CAŁKOWICIE', async ({ page }) => {
   const st = await page.evaluate(() => JSON.parse(localStorage.getItem('kolony-vibe-settings')))
   expect(st.hints).toBe(false)
 })
+
+test('skróty klawiszowe: spacja, W, cyfry i Esc', async ({ page }) => {
+  await newGame(page)
+  await page.keyboard.press('Space')
+  await expect(page.getByText('DZIEŃ 2/365')).toBeVisible()
+  await expect(page.locator('.tw')).toHaveCount(0) // koniec animacji dnia – wtedy skróty znowu działają
+  await expect(page.getByRole('button', { name: '▶ KONIEC DNIA' })).toBeEnabled()
+  await page.keyboard.press('2')
+  await expect(page.locator('.tabs button.on')).toHaveText('BUDOWA')
+  await page.keyboard.press('7')
+  await expect(page.locator('.tabs button.on')).toHaveText('TECHNOLOGIE')
+  await page.keyboard.press('Escape')
+  await expect(page.getByRole('heading', { name: 'MENU' })).toBeVisible()
+  await page.keyboard.press('Escape')
+  await expect(page.getByRole('heading', { name: 'MENU' })).toBeHidden()
+  await page.keyboard.press('w')
+  await expect(page.getByText(/DZIEŃ (3|4|5|6|7|8|9)\/365/)).toBeVisible()
+})

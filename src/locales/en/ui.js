@@ -24,7 +24,8 @@ export default {
   'bar.decide': '⚠ DECISION!',
   'bar.endDay': '▶ END DAY',
   'bar.week': '▶▶ 7 DAYS',
-  'bar.weekTitle': 'Fast-forward up to 7 days – stops at important events',
+  'bar.weekTitle': 'Fast-forward up to 7 days – stops at important events (key: W)',
+  'bar.endTitle': 'Key: Space',
   'bar.devTitle': 'Developer menu',
   'bar.menuTitle': 'Menu',
   'turn.day': 'DAY {d}'

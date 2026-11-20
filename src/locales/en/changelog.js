@@ -3,6 +3,7 @@ export default {
   'log.wip': 'in preparation',
   'log.v.0.4': '0.4 (in development)',
   'log.items.0.4': [
+    'Keyboard shortcuts: Space – end day, W – 7 days, 1–8 – tabs, Esc – menu (listed in the RULES).',
     'The game in English: choose the language (PL/EN) on the start screen and in SETTINGS; on first launch the game picks it based on the browser language.',
     'A battery holds 25 kWh instead of 100. A new game starts with 4 batteries (100 kWh, as before), and in saved games each old battery turns into 4 new ones. A battery costs 35 cr and 20 t of minerals (instead of 130 cr and 70 t), one worker runs 4 batteries, and building one takes 4 times less work.',
     'The tutorial pop-up has a TURN THE TUTORIAL OFF COMPLETELY button and says where to turn it back on.',

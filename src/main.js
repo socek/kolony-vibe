@@ -1,7 +1,8 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import { initAudio } from './game/audio.js'
-import { syncMusic, ui, showScreen } from './store.js'
+import { syncMusic, ui, game, showScreen, closeScreen, goBack, closeHint, advance, setTab } from './store.js'
+import { setupKeys } from './keys.js'
 import { setupBackButton } from './backButton.js'
 import { initLang } from './i18n.js'
 import { setupAnalytics } from './analytics.js'
@@ -20,6 +21,7 @@ initLang()
 createApp(App).mount('#app')
 setupAnalytics(ui)
 setupBackButton(ui, showScreen)
+setupKeys({ ui, game, advance, setTab, showScreen, closeScreen, goBack, closeHint })
 
 // tryb offline (PWA): tylko w zbudowanej grze serwowanej przez http(s), nie z dysku
 if (import.meta.env.PROD && 'serviceWorker' in navigator && location.protocol.startsWith('http')) {

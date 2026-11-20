@@ -50,9 +50,10 @@ const layout = computed(() => {
 const queueList = computed(() => (s.value.rq || []).map(k => TECH[k].n))
 const selInfo = computed(() => sel.value && info(sel.value))
 // zamykanie okienka z opisem klawiszem Esc
-const onKey = e => { if (e.key === 'Escape') sel.value = null }
-onMounted(() => window.addEventListener('keydown', onKey))
-onUnmounted(() => window.removeEventListener('keydown', onKey))
+// (w fazie przechwytywania i z preventDefault, żeby globalny skrót Esc nie otwierał przy tym menu)
+const onKey = e => { if (e.key === 'Escape' && sel.value) { sel.value = null; e.preventDefault() } }
+onMounted(() => window.addEventListener('keydown', onKey, true))
+onUnmounted(() => window.removeEventListener('keydown', onKey, true))
 // po akcji (kolejka, badaj teraz, usuń) okienko się zamyka
 const act = (f, k) => { f(k); sel.value = null }
 

@@ -13,7 +13,7 @@ onUnmounted(() => window.removeEventListener('hashchange', check))
 <template>
   <div class="bar">
     <button v-if="game.s.pending" class="go decide" @click="showScreen('choice')">{{ t('bar.decide') }}</button>
-    <button v-else class="go" :disabled="ui.busy || !!game.s.over" @click="advance(1)">{{ t('bar.endDay') }}</button>
+    <button v-else class="go" :disabled="ui.busy || !!game.s.over" @click="advance(1)" :title="t('bar.endTitle')">{{ t('bar.endDay') }}</button>
     <button :disabled="ui.busy || !!game.s.over || !!game.s.pending" :title="t('bar.weekTitle')" @click="advance(7)">{{ t('bar.week') }}</button>
     <button v-if="devOn" :title="t('bar.devTitle')" @click="showScreen('dev')">DEV</button>
     <button title="Menu" @click="showScreen('menu')">≡</button>

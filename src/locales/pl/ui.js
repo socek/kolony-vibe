@@ -24,7 +24,8 @@ export default {
   'bar.decide': '⚠ DECYZJA!',
   'bar.endDay': '▶ KONIEC DNIA',
   'bar.week': '▶▶ 7 DNI',
-  'bar.weekTitle': 'Przewiń do 7 dni – zatrzymuje się przy ważnych wydarzeniach',
+  'bar.weekTitle': 'Przewiń do 7 dni – zatrzymuje się przy ważnych wydarzeniach (klawisz W)',
+  'bar.endTitle': 'Klawisz: spacja',
   'bar.devTitle': 'Menu deweloperskie',
   'bar.menuTitle': 'Menu',
   'turn.day': 'DZIEŃ {d}'

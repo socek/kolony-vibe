@@ -1,5 +1,6 @@
 // Zasady gry (ekran ZASADY)
 export default {
+  'help.keys': 'SKRÓTY KLAWISZOWE', 'help.keyList': ['Spacja – koniec dnia (albo decyzja do podjęcia)', 'W – przewiń 7 dni', '1–8 – zakładki', 'Esc – menu gry albo zamknięcie otwartego okna'],
   'help.intro': 'Jesteś gubernatorem kolonii na odległej planecie. Każda tura to jeden dzień. Gra oferuje kilka scenariuszy – każdy ma własny cel, historię i poziom trudności (trudniejszy scenariusz mnoży wynik). W obecnym scenariuszu ({scen}) masz {days} dni na cel: {goal}.',
   'help.rules': p => [
     'Pracować może zwykle 60% kolonistów (reszta to dzieci, seniorzy i opiekunowie). Wysokie morale dodaje do 10 pkt proc., niskie tyle samo odejmuje; szpitale i technologia Zautomatyzowane żłobki dodają po 5 pkt proc., a po epidemii chorzy przez kilka dni nie pracują. Odsetek mieści się między 40% a 80%. Najpierw obsadzane są mieszkania, chłodnie, magazyny, baterie i osłony, potem reszta zadań (budynki i budowniczowie) wg priorytetów z zakładki PRACOWNICY. Zatrzymany budynek nie produkuje ani nie zużywa energii, a jego pracownicy są bezrobotni.',

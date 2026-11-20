@@ -3,6 +3,7 @@ export default {
   'log.wip': 'w przygotowaniu',
   'log.v.0.4': '0.4 (in development)',
   'log.items.0.4': [
+    'Skróty klawiszowe: spacja – koniec dnia, W – 7 dni, 1–8 – zakładki, Esc – menu (lista w ZASADACH).',
     'Gra po angielsku: język (PL/EN) wybierasz na ekranie startowym i w USTAWIENIACH; przy pierwszym uruchomieniu gra wybiera go według języka przeglądarki.',
     'Bateria mieści 25 kWh zamiast 100. Nowa gra zaczyna się z 4 bateriami (tak jak dotąd 100 kWh), a w zapisanych grach każda dawna bateria zamienia się w 4 nowe. Bateria kosztuje 35 kr i 20 t minerałów (zamiast 130 kr i 70 t), obsługuje ją 1 pracownik na 4 baterie, a budowa jest 4 razy krótsza.',
     'Okienko samouczka ma przycisk WYŁĄCZ SAMOUCZEK CAŁKOWICIE i informację, gdzie go potem włączyć.',

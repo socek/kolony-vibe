@@ -1,5 +1,6 @@
 // Game rules (RULES screen)
 export default {
+  'help.keys': 'KEYBOARD SHORTCUTS', 'help.keyList': ['Space – end the day (or the decision to make)', 'W – fast-forward 7 days', '1–8 – tabs', 'Esc – game menu or close the open window'],
   'help.intro': 'You are the governor of a colony on a distant planet. Each turn is one day. The game offers several scenarios – each with its own goal, story and difficulty (a harder scenario multiplies your score). In the current scenario ({scen}) you have {days} days to reach the goal: {goal}.',
   'help.rules': p => [
     'Usually 60% of colonists can work (the rest are children, the elderly and their carers). High morale adds up to 10 points, low morale takes away as much; hospitals and the Automated Nurseries technology add 5 points each, and after an epidemic the sick cannot work for a few days. The share always stays between 40% and 80%. Housing, cold stores, warehouses, batteries and shields are staffed first, then the remaining jobs (buildings and builders) by the priorities in the WORKERS tab. A stopped building neither produces nor uses energy, and its workers are unemployed.',
