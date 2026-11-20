@@ -6,6 +6,8 @@ export default {
   'menu.help': 'RULES', 'menu.about': 'ABOUT', 'menu.log': 'CHANGELOG', 'menu.newGame': 'NEW GAME',
   'menu.continue': 'CONTINUE (day {d})',
 
+  'set.access': 'ACCESSIBILITY', 'set.size': 'Text and button size', 'set.size.m': 'NORMAL', 'set.size.l': 'LARGE', 'set.size.xl': 'EXTRA LARGE',
+  'set.contrast': 'High contrast (black background, brighter colours)',
   'set.lang': 'LANGUAGE', 'set.sound': 'SOUND',
   'set.music': 'Background music (changes with the situation in the colony)',
   'set.sfx': 'Sound effects',

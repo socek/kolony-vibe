@@ -43,8 +43,9 @@ localize(Object.fromEntries(STOPS.map(x => [x.k, x])), 'stop', ['n', 'why'])
 const KEY = 'kolony-vibe-settings'
 let stored = null
 try { stored = JSON.parse(localStorage.getItem(KEY) || 'null') } catch (e) { /* brak ustawień */ }
+// size – powiększenie gry (m / l / xl), contrast – tryb wysokiego kontrastu
 // short – skrócone komunikaty w raporcie (bez rad, co zrobić – dla zaawansowanych)
 // analytics – zgoda na Google Analytics: null (jeszcze nie zapytano), true, false
 // stops – powody zatrzymania przewijania, auto – automatyczne odpowiedzi na zdarzenia z wyborem
-export const settings = reactive({ stops: { ...stopDefaults(), ...(stored && stored.stops) }, auto: { ...(stored && stored.auto) }, chart: { range: 90, off: {}, ...(stored && stored.chart) }, hints: stored && stored.hints === false ? false : true, music: stored && stored.music === false ? false : true, hintOff: { ...(stored && stored.hintOff) }, analytics: stored && typeof stored.analytics === 'boolean' ? stored.analytics : null, short: !!(stored && stored.short) })
+export const settings = reactive({ stops: { ...stopDefaults(), ...(stored && stored.stops) }, auto: { ...(stored && stored.auto) }, chart: { range: 90, off: {}, ...(stored && stored.chart) }, hints: stored && stored.hints === false ? false : true, music: stored && stored.music === false ? false : true, hintOff: { ...(stored && stored.hintOff) }, analytics: stored && typeof stored.analytics === 'boolean' ? stored.analytics : null, short: !!(stored && stored.short), size: (stored && stored.size) || 'm', contrast: !!(stored && stored.contrast) })
 watch(settings, v => { try { localStorage.setItem(KEY, JSON.stringify(v)) } catch (e) { /* brak zapisu */ } }, { deep: true })

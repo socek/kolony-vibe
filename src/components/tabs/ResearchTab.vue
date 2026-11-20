@@ -64,9 +64,13 @@ const size = ref({ w: 0, h: 0 })
 function drawArrows() {
   const g = grid.value
   if (!g) return
-  const box = g.getBoundingClientRect()
+  // pozycje względem schematu z offset* (a nie getBoundingClientRect) – nie zależą od powiększenia strony (CSS zoom)
+  const box = { left: 0, top: 0, width: g.offsetWidth, height: g.offsetHeight }
   size.value = { w: box.width, h: box.height }
-  const rect = k => { const el = g.querySelector('[data-tech="' + k + '"]'); return el && el.getBoundingClientRect() }
+  const rect = k => {
+    const el = g.querySelector('[data-tech="' + k + '"]')
+    return el && { left: el.offsetLeft, top: el.offsetTop, width: el.offsetWidth, bottom: el.offsetTop + el.offsetHeight }
+  }
   const pos = layout.value
   // czy w kolumnie col między wierszami a i b (wyłącznie) stoi jakiś blok
   const blocked = (col, a, b) => Object.values(pos).some(p => p.col === col && p.row > a && p.row < b)

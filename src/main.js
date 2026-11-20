@@ -5,6 +5,8 @@ import { syncMusic, ui, game, showScreen, closeScreen, goBack, closeHint, advanc
 import { setupKeys } from './keys.js'
 import { setupBackButton } from './backButton.js'
 import { initLang } from './i18n.js'
+import { watchEffect } from 'vue'
+import { settings } from './game/stops.js'
 import { setupAnalytics } from './analytics.js'
 // czcionki dołączone do gry (działają offline): tylko alfabet łaciński z polskimi znakami
 import '@fontsource/vt323/latin.css'
@@ -18,6 +20,12 @@ document.addEventListener('click', () => { initAudio(); syncMusic() })
 
 // język: zapisany wybór albo język przeglądarki (przed pierwszym wyświetleniem)
 initLang()
+// dostępność: atrybuty na <html> sterują powiększeniem i kontrastem (style.css)
+watchEffect(() => {
+  const h = document.documentElement
+  if (settings.size && settings.size !== 'm') h.dataset.size = settings.size; else delete h.dataset.size
+  if (settings.contrast) h.dataset.contrast = ''; else delete h.dataset.contrast
+})
 createApp(App).mount('#app')
 setupAnalytics(ui)
 setupBackButton(ui, showScreen)

@@ -16,6 +16,12 @@ const reset = () => Object.assign(settings.stops, stopDefaults())
   <h1>{{ t('menu.settings') }}</h1>
   <div class="devh">{{ t('set.lang') }}</div>
   <div class="card"><LangSwitch /></div>
+  <div class="devh">{{ t('set.access') }}</div>
+  <div class="card">
+    <div class="row stopopt"><span>{{ t('set.size') }}</span>
+      <span class="pr" style="margin:0"><button v-for="z in ['m', 'l', 'xl']" :key="z" :class="{ on: settings.size === z }" @click="settings.size = z">{{ t('set.size.' + z) }}</button></span></div>
+    <label class="row stopopt"><span>{{ t('set.contrast') }}</span><input v-model="settings.contrast" type="checkbox"></label>
+  </div>
   <div class="devh">{{ t('set.sound') }}</div>
   <div class="card">
     <label class="row stopopt"><span>{{ t('set.music') }}</span><input v-model="settings.music" type="checkbox"></label>

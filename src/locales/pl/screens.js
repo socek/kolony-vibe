@@ -6,6 +6,8 @@ export default {
   'menu.help': 'ZASADY', 'menu.about': 'O GRZE', 'menu.log': 'ZMIANY', 'menu.newGame': 'NOWA GRA',
   'menu.continue': 'KONTYNUUJ (dzień {d})',
 
+  'set.access': 'DOSTĘPNOŚĆ', 'set.size': 'Wielkość tekstu i przycisków', 'set.size.m': 'NORMALNA', 'set.size.l': 'DUŻA', 'set.size.xl': 'BARDZO DUŻA',
+  'set.contrast': 'Wysoki kontrast (czarne tło, jaśniejsze kolory)',
   'set.lang': 'JĘZYK', 'set.sound': 'DŹWIĘK',
   'set.music': 'Muzyka w tle (zmienia się zależnie od sytuacji w kolonii)',
   'set.sfx': 'Efekty dźwiękowe',

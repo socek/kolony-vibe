@@ -400,3 +400,15 @@ test('skróty klawiszowe: spacja, W, cyfry i Esc', async ({ page }) => {
   await page.keyboard.press('w')
   await expect(page.getByText(/DZIEŃ (3|4|5|6|7|8|9)\/365/)).toBeVisible()
 })
+
+test('dostępność: wielkość tekstu i wysoki kontrast', async ({ page }) => {
+  await newGame(page)
+  await page.getByTitle('Menu', { exact: true }).click()
+  await page.getByRole('button', { name: 'USTAWIENIA' }).click()
+  await page.getByRole('button', { name: 'BARDZO DUŻA' }).click()
+  await page.getByLabel('Wysoki kontrast (czarne tło, jaśniejsze kolory)').check()
+  await expect(page.locator('html')).toHaveAttribute('data-size', 'xl')
+  await expect(page.locator('html')).toHaveAttribute('data-contrast', '')
+  await page.getByRole('button', { name: 'NORMALNA' }).click()
+  await expect(page.locator('html')).not.toHaveAttribute('data-size', /./)
+})
