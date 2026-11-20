@@ -1,6 +1,6 @@
 // Zasady gry (ekran ZASADY)
 export default {
-  'help.keys': 'SKRÓTY KLAWISZOWE', 'help.keyList': ['Spacja – koniec dnia (albo decyzja do podjęcia)', 'W – przewiń 7 dni', '1–8 – zakładki', 'Esc – menu gry albo zamknięcie otwartego okna'],
+  'help.keys': 'SKRÓTY KLAWISZOWE', 'help.keyList': ['Spacja – koniec dnia (albo decyzja do podjęcia)', 'W – przewiń 7 dni', '1–9 – zakładki', 'Esc – menu gry albo zamknięcie otwartego okna'],
   'help.intro': 'Jesteś gubernatorem kolonii na odległej planecie. Każda tura to jeden dzień. Gra oferuje kilka scenariuszy – każdy ma własny cel, historię i poziom trudności (trudniejszy scenariusz mnoży wynik). W obecnym scenariuszu ({scen}) masz {days} dni na cel: {goal}.',
   'help.introFree': 'Jesteś gubernatorem kolonii na odległej planecie. Każda tura to jeden dzień. W obecnym scenariuszu ({scen}) nie ma celu ani limitu dni – budujesz, ile chcesz, ale głód, bunt i bankructwo nadal kończą grę.',
   'help.rules': p => [

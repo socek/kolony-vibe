@@ -1,6 +1,6 @@
 import { TABS } from './game/constants.js'
 
-// Skróty klawiszowe (komputer): spacja – koniec dnia (albo decyzja), W – 7 dni, 1–8 – zakładki,
+// Skróty klawiszowe (komputer): spacja – koniec dnia (albo decyzja), W – 7 dni, 1–9 – zakładki,
 // Esc – menu gry (albo zamknięcie otwartego ekranu). Nie działają podczas pisania w polach formularzy.
 export function setupKeys({ ui, game, advance, setTab, showScreen, closeScreen, goBack, closeHint }) {
   window.addEventListener('keydown', e => {

@@ -23,7 +23,7 @@ test('angielska przeglądarka: gra startuje po angielsku i da się w nią grać'
   await expect(page.getByText("GOVERNOR'S TERM")).toBeVisible()
   await page.getByRole('button', { name: '▶ END DAY' }).click()
   await expect(page.locator('.panel')).toContainText('REPORT FOR THE LAST DAY')
-  for (const tab of ['BUILD', 'WORKERS', 'EXPEDITIONS', 'EMPIRE', 'POLICY', 'TECHNOLOGIES', 'STATISTICS']) {
+  for (const tab of ['BUILD', 'WORKERS', 'EXPEDITIONS', 'EMPIRE', 'POLICY', 'TECHNOLOGIES', 'STATISTICS', 'COLONY']) {
     await page.locator('.tabs').getByRole('button', { name: tab, exact: true }).click()
     // żadnych polskich znaków w treści zakładki
     expect(await page.locator('.panel').innerText()).not.toMatch(/[ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/)

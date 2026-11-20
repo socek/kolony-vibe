@@ -174,3 +174,24 @@ html[data-contrast] .card{border-top-color:#888}
 .law{margin-top:8px;padding:4px 6px;border-left:3px solid transparent}.law.on{border-left-color:var(--yellow);background:var(--deep)}
 .savecode{width:100%;min-height:70px;margin-top:6px;font-family:'VT323',monospace;font-size:15px;background:var(--deep);color:var(--white);border:1px solid var(--text);word-break:break-all}
 .filebtn{font-size:21px;background:var(--text);color:var(--screen);padding:4px 10px;cursor:pointer}.filebtn:hover{background:var(--white)}.filebtn input{display:none}
+/* mapa kolonii (zakładka KOLONIA) */
+.cmap{position:relative;overflow:hidden;padding:10px;border:2px solid var(--text);background:#4a4a5a;background-image:radial-gradient(rgba(255,255,255,.08) 1px,transparent 1px);background-size:12px 12px;min-height:200px}
+.cmap.ground-purr{background-color:#3d6b3a}.cmap.ground-splash{background-color:#2a5d8a}.cmap.ground-sill{background-color:#101030;background-image:radial-gradient(#fff 1px,transparent 1px);background-size:37px 29px}
+.cmap.ground-ice{background-color:#7c9cb0}.cmap.ground-ticktock{background-color:#4b3a6e}.cmap.ground-sandbox{background-color:#9a8450}
+html[data-contrast] .cmap{background-color:#000}
+.zone{position:relative;z-index:1;border:2px dashed var(--g);background:rgba(36,27,94,.55);padding:4px 6px 6px;margin-bottom:10px}
+.zname{font-size:15px;color:var(--g);margin-bottom:4px}
+.ztiles{display:flex;flex-wrap:wrap;gap:4px}
+.mtile{position:relative;width:40px;height:40px;background:rgba(0,0,0,.25);display:flex;align-items:center;justify-content:center}
+.mtile .ic{width:32px;height:32px;margin:0}
+.mtile.broken{outline:2px solid var(--red);animation:mblink 1s steps(1) infinite}
+@keyframes mblink{50%{outline-color:transparent}}
+.mtile.site>.ic{opacity:.35}
+.mtile .scaf{position:absolute;inset:4px}.mtile .scaf .ic{width:32px;height:32px;opacity:.9}
+.mtile .sbar{position:absolute;left:2px;right:2px;bottom:1px;height:4px;background:var(--deep)}.mtile .sbar i{display:block;height:100%;background:var(--yellow)}
+.walkers{position:absolute;inset:0;pointer-events:none;z-index:2}
+.walker{position:absolute;left:-20px;animation:walk linear infinite}.walker .ic{width:14px;height:14px;margin:0}
+.walker.back{animation-name:walkback}.walker.back .ic{transform:scaleX(-1)}
+@keyframes walk{from{left:-20px}to{left:100%}}
+@keyframes walkback{from{left:100%}to{left:-20px}}
+@media(prefers-reduced-motion:reduce){.walker,.mtile.broken{animation:none}.walker{display:none}}

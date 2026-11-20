@@ -86,7 +86,7 @@ export const DAYS = 365, YEAR = 2150, KEY = 'kolony-vibe-v2'
 export const INFRA = ['battery', 'fridge', 'store', 'house', 'shield', 'platform', 'module', 'golf']
 export const JOBS = ['build', 'repair', 'farm', 'farm2', 'synth', 'power', 'power2', 'mine', 'mine2', 'school', 'hosp', 'rec', 'lab', 'port', 'gun', 'hunt', 'kelp', 'geo', 'icefac', 'fence', 'pen', 'gallery']
 export const PRIO = [[0], [1], [2], [3]]
-export const TABS = [['raport'], ['budowa'], ['praca'], ['wyprawy'], ['rynek'], ['polityka'], ['nauka'], ['statystyki']]
+export const TABS = [['raport'], ['budowa'], ['praca'], ['wyprawy'], ['rynek'], ['polityka'], ['nauka'], ['statystyki'], ['kolonia']]
 export const RATIONS = [[0.75], [1], [1.25]]
 export const MDAYS = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 

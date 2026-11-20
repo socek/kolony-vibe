@@ -31,6 +31,20 @@ export const ICONS = {
   github: ['.a....a.', '.aaaaaa.', 'aaaaaaaa', 'aa.aa.aa', 'aaaaaaaa', '.aaaaaa.', '..aaaa..', '.a.aa.a.'],
   youtube: ['........', '.hhhhhh.', 'hhhahhhh', 'hhhaahhh', 'hhhaaahh', 'hhhaahhh', 'hhhahhhh', '.hhhhhh.'],
   twitch: ['gggggggg', 'g......g', 'g.a..a.g', 'g.a..a.g', 'g......g', 'gggg.ggg', '...g.g..', '...gg...'],
+  synth: ['.ffffff.', 'f......f', 'f.cccc.f', 'f.cccc.f', 'f......f', 'ffffffff', '.d....d.', '.dd..dd.'],
+  school: ['...d....', '...dd...', '...a....', '.aaaaaa.', 'aaaaaaaa', 'a.a..a.a', 'a.a..a.a', 'aaaaaaaa'],
+  hosp: ['.aaaaaa.', 'aaaddaaa', 'aaaddaaa', 'adddddda', 'adddddda', 'aaaddaaa', 'aaaddaaa', '.aaaaaa.'],
+  fence: ['.e....e.', 'e.e..e.e', '........', 'f.f.f.f.', 'ffffffff', 'f.f.f.f.', 'f.f.f.f.', 'ffffffff'],
+  pen: ['........', 'ffffffff', 'f......f', 'f.bbbb.f', 'f.b.bb.f', 'f.bbbb.f', 'f......f', 'ffffffff'],
+  kelp: ['.c...c..', '.cc.cc..', '..c.c.c.', '.cc.cc.c', '..ccc.c.', 'eeeeeeee', 'e.e.e.e.', 'eeeeeeee'],
+  platform: ['........', '........', 'ffffffff', 'f.f..f.f', 'ffffffff', '.e.e.e.e', 'e.e.e.e.', 'eeeeeeee'],
+  golf: ['..dd....', '..ddd...', '..dd....', '..f.....', '..f.....', '..f...a.', 'cccccccc', 'eeeeeeee'],
+  module: ['..eeee..', '.eaeeae.', 'eeeeeeee', 'eaeeeeae', 'eeeeeeee', '.eeeeee.', '..e..e..', '..e..e..'],
+  gallery: ['ffffffff', 'feeeeeef', 'feaeeaef', 'feeeeeef', 'feeaeeef', 'feeeeeef', 'ffffffff', 'bbbbbbbb'],
+  geo: ['.a..a...', 'a..a..a.', '.a..a...', '..dddd..', '.dddddd.', 'dd.dd.dd', 'dddddddd', 'dddddddd'],
+  icefac: ['.aaaaaa.', 'aeeeeeea', 'aeaeeeea', 'aeeeeeea', 'aeeeeeea', 'aeeeeeea', 'aeeeeeea', '.aaaaaa.'],
+  site: ['b......b', 'bbbbbbbb', 'b.b..b.b', 'bb.bb.bb', 'b.b..b.b', 'bbbbbbbb', 'b......b', 'b......b'],
+  colonist: ['..aa....', '..aa....', '.aaaa...', 'a.aa.a..', '..aa....', '.a..a...', '.a..a...', '........'],
   port: ['...aa...', '..aaaa..', '..aeea..', '..aaaa..', '.aaaaaa.', 'aa.aa.aa', '...dd...', '..d..d..']
 }
 

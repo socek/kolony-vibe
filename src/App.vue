@@ -16,8 +16,9 @@ import PolicyTab from './components/tabs/PolicyTab.vue'
 import ResearchTab from './components/tabs/ResearchTab.vue'
 import ExpeditionsTab from './components/tabs/ExpeditionsTab.vue'
 import StatsTab from './components/tabs/StatsTab.vue'
+import MapTab from './components/tabs/MapTab.vue'
 
-const PANELS = { raport: ReportTab, budowa: BuildTab, praca: WorkTab, wyprawy: ExpeditionsTab, rynek: MarketTab, polityka: PolicyTab, nauka: ResearchTab, statystyki: StatsTab }
+const PANELS = { raport: ReportTab, budowa: BuildTab, praca: WorkTab, wyprawy: ExpeditionsTab, rynek: MarketTab, polityka: PolicyTab, nauka: ResearchTab, statystyki: StatsTab, kolonia: MapTab }
 import ConsentBar from './components/ConsentBar.vue'
 
 // po rozegraniu dni przewiń tak, żeby początek raportu był na górze ekranu

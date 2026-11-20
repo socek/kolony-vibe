@@ -1,6 +1,6 @@
 // Game rules (RULES screen)
 export default {
-  'help.keys': 'KEYBOARD SHORTCUTS', 'help.keyList': ['Space – end the day (or the decision to make)', 'W – fast-forward 7 days', '1–8 – tabs', 'Esc – game menu or close the open window'],
+  'help.keys': 'KEYBOARD SHORTCUTS', 'help.keyList': ['Space – end the day (or the decision to make)', 'W – fast-forward 7 days', '1–9 – tabs', 'Esc – game menu or close the open window'],
   'help.intro': 'You are the governor of a colony on a distant planet. Each turn is one day. The game offers several scenarios – each with its own goal, story and difficulty (a harder scenario multiplies your score). In the current scenario ({scen}) you have {days} days to reach the goal: {goal}.',
   'help.introFree': 'You are the governor of a colony on a distant planet. Each turn is one day. In the current scenario ({scen}) there is no goal and no day limit – you build as much as you like, but famine, revolt and bankruptcy still end the game.',
   'help.rules': p => [

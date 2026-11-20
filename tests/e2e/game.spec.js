@@ -33,7 +33,7 @@ test('ekran startowy i nowa gra', async ({ page }) => {
   await page.getByRole('button', { name: 'ROZPOCZNIJ' }).click()
   await expect(page.getByText('ZLECENIODAWCA')).toBeVisible()
   await page.getByRole('button', { name: 'DO DZIEŁA!' }).click()
-  await expect(page.locator('.tabs button')).toHaveCount(8)
+  await expect(page.locator('.tabs button')).toHaveCount(9)
   await expect(page.getByText('CEL: 1000 OSÓB')).toBeVisible()
   await expect(page.getByText('1 STY 2150 · DZIEŃ 1/365')).toBeVisible()
 })
@@ -493,4 +493,15 @@ test('udostępnianie wyniku: tekst w schowku i obrazek', async ({ page, context 
   const d = await dl
   expect(d.suggestedFilename()).toBe('kolony-vibe-moon.png')
   if (process.env.SHOT) await d.saveAs(process.env.SHOT)
+})
+
+test('zakładka KOLONIA: mapa z budynkami i placem budowy', async ({ page }) => {
+  await newGame(page)
+  await tab(page, 'BUDOWA')
+  await page.getByRole('button', { name: 'BUDUJ' }).first().click()
+  await tab(page, 'KOLONIA')
+  // Księżyc na starcie: 3 farmy, 2 elektrownie, 4 baterie, chłodnia, magazyn, kopalnia, 2 moduły = 14 budynków
+  await expect(page.locator('.mtile:not(.site)')).toHaveCount(14)
+  await expect(page.locator('.mtile.site')).toHaveCount(1)
+  await expect(page.getByText('budynki: 14 · place budowy: 1 · awarie: 0')).toBeVisible()
 })
