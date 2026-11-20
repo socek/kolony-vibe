@@ -9,6 +9,8 @@ export const versionLabel = (upper = false) => {
 export const CHANGELOG = [
   {
     v: '0.3 „Merveil” (in development)', d: 'w przygotowaniu', items: [
+      'Wyprawy wybierają cel poszukiwań: złoża, ruiny (punkty badań), wraki (kredyty, minerały, części do technologii) albo osadnicy (handel, nowi koloniści, konflikt lub stała osada sąsiedzka z handlem w zakładce RYNEK). Żołnierze i inżynierowie mogą dołączyć do ekipy.',
+      'Szpitale osłabiają też epidemie.',
       'Specjaliści: naukowcy, inżynierowie i żołnierze pracują o 50% wydajniej na swoich stanowiskach. Nowe budynki: szkoła (kształci specjalistów) i szpital (słabsze epidemie, mniej zgonów z głodu, tylko naukowcy). Laboratoria obsadzają tylko naukowcy.',
       'Zlecenia Ludzkiej Unii Jedności (zakładka RYNEK): dostawy żywności, minerałów i energii, wysłanie kolonistów, zbadanie technologii. Różne terminy, nagrody i kary; reputacja u LUJ zmienia wysokość nagród.',
       'Zakładka STATYSTYKI: wykresy wszystkich zasobów dzień po dniu, wybór zakresu, znaczniki wydarzeń, ukrywanie serii.',

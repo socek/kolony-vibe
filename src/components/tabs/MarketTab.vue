@@ -2,6 +2,8 @@
 import { computed } from 'vue'
 import { game, ui, prices, sell, buy, acceptOrder, deliverOrder } from '../../store.js'
 import { orderTitle, rewardText, penaltyText, canAccept, canDeliver } from '../../game/orders.js'
+import { NB_TRADES, nbWait } from '../../game/expeditions.js'
+import { neighborTrade } from '../../store.js'
 import { daysTxt } from '../../game/format.js'
 import { RES, capOf } from '../../game/constants.js'
 import { fmt } from '../../game/format.js'
@@ -30,6 +32,14 @@ const rows = computed(() => Object.entries(RES).map(([k, r]) => {
       <div class="row"><span>OFERTA: {{ orderTitle(x) }}</span><span class="small">wygasa za {{ daysTxt(Math.max(1, x.expires - s.m + 1)) }}</span></div>
       <div class="small">{{ x.who }} – {{ x.why }}. Czas na wykonanie: {{ daysTxt(x.days) }}. Nagroda: <span class="pos">{{ rewardText(x) }}</span> · kara: <span class="neg">{{ penaltyText(x) }}</span></div>
       <div class="row small"><span class="neg">{{ canAccept(s, x.id) }}</span><button :disabled="!!canAccept(s, x.id)" @click="acceptOrder(x.id)">PRZYJMIJ</button></div>
+    </div>
+  </div>
+  <div v-if="s.nb" class="card">
+    <div class="t"><PixelIcon name="pop" />OSADA SĄSIEDZKA „{{ s.nb.n.toUpperCase() }}”</div>
+    <div class="small">Sąsiedzi chętnie handlują, ale każdą wymianę można powtórzyć dopiero po 7 dniach.</div>
+    <div v-for="t in NB_TRADES" :key="t.k" class="row small" style="margin-top:4px">
+      <span>{{ t.n }} ({{ t.d }})<span v-if="nbWait(s, t.k)" class="warn"> – za {{ daysTxt(nbWait(s, t.k)) }}</span><span v-else-if="t.need(s)" class="neg"> – {{ t.need(s) }}</span></span>
+      <button :disabled="!!nbWait(s, t.k) || !!t.need(s)" @click="neighborTrade(t.k)">WYMIEŃ</button>
     </div>
   </div>
   <div class="row qty">

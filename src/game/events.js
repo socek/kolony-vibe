@@ -23,7 +23,7 @@ export const EVENTS = [
     s.b[k]--; s.mor -= 4
     return 'DESZCZ METEORYTÓW! Zniszczony budynek: ' + BLD[k].n + '.' + (defRed > 0 ? ' Działa nie zdołały zestrzelić odłamków.' : '') + gunHit
   },
-  s => { const d = s.pop * (s.tech.med ? 0.03 : 0.08); s.pop -= d; s.mor -= 5; return 'EPIDEMIA! Zmarło ' + Math.round(d) + ' kolonistów.' },
+  s => { const d = s.pop * (s.tech.med ? 0.03 : 0.08) * (1 - 0.5 * calc(s).hospRed); s.pop -= d; s.mor -= 5; return 'EPIDEMIA! Zmarło ' + Math.round(d) + ' kolonistów.' },
   s => { s.food += 100; s.min += 60; return 'Statek zaopatrzeniowy z Ziemi: +100 t żywności, +60 t minerałów.' },
   s => { const l = Math.round(s.energy * 0.5); if (l < 5) return null; s.energy -= l; return 'Rozbłysk słoneczny! Utracono ' + l + ' kWh energii.' },
   s => { const n = depositName('tuż obok kolonii'), t = addDeposit(s, n, 150 + Math.random() * 250); return 'Geolodzy przypadkiem odkryli nowe złoże: ' + n + ' – ' + t + ' t.' },

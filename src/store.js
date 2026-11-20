@@ -7,7 +7,7 @@ import { EVENTS } from './game/events.js'
 import { dateOf } from './game/format.js'
 import { beep } from './game/audio.js'
 import { settings, stopWhy } from './game/stops.js'
-import { sendExpedition, addDeposit } from './game/expeditions.js'
+import { sendExpedition, addDeposit, nbTrade } from './game/expeditions.js'
 import { startCampaign } from './game/campaigns.js'
 import { accept, deliver, makeOffer, ensureOrders } from './game/orders.js'
 import { queueTech, unqueueTech, researchNow, nextResearch } from './game/research.js'
@@ -21,7 +21,7 @@ const resumable = saved && !saved.over ? saved : null
 // game.s – stan gry (zapisywany), ui – stan interfejsu
 export const game = reactive({ s: resumable || newState() })
 export const ui = reactive({
-  tab: 'raport', qty: 50, expRange: 'near', expTeam: 5, screen: 'boot', busy: false, turn: null, devMsg: '',
+  tab: 'raport', qty: 50, expRange: 'near', expTeam: 5, expGoal: 'dep', expSol: 0, expEng: 0, screen: 'boot', busy: false, turn: null, devMsg: '',
   savedDay: resumable ? resumable.m : null, saveDropped: loaded.dropped, lastPlace: null
 })
 export const c = computed(() => calc(game.s))
@@ -69,7 +69,8 @@ export function setRation(r) { game.s.ration = r; persist() }
 export function setTax(v) { game.s.tax = v }
 export const saveNow = persist
 export function setPrio(k, l) { game.s.prio[k] = l; beep(600, 0.03); persist() }
-export function sendExp() { if (sendExpedition(game.s, ui.expRange, ui.expTeam)) { beep(440, 0.12); persist() } }
+export function sendExp() { if (sendExpedition(game.s, ui.expRange, ui.expTeam, ui.expGoal, ui.expSol, ui.expEng)) { ui.expSol = 0; ui.expEng = 0; beep(440, 0.12); persist() } }
+export function neighborTrade(k) { if (nbTrade(game.s, k)) { beep(740, 0.05); persist() } }
 export function campaign(k) { if (startCampaign(game.s, k)) { beep(700, 0.1); persist() } }
 // decyzja w zdarzeniu z wyborem
 export function decide(i) {

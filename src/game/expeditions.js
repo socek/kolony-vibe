@@ -1,5 +1,6 @@
 // Złoża minerałów i wyprawy poszukiwawcze
 import { bumpStat } from './badges.js'
+import { TECH, techReady, houseCapOf } from './constants.js'
 
 export const START_DEPOSIT = 1200
 export const MIN_POP_LEFT = 20 // tylu kolonistów musi zostać w kolonii
@@ -51,21 +52,72 @@ export function extract(s, amount) {
   return gone
 }
 
-export function canSend(s, rk, team) {
-  const r = rangeOf(rk), t = teamOf(team), cost = expCost(r, t, s)
+// Cele poszukiwań: wybrany cel ma wysoką szansę, każdy inny – bardzo niską (OTHER_CHANCE)
+export const GOALS = [
+  { k: 'dep', n: 'ZŁOŻA', d: 'nowe złoże minerałów' },
+  { k: 'ruins', n: 'RUINY', d: 'punkty badań z ruin dawnych osadników' },
+  { k: 'wreck', n: 'WRAKI', d: 'kredyty, minerały albo części do technologii' },
+  { k: 'settlers', n: 'OSADNICY', d: 'kontakt z innymi osadnikami' }
+]
+export const OTHER_CHANCE = 0.05
+export const MAX_SPEC_IN_TEAM = 2
+const NB_NAMES = ['Nowe Bajoro', 'Osada Pod Skałą', 'Przystań Uparciuchów', 'Kolonia Wieczny Poniedziałek', 'Wioska Zagubionych Bagaży']
+
+export function canSend(s, rk, team, sol = 0, eng = 0) {
+  const r = rangeOf(rk), t = teamOf(team), cost = expCost(r, t, s), sp = s.spec || {}
   if (r.req && !s.tech[r.req]) return 'Ten cel wymaga technologii.'
   if (s.cr < cost.cr) return 'Brakuje kredytów na sprzęt.'
   if (s.food < cost.food) return 'Brakuje żywności na prowiant.'
   if (s.pop - t.n < MIN_POP_LEFT) return 'W kolonii musi zostać co najmniej ' + MIN_POP_LEFT + ' osób.'
+  if (sol > (sp.sol || 0)) return 'Za mało żołnierzy.'
+  if (eng > (sp.eng || 0)) return 'Za mało inżynierów.'
   return ''
 }
 
-export function sendExpedition(s, rk, team) {
-  if (canSend(s, rk, team)) return false
+// sol / eng – żołnierze i inżynierowie w ekipie (wliczani w liczebność ekipy)
+export function sendExpedition(s, rk, team, goal = 'dep', sol = 0, eng = 0) {
+  if (canSend(s, rk, team, sol, eng)) return false
   const r = rangeOf(rk), t = teamOf(team), cost = expCost(r, t, s)
   s.cr -= cost.cr; s.food -= cost.food; s.pop -= t.n
-  s.exp.push({ r: rk, team: t.n, left: expDays(r, s), days: expDays(r, s) })
+  if (s.spec) { s.spec.sol -= sol; s.spec.eng -= eng }
+  s.exp.push({ r: rk, team: t.n, left: expDays(r, s), days: expDays(r, s), goal, sol, eng })
   return true
+}
+
+// punkty badań: do bieżącego projektu albo pierwszej dostępnej technologii (inaczej – kredyty)
+function addResearch(s, pts) {
+  const k = s.rs || Object.keys(TECH).find(t => !s.tech[t] && techReady(s, t))
+  if (!k) { s.cr += pts * 5; return pts * 5 + ' kr (nie było czego badać)' }
+  s.rp[k] = (s.rp[k] || 0) + pts
+  return pts + ' pkt badań (' + TECH[k].n + ')'
+}
+
+// znalezisko danego rodzaju; zwraca opis
+function find(s, kind, x, r, t) {
+  const rnd = Math.random, eng = x.eng || 0, scale = t.mult * (r.days / 10)
+  if (kind === 'dep') {
+    const name = depositName(r.places[Math.floor(rnd() * r.places.length)])
+    const size = addDeposit(s, name, (r.size[0] + rnd() * (r.size[1] - r.size[0])) * t.mult * (1 + 0.1 * eng))
+    return 'odkryto ' + name + ' – ' + size + ' t'
+  }
+  if (kind === 'ruins') return 'w ruinach znaleziono zapiski: ' + addResearch(s, Math.round((20 + rnd() * 60) * scale))
+  if (kind === 'wreck') {
+    const m = scale * (1 + 0.5 * eng), roll = rnd()
+    if (roll < 0.4) { const v = Math.round((100 + rnd() * 300) * m); s.cr += v; return 'z wraku odzyskano sprzęt wart ' + v + ' kr' }
+    if (roll < 0.75) { const v = Math.round((80 + rnd() * 220) * m); s.min += v; return 'z wraku odzyskano ' + v + ' t minerałów' }
+    return 'z wraku wymontowano części do technologii: ' + addResearch(s, Math.round((15 + rnd() * 45) * m))
+  }
+  // osadnicy
+  const roll = rnd()
+  if (!s.nb && roll < 0.25) {
+    s.nb = { n: NB_NAMES[Math.floor(rnd() * NB_NAMES.length)], cd: {} }
+    return 'odkryto stałą osadę sąsiedzką „' + s.nb.n + '” – można z nią handlować (zakładka RYNEK)'
+  }
+  if (roll < 0.55) { s.food += 120; s.cr += 100; return 'osadnicy wymienili się towarami: +120 t żywności i 100 kr' }
+  if (roll < 0.8) { const n = Math.round(Math.min(5 + rnd() * 10, Math.max(0, houseCapOf(s) - s.pop))); s.pop += n; return n ? n + ' osadników postanowiło dołączyć do kolonii' : 'osadnicy chcieli dołączyć, ale nie ma dla nich miejsca' }
+  const loss = Math.max(0, Math.round((1 + rnd() * 3) * (1 - 0.4 * (x.sol || 0))))
+  s.pop -= Math.min(loss, s.pop)
+  return loss ? 'spotkanie z osadnikami skończyło się bójką – zginęło ' + loss + ' kolonistów' : 'osadnicy byli wrogo nastawieni, ale żołnierze załagodzili sytuację'
 }
 
 // Jeden dzień wypraw; note(tekst, klasa) dopisuje do raportu. Zwraca liczbę wypraw, które wróciły.
@@ -75,20 +127,41 @@ export function tickExpeditions(s, note) {
   s.exp = s.exp.filter(x => {
     if (x.left > 0) return true
     back++
-    const r = rangeOf(x.r), t = teamOf(x.team)
+    const r = rangeOf(x.r), t = teamOf(x.team), goal = x.goal || 'dep', sol = x.sol || 0, eng = x.eng || 0
+    // żołnierze zmniejszają ryzyko strat o 30% każdy
     let alive = x.team
-    if (Math.random() < expRisk(r, s)) alive -= Math.max(1, Math.round(x.team * (0.1 + Math.random() * 0.2)))
+    if (Math.random() < expRisk(r, s) * Math.max(0, 1 - 0.3 * sol)) alive -= Math.max(1, Math.round(x.team * (0.1 + Math.random() * 0.2)))
+    const lost = x.team - alive
+    // straty najpierw wśród zwykłych uczestników, potem wśród specjalistów
+    let specLost = Math.max(0, lost - (x.team - sol - eng))
+    const solLost = Math.min(sol, specLost); specLost -= solLost
+    const engLost = Math.min(eng, specLost)
     s.pop += alive
-    if (alive === x.team) bumpStat(s, 'expClean')
-    const lost = x.team - alive, lostTxt = lost ? ' Zginęło ' + lost + ' z ' + x.team + ' uczestników.' : ''
-    if (Math.random() < expChance(r, t, s)) {
-      const name = depositName(r.places[Math.floor(Math.random() * r.places.length)])
-      const size = addDeposit(s, name, (r.size[0] + Math.random() * (r.size[1] - r.size[0])) * t.mult)
-      note('★ Wyprawa (' + r.n + ') wróciła: odkryto ' + name + ' – ' + size + ' t.' + lostTxt, lost ? 'warn' : 'pos')
-    } else {
-      note('Wyprawa (' + r.n + ') wróciła z niczym.' + lostTxt, lost ? 'neg' : 'warn')
-    }
+    if (s.spec) { s.spec.sol += sol - solLost; s.spec.eng += eng - engLost }
+    if (!lost) bumpStat(s, 'expClean')
+    const lostTxt = lost ? ' Zginęło ' + lost + ' z ' + x.team + ' uczestników.' : ''
+    const finds = []
+    const main = goal === 'dep' ? expChance(r, t, s) : Math.min(0.95, r.chance + t.bonus)
+    if (Math.random() < main) finds.push(find(s, goal, x, r, t))
+    for (const g of GOALS) if (g.k !== goal && Math.random() < OTHER_CHANCE) finds.push('przy okazji: ' + find(s, g.k, x, r, t))
+    const what = GOALS.find(g => g.k === goal).n.toLowerCase()
+    if (finds.length) note('★ Wyprawa (' + r.n + ', cel: ' + what + ') wróciła: ' + finds.join('; ') + '.' + lostTxt, lost ? 'warn' : 'pos')
+    else note('Wyprawa (' + r.n + ', cel: ' + what + ') wróciła z niczym.' + lostTxt, lost ? 'neg' : 'warn')
     return false
   })
   return back
+}
+
+// Handel z osadą sąsiedzką: każda wymiana raz na 7 dni
+export const NB_TRADES = [
+  { k: 'food', n: 'Kup 50 t żywności', d: '−150 kr, +50 t żywności', need: s => s.cr < 150 ? 'Brakuje kredytów.' : '', run: s => { s.cr -= 150; s.food += 50 } },
+  { k: 'min', n: 'Sprzedaj 50 t minerałów', d: '−50 t minerałów, +400 kr', need: s => s.min < 50 ? 'Brakuje minerałów.' : '', run: s => { s.min -= 50; s.cr += 400 } },
+  { k: 'people', n: 'Zaproś rodziny osadników', d: '−200 kr, +8 kolonistów (jeśli jest miejsce)', need: s => s.cr < 200 ? 'Brakuje kredytów.' : houseCapOf(s) - s.pop < 8 ? 'Brak miejsca w modułach mieszkalnych.' : '', run: s => { s.cr -= 200; s.pop += 8 } }
+]
+export function nbWait(s, k) { return s.nb ? Math.max(0, (s.nb.cd[k] || 0) - s.m) : 0 }
+export function nbTrade(s, k) {
+  const t = NB_TRADES.find(x => x.k === k)
+  if (!s.nb || !t || nbWait(s, k) || t.need(s)) return false
+  t.run(s); s.nb.cd[k] = s.m + 7
+  return true
 }

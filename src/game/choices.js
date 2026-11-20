@@ -36,7 +36,7 @@ export const CHOICES = {
         n: 'Przyjmij', d: () => 'Nowi koloniści (jeśli jest miejsce), ale choroba może się rozprzestrzenić.',
         run: s => {
           const n = R(Math.min(15, Math.max(0, calc(s).cap - s.pop))); s.pop += n
-          if (rnd() < 0.5) { const d = R(s.pop * (s.tech.med ? 0.02 : 0.05)); s.pop -= d; return 'Przyjęto ' + n + ' uchodźców, ale choroba się rozprzestrzeniła – zmarło ' + d + ' osób.' }
+          if (rnd() < 0.5) { const d = R(s.pop * (s.tech.med ? 0.02 : 0.05) * (1 - 0.5 * calc(s).hospRed)); s.pop -= d; return 'Przyjęto ' + n + ' uchodźców, ale choroba się rozprzestrzeniła – zmarło ' + d + ' osób.' }
           return 'Przyjęto ' + n + ' uchodźców. Gorączka szybko minęła.'
         }
       },
@@ -127,7 +127,7 @@ export const CHOICES = {
         n: 'Szczepionka eksperymentalna', d: () => 'Może zadziałać idealnie… albo wcale.',
         run: s => { if (rnd() < 0.5) return 'Szczepionka zadziałała! Nikt nie zmarł.'; const d = R(s.pop * 0.08); s.pop -= d; return 'Szczepionka nie zadziałała. Zmarło ' + d + ' osób.' }
       },
-      { n: 'Nic nie rób', d: () => 'Duże straty w ludziach', run: s => { const d = R(s.pop * (s.tech.med ? 0.03 : 0.08)); s.pop -= d; s.mor -= 5; return 'Epidemia przeszła przez kolonię. Zmarło ' + d + ' osób.' } }
+      { n: 'Nic nie rób', d: () => 'Duże straty w ludziach', run: s => { const d = R(s.pop * (s.tech.med ? 0.03 : 0.08) * (1 - 0.5 * calc(s).hospRed)); s.pop -= d; s.mor -= 5; return 'Epidemia przeszła przez kolonię. Zmarło ' + d + ' osób.' } }
     ]
   },
   smugglers: {

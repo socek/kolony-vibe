@@ -163,3 +163,12 @@ test('zlecenie LUJ: przyjęcie i wykonanie', async ({ page }) => {
   await expect(page.locator('.order')).toHaveCount(0)
   await expect(page.getByText(/reputacja u LUJ: \d+/)).toContainText('56')
 })
+
+test('wyprawa do ruin z żołnierzem', async ({ page }) => {
+  await newGame(page)
+  await tab(page, 'WYPRAWY')
+  await page.getByRole('button', { name: 'RUINY' }).click()
+  await page.locator('.row', { hasText: 'Żołnierze:' }).getByRole('button', { name: '+' }).first().click()
+  await page.getByRole('button', { name: 'WYŚLIJ WYPRAWĘ' }).click()
+  await expect(page.getByText(/cel: ruiny · 5 osób \(żołn\. 1/)).toBeVisible()
+})
