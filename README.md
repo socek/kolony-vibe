@@ -36,3 +36,15 @@ albo systemowe Chromium wskazane zmienną `CHROMIUM_PATH=/usr/bin/chromium`.
 - `src/store.js` – reaktywny stan gry i interfejsu oraz akcje gracza.
 - `src/components/` – elementy ekranu; `tabs/` – zakładki, `screens/` – ekrany nakładki (menu, zasady, dev…).
 - `tests/unit/` – logika gry, `tests/components/` – komponenty Vue, `tests/e2e/` – cała gra w przeglądarce.
+
+## Licencja
+
+Copyright (C) 2026 Dominik "Socek" Długajczyk
+
+Kolony Vibe jest wolnym oprogramowaniem na licencji **GNU Affero General Public License v3.0
+lub nowszej** – pełny tekst w pliku [`LICENSE`](LICENSE). Kto udostępnia zmienioną wersję gry
+(także jako stronę www), musi udostępnić jej kod źródłowy na tej samej licencji.
+
+Elementy innych autorów:
+- czcionki **VT323** i **Press Start 2P** – SIL Open Font License 1.1 (`licenses/`),
+- **Vue** i pozostałe biblioteki – licencja MIT.

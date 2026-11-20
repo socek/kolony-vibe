@@ -5,6 +5,7 @@ export const CHANGELOG = [
     v: '0.3 „Merveil”', d: 'w przygotowaniu', items: [
       'Ikonka gry w karcie przeglądarki.',
       'Gra zapisuje się od razu po każdym dniu, a nie dopiero po animacji.',
+      'Gra jest otwartoźródłowa (licencja GNU AGPL v3) – link do kodu na ekranie „O grze”.',
       'Gra działa offline i można ją zainstalować na telefonie jak aplikację (PWA). Czcionki są wbudowane w grę.'
     ]
   },

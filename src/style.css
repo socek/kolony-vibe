@@ -80,3 +80,4 @@ input[type=range]{width:100%;accent-color:var(--yellow)}
 .grph + .card{border-top:0}
 .card.locked > :not(.locknote){opacity:.35;filter:grayscale(1)}
 .locknote{color:var(--red);font-size:18px;margin-top:2px}
+a{color:var(--cyan)}
