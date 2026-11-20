@@ -1,7 +1,7 @@
 // Changelog (CHANGELOG screen): log.v.<version> – version name, log.items.<version> – entries, newest first
 export default {
   'log.wip': 'in preparation',
-  'log.v.0.4': '0.4 (in development)',
+  'log.v.0.4': '0.4',
   'log.items.0.4': [
     'New POWER tab: the order in which buildings get power (drag by ≡ or use ▲ ▼) and a slider for how many buildings of a type are powered. Heating and infrastructure are always powered first. In a shortage the buildings at the bottom of the list stop – instead of production dropping evenly everywhere. The 0 key opens the tenth tab.',
     'The EMPIRE button shows the number of HUU orders – offers and accepted ones.',

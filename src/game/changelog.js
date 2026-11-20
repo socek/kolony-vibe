@@ -3,7 +3,7 @@ import { t, locale } from '../i18n.js'
 // CODENAME może być pusty – wtedy etykieta pokazuje sam numer wersji
 export const VERSION = '0.4', CODENAME = ''
 // wersja w trakcie zmian – pokazywane przy numerze wersji
-export const IN_DEV = true
+export const IN_DEV = false
 export const versionLabel = (upper = false) => {
   const t = VERSION + (CODENAME ? ' „' + CODENAME + '”' : '') + (IN_DEV ? ' (in development)' : '')
   return upper ? t.toUpperCase() : t
@@ -12,7 +12,7 @@ export const versionLabel = (upper = false) => {
 // Lista zmian: treść w słownikach (log.v.<k> – nazwa wersji, log.items.<k> – punkty), d – data wydania (ISO) albo brak (w przygotowaniu).
 // Nowy punkt dopisuj w obu językach: src/locales/pl/changelog.js i src/locales/en/changelog.js.
 export const CHANGELOG = [
-  { k: '0.4' },
+  { k: '0.4', d: '2026-11-21' },
   { k: '0.3', d: '2026-11-20' },
   { k: '0.2', d: '2026-11-19' },
   { k: '0.1', d: '2026-11-19' }

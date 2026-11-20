@@ -1,7 +1,7 @@
 // Lista zmian (ekran ZMIANY): log.v.<wersja> – nazwa wersji, log.items.<wersja> – punkty, od najnowszych
 export default {
   'log.wip': 'w przygotowaniu',
-  'log.v.0.4': '0.4 (in development)',
+  'log.v.0.4': '0.4',
   'log.items.0.4': [
     'Nowa zakładka ELEKTRYCZNOŚĆ: kolejność zasilania budynków (przeciąganie za ≡ albo ▲ ▼) i suwak, ile budynków danego typu dostaje prąd. Ogrzewanie i infrastruktura są zasilane zawsze jako pierwsze. Przy braku prądu stoją budynki z dołu listy – zamiast równego spadku produkcji wszędzie. Skrót klawiszowy 0 otwiera dziesiątą zakładkę.',
     'Przycisk IMPERIUM pokazuje liczbę zleceń LUJ – ofert i przyjętych.',
