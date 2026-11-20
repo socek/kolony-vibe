@@ -9,6 +9,7 @@ export const versionLabel = (upper = false) => {
 export const CHANGELOG = [
   {
     v: '0.3 „Merveil” (in development)', d: 'w przygotowaniu', items: [
+      'Ekran „O grze”: wstążka „Fork me on GitHub” i linki do kanałów autora na YouTube i Twitchu.',
       'Anonimowe statystyki gry (Google Analytics) – tylko za zgodą gracza, zgodę można zmienić w ustawieniach.',
       'Zakładka PRACA nazywa się teraz PRACOWNICY.',
       'Ekran startowy opowiada początek fabuły: jak Imperator Gała awansował cię na Gubernatora Ósmego Wielkiego Nowego Obszaru. Na telefonie przyciski są nad fabułą. Wstęp do scenariuszy i list z kancelarii mówią teraz o Imperatorze Gale.',

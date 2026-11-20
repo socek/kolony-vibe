@@ -1,5 +1,5 @@
-// Ikonki pikselowe 8x8: a biały, b żółty, c zielony, d czerwony, e cyjan, f fiolet
-export const PAL = { a: '#fff', b: '#E3EA9A', c: '#A6E08F', d: '#FF9F90', e: '#9ADCE8', f: '#B3ADFF' }
+// Ikonki pikselowe 8x8: a biały, b żółty, c zielony, d czerwony, e cyjan, f fiolet, g purpura (Twitch), h czerwień (YouTube)
+export const PAL = { a: '#fff', b: '#E3EA9A', c: '#A6E08F', d: '#FF9F90', e: '#9ADCE8', f: '#B3ADFF', g: '#A970FF', h: '#FF4E45' }
 
 export const ICONS = {
   pop: ['..aaaa..', '..aaaa..', '...aa...', '.aaaaaa.', 'a.aaaa.a', '..aaaa..', '..a..a..', '..a..a..'],
@@ -28,6 +28,9 @@ export const ICONS = {
   shield: ['eeeeeeee', 'eaaeeeee', 'eaeeeeee', 'eeeeeeee', 'eeeeeeee', '.eeeeee.', '..eeee..', '...ee...'],
   gun: ['......a.', '.....a..', '....a...', '...ffa..', '..ffff..', '.ffffff.', 'ffffffff', 'ffffffff'],
   lock: ['..dddd..', '.d....d.', '.d....d.', 'dddddddd', 'ddd..ddd', 'ddd..ddd', 'dddddddd', '........'],
+  github: ['.a....a.', '.aaaaaa.', 'aaaaaaaa', 'aa.aa.aa', 'aaaaaaaa', '.aaaaaa.', '..aaaa..', '.a.aa.a.'],
+  youtube: ['........', '.hhhhhh.', 'hhhahhhh', 'hhhaahhh', 'hhhaaahh', 'hhhaahhh', 'hhhahhhh', '.hhhhhh.'],
+  twitch: ['gggggggg', 'g......g', 'g.a..a.g', 'g.a..a.g', 'g......g', 'gggg.ggg', '...g.g..', '...gg...'],
   port: ['...aa...', '..aaaa..', '..aeea..', '..aaaa..', '.aaaaaa.', 'aa.aa.aa', '...dd...', '..d..d..']
 }
 

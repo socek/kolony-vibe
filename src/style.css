@@ -143,3 +143,13 @@ a{color:var(--cyan)}
 .bootbody{display:flex;flex-direction:column}
 @media (max-width:600px){.bootbody .btns{order:-1;margin-bottom:6px}}
 .consent{position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--screen);border-top:3px solid var(--cyan);padding:10px 16px;max-width:780px;margin:0 auto}.consent .btns{margin-top:8px}
+/* O GRZE: wstążka „fork me on github” w rogu i linki do autora */
+.overlay .box{position:relative}
+.forkme{position:absolute;top:44px;right:-45px;width:200px;transform:rotate(45deg);background:var(--green);color:var(--screen);text-align:center;font-size:14px;padding:3px 0;text-decoration:none;box-shadow:0 0 0 2px var(--screen),0 0 0 4px var(--green);z-index:1}
+.forkme:hover{background:var(--white)}
+.social{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 12px}
+.social a{flex:1 1 160px;display:flex;align-items:center;gap:8px;padding:6px 10px;border:2px solid var(--text);color:var(--text);text-decoration:none;line-height:1.1}
+.social a .ic{width:32px;height:32px;margin:0;flex:none}
+.social a b{color:var(--white);font-weight:normal;font-size:22px}
+.social a.github:hover{border-color:var(--white)}.social a.youtube:hover{border-color:#FF4E45}.social a.twitch:hover{border-color:#A970FF}
+@media (max-width:600px){.about-intro{padding-right:72px}}

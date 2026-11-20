@@ -284,3 +284,11 @@ test('animacja startowa leci tylko raz', async ({ page }) => {
   // od razu cały ekran z przyciskami, bez ponownego „wczytywania”
   await expect(page.getByRole('button', { name: 'NOWA GRA' })).toBeVisible({ timeout: 300 })
 })
+
+test('O GRZE: wstążka GitHub i linki do YouTube i Twitcha', async ({ page }) => {
+  await page.goto('/')
+  await page.getByRole('button', { name: 'O GRZE' }).click()
+  await expect(page.getByRole('link', { name: 'FORK ME ON GITHUB' })).toHaveAttribute('href', 'https://github.com/socek/kolony-vibe')
+  await expect(page.getByRole('link', { name: /YouTube/ })).toHaveAttribute('href', 'https://www.youtube.com/user/socek')
+  await expect(page.getByRole('link', { name: /Twitch/ })).toHaveAttribute('href', 'https://www.twitch.tv/wujeksocek')
+})
