@@ -12,7 +12,7 @@ const pick = ref(SCENARIOS.find(x => x.ready).k)
   <p class="small">{{ t('story.prologue') }}</p>
   <div class="devh">{{ t('scen.pick') }}</div>
   <button v-for="x in SCENARIOS" :key="x.k" class="scen" :class="{ on: pick === x.k, off: !x.ready }" :disabled="!x.ready" @click="pick = x.k">
-    <span class="row"><span class="t">{{ x.n }}</span><span :style="{ color: DIFF[x.diff].color }">{{ DIFF[x.diff].n }} · {{ t('scen.mult', { m: DIFF[x.diff].mult.toLocaleString(locale()) }) }}</span></span>
+    <span class="row"><span class="t">{{ x.n }}</span><span :style="{ color: DIFF[x.diff].color }">{{ DIFF[x.diff].n }} · {{ x.noScore ? t('scen.noScore') : t('scen.mult', { m: DIFF[x.diff].mult.toLocaleString(locale()) }) }}</span></span>
     <span class="small">{{ t('scen.goal', { g: x.goal.text }) }} · {{ x.features }}</span>
     <span v-if="!x.ready" class="small warn">{{ t('scen.wip') }}</span>
   </button>

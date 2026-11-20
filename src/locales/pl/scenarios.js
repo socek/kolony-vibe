@@ -6,6 +6,15 @@ export default {
   'sc.na': 'Niedostępne w tym scenariuszu.', 'sc.noSlotsSplash': 'Brak miejsca na budynki – zbuduj platformę pływającą.', 'sc.noSlotsSill': 'Brak miejsca na budynki – zbuduj moduł stacji.',
   'sc.and': ' i ',
 
+  'diff.free': 'SWOBODNY',
+  'sc.sandbox.n': 'Piaskownica Imperatora',
+  'sc.sandbox.patron': 'Opiekun Imperialnej Piaskownicy, Strażnik Wiaderka i Kustosz Foremek w Kształcie Rybki',
+  'sc.sandbox.story': [
+    'Jako dziecko Imperator Gała spędzał całe dnie na tej planecie, budując zamki z piasku. Dziś nikt z niej nie korzysta, a Jego Wysokość uznał, że szkoda marnować tyle dobrego piasku.',
+    'Możesz tu budować, ile chcesz i jak długo chcesz – nikt nie rozlicza cię z celu ani z terminu. Głód, bunt i bankructwo nadal są jednak prawdziwe. I nie ruszaj ulubionej łopatki Imperatora.'
+  ],
+  'sc.sandbox.goal': 'bez celu – buduj, ile chcesz', 'sc.sandbox.short': 'TRYB SWOBODNY', 'sc.sandbox.status': 'kolonia istnieje od {n} dni',
+  'sc.sandbox.win': '', 'sc.sandbox.features': 'Bez celu i bez limitu dni, bez wyniku w tabeli. Przegrać można nadal.',
   'sc.moon.n': 'Księżyc Jowisz-67',
   'sc.moon.patron': 'Specjalny Doradca Imperatora do spraw Rozpowszechniania Czytania Książek wśród Obywateli Niechętnych Czytaniu',
   'sc.moon.story': [

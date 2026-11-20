@@ -412,3 +412,18 @@ test('dostępność: wielkość tekstu i wysoki kontrast', async ({ page }) => {
   await page.getByRole('button', { name: 'NORMALNA' }).click()
   await expect(page.locator('html')).not.toHaveAttribute('data-size', /./)
 })
+
+test('Piaskownica: bez limitu dni i bez wyniku', async ({ page }) => {
+  await page.goto('/')
+  await page.getByRole('button', { name: 'NOWA GRA' }).click()
+  await page.getByRole('button', { name: /Piaskownica Imperatora/ }).click()
+  await expect(page.getByRole('button', { name: /Piaskownica Imperatora/ })).toContainText('bez wyniku')
+  await page.getByRole('button', { name: 'ROZPOCZNIJ' }).click()
+  await expect(page.getByText('Buduj kolonię tak długo, jak chcesz')).toBeVisible()
+  await page.getByRole('button', { name: 'DO DZIEŁA!' }).click()
+  await expect(page.getByText('DZIEŃ 1', { exact: true })).toHaveCount(0)
+  await expect(page.locator('.screen')).toContainText('· DZIEŃ 1')
+  await expect(page.locator('.screen')).not.toContainText('/365')
+  await expect(page.getByText('KADENCJA GUBERNATORA')).toHaveCount(0)
+  await expect(page.getByText('TRYB SWOBODNY', { exact: true })).toBeVisible()
+})

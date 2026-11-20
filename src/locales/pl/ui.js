@@ -8,6 +8,7 @@ export default {
   'fmt.month.6': 'LIP', 'fmt.month.7': 'SIE', 'fmt.month.8': 'WRZ', 'fmt.month.9': 'PAŹ', 'fmt.month.10': 'LIS', 'fmt.month.11': 'GRU',
 
   'top.day': 'DZIEŃ {d}/{max}',
+  'top.dayFree': 'DZIEŃ {d}',
   'top.season': 'PORA ROKU: {n}',
   'top.seasonNext': p => 'za ' + p.n + ' ' + plForm(p.n, 'dzień', 'dni', 'dni') + ': ' + p.next,
   'top.term': 'KADENCJA GUBERNATORA',

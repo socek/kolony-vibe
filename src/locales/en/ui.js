@@ -8,6 +8,7 @@ export default {
   'fmt.month.6': 'JUL', 'fmt.month.7': 'AUG', 'fmt.month.8': 'SEP', 'fmt.month.9': 'OCT', 'fmt.month.10': 'NOV', 'fmt.month.11': 'DEC',
 
   'top.day': 'DAY {d}/{max}',
+  'top.dayFree': 'DAY {d}',
   'top.season': 'SEASON: {n}',
   'top.seasonNext': p => 'in ' + p.n + ' ' + enForm(p.n, 'day', 'days') + ': ' + p.next,
   'top.term': "GOVERNOR'S TERM",

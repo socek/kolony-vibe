@@ -25,16 +25,16 @@ export default {
   'set.autoInfo': 'Zdarzenia z wyborem zawsze czekają na twoją decyzję – chyba że ustawisz tu odpowiedź automatyczną. Jeśli wybranej odpowiedzi nie da się wykonać (np. brakuje kredytów), gra i tak zapyta.',
   'set.askMe': 'pytaj mnie',
 
-  'scen.pick': 'WYBIERZ SCENARIUSZ', 'scen.mult': 'wynik ×{m}', 'scen.goal': 'Cel: {g}', 'scen.wip': 'W PRZYGOTOWANIU', 'scen.start': 'ROZPOCZNIJ',
+  'scen.pick': 'WYBIERZ SCENARIUSZ', 'scen.mult': 'wynik ×{m}', 'scen.goal': 'Cel: {g}', 'scen.noScore': 'bez wyniku', 'scen.wip': 'W PRZYGOTOWANIU', 'scen.start': 'ROZPOCZNIJ',
   'intro.diff': 'Poziom trudności: {d}', 'intro.patron': 'ZLECENIODAWCA', 'intro.task': 'TWOJE ZADANIE',
-  'intro.taskText': '{g} w ciągu {n} dni.', 'intro.go': 'DO DZIEŁA!',
+  'intro.taskText': '{g} w ciągu {n} dni.', 'intro.taskFree': 'Buduj kolonię tak długo, jak chcesz – bez celu i bez terminu. Uważaj tylko na głód, bunt i bankructwo.', 'intro.go': 'DO DZIEŁA!',
   'choice.look': 'OBEJRZYJ KOLONIĘ (DECYZJA POCZEKA)'
 }
 export const end = {
   'end.scen': 'Scenariusz: {n} ({d})', 'end.stats1': 'Koloniści: {pop} · Morale: {mor}%', 'end.stats2': 'Dzień: {day} · Technologie: {tech}',
   'end.score': 'WYNIK: {n}', 'end.mult': '{base} pkt × {m} za poziom trudności',
   'end.place': p => 'Twój wynik to ' + p.p + '. miejsce na ' + p.n + ' ' + (p.n === 1 ? 'grę' : 'gier') + '.',
-  'end.badges': 'Odznaki zdobyte w tej grze:', 'end.stats': 'STATYSTYKI', 'end.look': 'ZOBACZ KOLONIĘ',
+  'end.noScore': 'Piaskownica nie ma wyniku – liczy się, jak długo przetrwała kolonia.', 'end.badges': 'Odznaki zdobyte w tej grze:', 'end.stats': 'STATYSTYKI', 'end.look': 'ZOBACZ KOLONIĘ',
   'sc.title': 'WYNIKI', 'sc.best': 'NAJLEPSZE GRY', 'sc.none': 'Nie ukończono jeszcze żadnej gry.', 'sc.scen': 'scenariusz', 'sc.score': 'wynik',
   'sc.win': 'wygrana', 'sc.lose': 'przegrana',
   'sc.det': 'koloniści {pop} · dzień {day} · morale {mor}% · kredyty {cr} · technologie {tech}',

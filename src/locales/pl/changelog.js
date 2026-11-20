@@ -3,6 +3,7 @@ export default {
   'log.wip': 'w przygotowaniu',
   'log.v.0.4': '0.4 (in development)',
   'log.items.0.4': [
+    'Nowy scenariusz: Piaskownica Imperatora – bez celu i bez limitu dni, bez wyniku w tabeli; przegrać można nadal.',
     'Dostępność (menu → USTAWIENIA): większy tekst i przyciski (dwa poziomy) oraz tryb wysokiego kontrastu.',
     'Skróty klawiszowe: spacja – koniec dnia, W – 7 dni, 1–8 – zakładki, Esc – menu (lista w ZASADACH).',
     'Gra po angielsku: język (PL/EN) wybierasz na ekranie startowym i w USTAWIENIACH; przy pierwszym uruchomieniu gra wybiera go według języka przeglądarki.',

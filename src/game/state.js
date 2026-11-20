@@ -27,7 +27,7 @@ export function newState(sc = 'moon') {
   // powitanie po zmianach scenariusza (liczba osadników może być inna niż 100)
   s.report = [
     { k: 'txt', t: t('state.welcome', { n: scen.n, pop: s.pop }) },
-    { k: 'txt', t: t('state.goal', { g: scen.goal.text, d: DAYS }) }
+    { k: 'txt', t: scen.endless ? t('state.goalFree') : t('state.goal', { g: scen.goal.text, d: DAYS }) }
   ]
   return s
 }

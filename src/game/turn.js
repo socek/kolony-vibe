@@ -161,7 +161,7 @@ export function endTurn(s, acc, auto = {}) {
   else if (s.pop < 10) s.over = { win: false, t: t('over.fall.t'), d: t('over.fall.d') }
   else if (s.mor <= 5) s.over = { win: false, t: t('over.revolt.t'), d: t('over.revolt.d') }
   else if (s.cr < -500) s.over = { win: false, t: t('over.bankrupt.t'), d: t('over.bankrupt.d') }
-  else if (s.m > DAYS) s.over = { win: false, t: t('over.term.t'), d: t('over.term.d') }
+  else if (s.m > DAYS && !scenarioOf(s).endless) s.over = { win: false, t: t('over.term.t'), d: t('over.term.d') }
   if (s.over) stops.add('over')
   trackStats(s)
   record(s, [...stops])

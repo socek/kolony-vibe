@@ -18,7 +18,7 @@ import { pickHint } from './game/hints.js'
 import { track } from './analytics.js'
 import { specTargets, setSpecTarget, dismissSpec } from './game/specialists.js'
 import { playTheme, themeFor } from './game/music.js'
-import { buildBlock } from './game/scenarios.js'
+import { buildBlock, endless } from './game/scenarios.js'
 import { BADGES, newBadges } from './game/badges.js'
 import { hall, recordGame, grantBadges } from './game/scores.js'
 
@@ -154,7 +154,7 @@ export function advance(n) {
   // KONIEC DNIA i ▶▶ 7 DNI jako osobne zdarzenia
   track(n === 1 ? 'end_day' : 'skip_7_days', { day: s.m, scenario: s.sc || 'moon' })
   const p0 = snapshot(s)
-  const label = () => ({ day: Math.min(game.s.m + 1, DAYS), date: dateOf(game.s.m + 1) })
+  const label = () => { const e = endless(game.s); return { day: e ? game.s.m + 1 : Math.min(game.s.m + 1, DAYS), date: dateOf(game.s.m + 1, e) } }
   ui.turn = { ...label(), fill: 0, out: false }
   let i = 0, why = []
   const step = () => {

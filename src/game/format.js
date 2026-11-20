@@ -6,10 +6,12 @@ export const num = n => (Math.round(n * 10) / 10).toLocaleString(locale())
 export const daysTxt = n => t('fmt.days', { n })
 export const plDays = n => t('fmt.DAYS', { n })
 
-export function dateOf(day) {
-  let d = Math.min(day, DAYS), m = 0
+// endless – gra bez limitu dni (Piaskownica): po 365 dniach zaczyna się kolejny rok
+export function dateOf(day, endless = false) {
+  if (!endless) day = Math.min(day, DAYS)
+  let d = ((day - 1) % DAYS) + 1, m = 0
   while (d > MDAYS[m]) { d -= MDAYS[m]; m++ }
-  return d + ' ' + t('fmt.month.' + m) + ' ' + YEAR
+  return d + ' ' + t('fmt.month.' + m) + ' ' + (YEAR + Math.floor((day - 1) / DAYS))
 }
 
 export const pct = (v, max) => max > 0 ? Math.max(0, Math.min(100, v / max * 100)) : 0

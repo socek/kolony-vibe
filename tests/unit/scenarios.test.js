@@ -105,3 +105,22 @@ describe('scenariusze – zasady', () => {
     expect(s.min).toBeGreaterThan(min)
   })
 })
+
+describe('Piaskownica', async () => {
+  const { newState } = await import('../../src/game/state.js')
+  const { endTurn } = await import('../../src/game/turn.js')
+  const { recordGame } = await import('../../src/game/scores.js')
+  const { dateOf } = await import('../../src/game/format.js')
+  it('nie kończy się po 365 dniach i nie trafia do tabeli wyników', () => {
+    const s = newState('sandbox'); s.m = 365; s.food = 1e5; s.cr = 1e5; s.mor = 80
+    endTurn(s); s.pending = null; endTurn(s)
+    expect(s.over).toBe(null)
+    expect(s.m).toBe(367)
+    s.over = { win: false, t: 'X', d: 'Y' }
+    expect(recordGame(s)).toBe(null)
+  })
+  it('data przechodzi na kolejny rok', () => {
+    expect(dateOf(366, true)).toBe('1 STY 2151')
+    expect(dateOf(366)).toBe('31 GRU 2150')
+  })
+})

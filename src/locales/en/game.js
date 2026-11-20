@@ -109,5 +109,6 @@ export default {
   'over.term.t': 'END OF TERM', 'over.term.d': 'A year has passed. You did not reach the goal, but the colony survived.',
   'state.homeDeposit': 'Home deposit', 'state.welcome': 'Welcome, Governor! Your colony ({n}) has {pop} settlers.',
   'state.goal': 'Goal: {g} within a year ({d} days).',
+  'state.goalFree': 'Free play: no goal and no end of term – build as much as you like.',
   'work.base': 'Base (children, the elderly and carers do not work)', 'work.hosp': 'Hospitals (fewer sick)', 'work.sick': 'Sick after an epidemic ({d})'
 }

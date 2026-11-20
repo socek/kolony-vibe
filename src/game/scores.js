@@ -12,7 +12,7 @@ export const hall = reactive({ scores: read(SCORES, []), badges: read(BADGES, {}
 
 // zapisuje zakończoną grę do tabeli; zwraca miejsce w tabeli (1 = najlepszy wynik)
 export function recordGame(s) {
-  if (!s.over || s.recorded) return null
+  if (!s.over || s.recorded || scenarioOf(s).noScore) return null
   const sc = scenarioOf(s), entry = {
     date: new Date().toISOString(), sc: sc.k, scn: sc.n, diff: diffOf(s).n, mult: diffOf(s).mult,
     score: score(s), base: baseScore(s), win: !!s.over.win, end: s.over.t,

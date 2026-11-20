@@ -6,6 +6,15 @@ export default {
   'sc.na': 'Not available in this scenario.', 'sc.noSlotsSplash': 'No building slots left – build a floating platform.', 'sc.noSlotsSill': 'No building slots left – build a station module.',
   'sc.and': ' and ',
 
+  'diff.free': 'FREE PLAY',
+  'sc.sandbox.n': "The Emperor's Sandbox",
+  'sc.sandbox.patron': 'Keeper of the Imperial Sandbox, Guardian of the Bucket and Curator of the Fish-Shaped Moulds',
+  'sc.sandbox.story': [
+    'As a child, Emperor Gory spent whole days on this planet building sandcastles. Nobody uses it any more, and His Majesty decided it would be a shame to waste so much good sand.',
+    "You can build here as much as you like and for as long as you like – nobody holds you to a goal or a deadline. Famine, revolt and bankruptcy are still real, though. And do not touch the Emperor's favourite spade."
+  ],
+  'sc.sandbox.goal': 'no goal – build as much as you like', 'sc.sandbox.short': 'FREE PLAY', 'sc.sandbox.status': 'the colony has existed for {n} days',
+  'sc.sandbox.win': '', 'sc.sandbox.features': 'No goal and no day limit, no score in the table. You can still lose.',
   'sc.moon.n': 'Moon Jupiter-67',
   'sc.moon.patron': "Special Advisor to the Emperor for Spreading Book Reading among Citizens Reluctant to Read",
   'sc.moon.story': [

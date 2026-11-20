@@ -7,7 +7,9 @@ import { addDeposit, depositName } from './expeditions.js'
 export const DIFF = {
   easy: { mult: 1, color: 'var(--green)' },
   normal: { mult: 1.5, color: 'var(--yellow)' },
-  hard: { mult: 2, color: 'var(--red)' }
+  hard: { mult: 2, color: 'var(--red)' },
+  // tryb swobodny (Piaskownica): bez wyniku
+  free: { mult: 0, color: 'var(--cyan)' }
 }
 
 // Początek fabuły (ekran startowy) i wstęp do wyboru scenariusza są w słownikach: story.boot, story.prologue
@@ -162,6 +164,16 @@ export const SCENARIOS = [
     // wieczna zima: na start geotermia i więcej farm, bo słońce i plony są słabe
     start: s => { s.dep[0].t = s.dep[0].max = 4000; s.iceSent = 0; s.b.geo = 2; s.b.farm = 5; s.b.fridge = 2; s.b.house = 3; s.pop = 130; s.food = 700; s.cr = 700; s.mods = { farmMul: 0.7, depMul: 1.5 } },
     tick: (s, c, note, add) => { if (c.iceProd > 0) { s.iceSent = (s.iceSent || 0) + c.iceProd; add('ice', { a: c.iceProd }) } return [] }
+  },
+  {
+    // Piaskownica: bez celu i bez końca kadencji, przegrać można nadal; wynik nie trafia do tabeli
+    k: 'sandbox', diff: 'free', ready: true, endless: true, noScore: true,
+    goal: {
+      get text () { return t('sc.sandbox.goal') }, get short () { return t('sc.sandbox.short') },
+      progress: () => null, done: () => false,
+      status: s => t('sc.sandbox.status', { n: s.m })
+    },
+    start: s => { s.food = 500; s.cr = 1000; s.min = 300; s.b.house = 3; s.b.farm = 4 }
   }
 ]
 
@@ -169,6 +181,9 @@ export const SCENARIOS = [
 localize(Object.fromEntries(SCENARIOS.map(x => [x.k, x])), 'sc', ['n', 'patron', 'story', 'win', 'features'])
 for (const k in DIFF) Object.defineProperty(DIFF[k], 'n', { get: () => t('diff.' + k), enumerable: true })
 for (const k in SEASONS) Object.defineProperty(SEASONS[k], 'n', { get: () => t('season.' + k), enumerable: true })
+
+// scenariusz bez limitu dni i bez wyniku (Piaskownica)
+export const endless = s => !!scenarioOf(s).endless
 
 export const scenarioOf = s => SCENARIOS.find(x => x.k === ((s && s.sc) || 'moon')) || SCENARIOS[0]
 export const diffOf = s => DIFF[scenarioOf(s).diff]

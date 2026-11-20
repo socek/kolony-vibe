@@ -80,8 +80,8 @@ const depDays = computed(() => c.value.minProd > 0 ? Math.floor(c.value.deps / c
   </div>
 
   <div class="card">
-    <div class="row"><span><PixelIcon name="pop" />{{ t('scen.goal', { g: scenarioOf(s).goal.text }) }}</span><span>{{ R(prog) }}%</span></div>
+    <div class="row"><span><PixelIcon name="pop" />{{ t('scen.goal', { g: scenarioOf(s).goal.text }) }}</span><span v-if="prog !== null">{{ R(prog) }}%</span></div>
     <div class="small">{{ scenarioOf(s).goal.status(s) }}</div>
-    <MeterBar :value="prog" :max="100" />
+    <MeterBar v-if="prog !== null" :value="prog" :max="100" />
   </div>
 </template>

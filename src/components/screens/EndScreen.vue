@@ -17,9 +17,12 @@ const s = computed(() => game.s)
     <h1 :class="s.over.win ? 'pos' : 'neg'">{{ s.over.t }}</h1>
     <p>{{ s.over.d }}</p>
     <p class="small">{{ t('end.scen', { n: scenarioOf(s).n, d: diffOf(s).n.toLowerCase() }) }}</p>
-    <p>{{ t('end.stats1', { pop: fmt(s.pop), mor: Math.round(s.mor) }) }}<br>{{ t('end.stats2', { day: Math.min(s.m, DAYS), tech: Object.keys(s.tech).length }) }}</p>
+    <p>{{ t('end.stats1', { pop: fmt(s.pop), mor: Math.round(s.mor) }) }}<br>{{ t('end.stats2', { day: scenarioOf(s).endless ? s.m : Math.min(s.m, DAYS), tech: Object.keys(s.tech).length }) }}</p>
+    <p v-if="scenarioOf(s).noScore" class="small sub">{{ t('end.noScore') }}</p>
+    <template v-else>
     <p class="t" style="color:var(--yellow)">{{ t('end.score', { n: score(s) }) }}</p>
     <p class="small">{{ t('end.mult', { base: baseScore(s), m: diffOf(s).mult.toLocaleString(locale()) }) }}</p>
+    </template>
     <p v-if="ui.lastPlace" class="sub">{{ t('end.place', { p: ui.lastPlace, n: hall.scores.length }) }}</p>
     <p v-if="s.earned && s.earned.length" class="small pos">{{ t('end.badges') }} {{ s.earned.map(k => BADGES.find(b => b.k === k).n).join(', ') }}</p>
   </template>

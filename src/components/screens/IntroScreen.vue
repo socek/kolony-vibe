@@ -13,6 +13,6 @@ const scen = computed(() => scenarioOf(game.s))
   <p class="small" :style="{ color: diffOf(game.s).color }">{{ t('intro.diff', { d: diffOf(game.s).n }) }}</p>
   <p><span class="sub">{{ t('intro.patron') }}</span><br><span style="color:var(--white)">{{ scen.patron }}</span></p>
   <p v-for="(p, i) in scen.story" :key="i">{{ p }}</p>
-  <p><span class="sub">{{ t('intro.task') }}</span><br><span style="color:var(--yellow)">{{ t('intro.taskText', { g: scen.goal.text, n: DAYS }) }}</span></p>
+  <p><span class="sub">{{ t('intro.task') }}</span><br><span style="color:var(--yellow)">{{ scen.endless ? t('intro.taskFree') : t('intro.taskText', { g: scen.goal.text, n: DAYS }) }}</span></p>
   <div class="btns"><button @click="closeScreen">{{ t('intro.go') }}</button></div>
 </template>
