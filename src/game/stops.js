@@ -7,6 +7,8 @@ export const STOPS = [
   { k: 'research', n: 'Ukończenie badań', why: 'ukończono badania', def: true },
   { k: 'exp', n: 'Powrót wyprawy', why: 'wróciła wyprawa', def: true },
   { k: 'camp', n: 'Przybycie kolonistów z kampanii reklamowej', why: 'przybyli koloniści z kampanii', def: true },
+  { k: 'order', n: 'Nowa oferta zlecenia LUJ', why: 'nowa oferta zlecenia LUJ', def: true },
+  { k: 'orderFail', n: 'Minął termin zlecenia LUJ', why: 'minął termin zlecenia', def: true },
   { k: 'depleted', n: 'Wyczerpanie złoża', why: 'wyczerpano złoże', def: true },
   { k: 'nodep', n: 'Kopalnie stanęły (brak złóż)', why: 'kopalnie stanęły', def: true },
   { k: 'evBad', n: 'Złe zdarzenia losowe (meteoryty, epidemia, piraci, rozbłysk, awaria)', why: 'groźne zdarzenie', def: true },

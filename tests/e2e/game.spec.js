@@ -150,3 +150,16 @@ test('koniec gry: miejsce w tabeli, statystyki i wyniki w menu', async ({ page }
   await expect(page.locator('.scorerow')).toHaveCount(1)
   await expect(page.locator('.badge')).toHaveCount(10)
 })
+
+test('zlecenie LUJ: przyjęcie i wykonanie', async ({ page }) => {
+  await newGame(page)
+  await page.evaluate(() => { location.hash = '#iddqd' })
+  await page.getByRole('button', { name: 'DEV' }).click()
+  await page.getByRole('button', { name: '+ZLECENIE LUJ' }).click()
+  await page.getByRole('button', { name: 'ZAMKNIJ' }).click()
+  await tab(page, 'RYNEK')
+  await page.getByRole('button', { name: 'PRZYJMIJ' }).click()
+  await page.getByRole('button', { name: 'DOSTARCZ' }).click()
+  await expect(page.locator('.order')).toHaveCount(0)
+  await expect(page.getByText(/reputacja u LUJ: \d+/)).toContainText('56')
+})

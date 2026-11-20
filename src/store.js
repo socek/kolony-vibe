@@ -9,6 +9,7 @@ import { beep } from './game/audio.js'
 import { settings, stopWhy } from './game/stops.js'
 import { sendExpedition, addDeposit } from './game/expeditions.js'
 import { startCampaign } from './game/campaigns.js'
+import { accept, deliver, makeOffer, ensureOrders } from './game/orders.js'
 import { queueTech, unqueueTech, researchNow, nextResearch } from './game/research.js'
 import { resolveChoice } from './game/choices.js'
 import { BADGES, newBadges } from './game/badges.js'
@@ -81,6 +82,13 @@ export function decide(i) {
   s.pending = null
   beep(600, 0.08); persist(); closeScreen()
 }
+export function acceptOrder(id) { if (accept(game.s, id)) { beep(700, 0.08); persist() } }
+export function deliverOrder(id) {
+  const txt = deliver(game.s, id)
+  if (!txt) return
+  game.s.report.unshift({ k: 'txt', t: '★ LUJ: ' + txt, c: 'pos', day: game.s.m - 1, top: 1 })
+  beep(990, 0.12); persist()
+}
 export function research(k) { if (queueTech(game.s, k)) { beep(880, 0.08); persist() } }
 export function unresearch(k) { unqueueTech(game.s, k); beep(300, 0.05); persist() }
 export function researchFirst(k) { if (researchNow(game.s, k)) { beep(990, 0.08); persist() } }
@@ -142,6 +150,7 @@ export function devAct(a) {
   else if (a === 'fill') { const cc = calc(s); s.food = cc.foodCap; s.min = cc.minCap; s.energy = cc.enCap; ui.devMsg = 'Magazyny pełne.' }
   else if (a === 'cash') { s.cr += 1000; ui.devMsg = '+1000 kr.' }
   else if (a === 'alltech') { for (const k in TECH) s.tech[k] = 1; s.rs = null; s.rp = {}; s.rq = []; ui.devMsg = 'Odkryto wszystkie technologie.' }
+  else if (a === 'order') { ensureOrders(s); makeOffer(s); ui.devMsg = 'Nowa oferta zlecenia LUJ (zakładka RYNEK).' }
   else if (a === 'dep') { addDeposit(s, 'Złoże deweloperskie', 1000); ui.devMsg = 'Dodano złoże 1000 t.' }
   else if (a === 'expback') { s.exp.forEach(x => x.left = 1); ui.devMsg = 'Wyprawy wrócą na koniec dnia.' }
   else if (a.startsWith('ch:')) { if (!s.pending) { s.pending = a.slice(3); ui.screen = 'choice'; persist(); return } ui.devMsg = 'Najpierw rozstrzygnij bieżącą decyzję.' }

@@ -9,6 +9,7 @@ import { nextResearch } from './research.js'
 import { scenarioOf } from './scenarios.js'
 import { CHOICES, CHOICE_KEYS, resolveChoice } from './choices.js'
 import { record } from './history.js'
+import { tickOrders } from './orders.js'
 import { trackStats, bumpStat } from './badges.js'
 
 export function clampStore(s) {
@@ -91,6 +92,7 @@ export function endTurn(s, acc, auto = {}) {
   s.pop -= deaths
   if (tickExpeditions(s, note)) stops.add('exp')
   if (tickCampaigns(s, note)) stops.add('camp')
+  for (const r of tickOrders(s, note)) stops.add(r)
   if (s.m > 10 && Math.random() < 0.1) {
     if (Math.random() < 0.4) {
       // zdarzenie z wyborem: odpowiedź automatyczna albo czekanie na decyzję gracza

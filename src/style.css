@@ -133,3 +133,6 @@ a{color:var(--cyan)}
 .badge{border-top:1px dashed var(--border);padding:4px 0;opacity:.55}
 .badge.got{opacity:1}
 .badge.got .t{color:var(--yellow)}
+.order{border-top:1px dashed var(--border);margin-top:6px;padding-top:4px}
+.order.offer{opacity:.9}
+.order.offer > .row:first-child{color:var(--cyan)}

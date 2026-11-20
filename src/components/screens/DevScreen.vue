@@ -9,7 +9,7 @@ import { CHOICES } from '../../game/choices.js'
 const s = computed(() => game.s)
 const r2 = v => Math.round((v || 0) * 100) / 100
 const stateFields = [['Dzień', 'm'], ['Koloniści', 'pop'], ['Morale %', 'mor'], ['Żywność t', 'food'], ['Energia kWh', 'energy'], ['Minerały t', 'min'], ['Kredyty', 'cr'], ['Podatki %', 'tax'], ['Dni głodu', 'hungerDays']]
-const ACTIONS = [['finish', 'UKOŃCZ BUDOWY'], ['fill', 'NAPEŁNIJ MAGAZYNY'], ['cash', '+1000 KR'], ['alltech', 'WSZYSTKIE TECHNOLOGIE'], ['skip7', '+7 DNI'], ['skip30', '+30 DNI'], ['dep', '+ZŁOŻE 1000 T'], ['expback', 'WYPRAWY WRACAJĄ'], ['revive', 'WZNÓW GRĘ PO KOŃCU']]
+const ACTIONS = [['finish', 'UKOŃCZ BUDOWY'], ['fill', 'NAPEŁNIJ MAGAZYNY'], ['cash', '+1000 KR'], ['alltech', 'WSZYSTKIE TECHNOLOGIE'], ['skip7', '+7 DNI'], ['skip30', '+30 DNI'], ['dep', '+ZŁOŻE 1000 T'], ['order', '+ZLECENIE LUJ'], ['expback', 'WYPRAWY WRACAJĄ'], ['revive', 'WZNÓW GRĘ PO KOŃCU']]
 </script>
 
 <template>

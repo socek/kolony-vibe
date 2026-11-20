@@ -9,6 +9,7 @@ export const versionLabel = (upper = false) => {
 export const CHANGELOG = [
   {
     v: '0.3 „Merveil” (in development)', d: 'w przygotowaniu', items: [
+      'Zlecenia Ludzkiej Unii Jedności (zakładka RYNEK): dostawy żywności, minerałów i energii, wysłanie kolonistów, zbadanie technologii. Różne terminy, nagrody i kary; reputacja u LUJ zmienia wysokość nagród.',
       'Zakładka STATYSTYKI: wykresy wszystkich zasobów dzień po dniu, wybór zakresu, znaczniki wydarzeń, ukrywanie serii.',
       'Wyniki i odznaki (menu → WYNIKI I ODZNAKI): tabela najlepszych gier ze wszystkimi szczegółami i 10 odznak wspólnych dla wszystkich scenariuszy. Ekran końca gry pokazuje miejsce w tabeli i ma przycisk do statystyk.',
       'Zdarzenia z wyborem: 11 nowych sytuacji (od 2 do 5 opcji), np. okup piratów, strajk górników, epidemia, list od Imperatora. Czas stoi, dopóki nie podejmiesz decyzji; w ustawieniach można ustawić odpowiedzi automatyczne.',
