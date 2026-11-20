@@ -161,7 +161,7 @@ test('zlecenie LUJ: przyjęcie i wykonanie', async ({ page }) => {
   await page.getByRole('button', { name: 'DEV' }).click()
   await page.getByRole('button', { name: '+ZLECENIE LUJ' }).click()
   await page.getByRole('button', { name: 'ZAMKNIJ' }).click()
-  await tab(page, 'RYNEK')
+  await tab(page, 'IMPERIUM')
   await page.getByRole('button', { name: 'PRZYJMIJ' }).click()
   await page.getByRole('button', { name: 'DOSTARCZ' }).click()
   await expect(page.locator('.order')).toHaveCount(0)

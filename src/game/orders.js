@@ -127,7 +127,7 @@ export function tickOrders(s, note) {
   if (s.m >= o.next) {
     const x = makeOffer(s)
     o.next = s.m + 15 + R(rnd() * 15)
-    note('★ LUJ: nowa oferta zlecenia – ' + orderTitle(x) + '. Szczegóły w zakładce RYNEK.', 'sub')
+    note('★ LUJ: nowa oferta zlecenia – ' + orderTitle(x) + '. Szczegóły w zakładce IMPERIUM.', 'sub')
     stops.push('order')
   }
   return stops

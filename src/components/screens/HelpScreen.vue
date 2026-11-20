@@ -24,13 +24,13 @@ const scen = computed(() => scenarioOf(game.s))
     • Głód: każdy dzień braku jedzenia zabija coraz więcej osób, a 12. dnia głodu umierają wszyscy. Głód kończy dzień pełnego jedzenia przy co najmniej normalnych racjach. Racje głodowe tylko wstrzymują umieranie.<br>
     • Działa magnetyczne (po zbadaniu technologii) zmniejszają straty od piratów i meteorytów – tylko obsadzone i zasilone. Mogą zostać zniszczone w czasie ataku.<br>
     • Niektóre zdarzenia wymagają decyzji – dopóki jej nie podejmiesz, czas stoi. W ustawieniach możesz ustawić odpowiedzi automatyczne.<br>
-    • Ludzka Unia Jedności zleca kolonii zadania (zakładka RYNEK): dostawy, wysłanie ludzi albo zbadanie technologii. Przyjęte zlecenie ma termin i karę, a wykonane daje nagrodę i reputację.<br>
+    • Ludzka Unia Jedności zleca kolonii zadania (zakładka IMPERIUM): dostawy, wysłanie ludzi albo zbadanie technologii. Przyjęte zlecenie ma termin i karę, a wykonane daje nagrodę i reputację.<br>
     • Kampanie reklamowe (zakładka POLITYKA) mogą przyciągnąć nowych kolonistów. Znasz tylko ich koszt i czas trwania – skuteczność trzeba sprawdzić samemu.<br>
     • Wysokie podatki i głodowe racje obniżają morale. Przy morale 5% wybucha bunt.<br>
     • Laboratoria codziennie posuwają naprzód badania. W zakładce TECHNOLOGIE dodajesz technologie do kolejki – naukowcy badają je po kolei. Technologie tworzą drzewo: niektóre wymagają odkrycia innych. Dają nowe budynki, premie i nowe możliwości (cele wypraw, kampanie, handel).<br>
     • Dług powyżej 500 kr oznacza bankructwo.<br>
     • Przycisk ▶▶ 7 DNI przewija tydzień i zatrzymuje się przy ważnych wydarzeniach – które to są, ustawisz w menu (≡) → USTAWIENIA.<br>
-    • Nadwyżki żywności i minerałów sprzedawaj na rynku, ceny zmieniają się codziennie.
+    • Nadwyżki żywności i minerałów sprzedawaj na rynku (zakładka IMPERIUM), ceny zmieniają się codziennie.
   </p>
   <div class="btns"><button @click="goBack">WRÓĆ</button></div>
 </template>

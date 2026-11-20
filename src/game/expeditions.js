@@ -114,7 +114,7 @@ function find(s, kind, x, r, t) {
   const roll = rnd()
   if (!s.nb && roll < 0.25) {
     s.nb = { n: NB_NAMES[Math.floor(rnd() * NB_NAMES.length)], cd: {} }
-    return 'odkryto stałą osadę sąsiedzką „' + s.nb.n + '” – można z nią handlować (zakładka RYNEK)'
+    return 'odkryto stałą osadę sąsiedzką „' + s.nb.n + '” – można z nią handlować (zakładka IMPERIUM)'
   }
   if (roll < 0.55) { s.food += 120; s.cr += 100; return 'osadnicy wymienili się towarami: +120 t żywności i 100 kr' }
   if (roll < 0.8) { const n = Math.round(Math.min(5 + rnd() * 10, Math.max(0, houseCapOf(s) - s.pop))); s.pop += n; return n ? n + ' osadników postanowiło dołączyć do kolonii' : 'osadnicy chcieli dołączyć, ale nie ma dla nich miejsca' }

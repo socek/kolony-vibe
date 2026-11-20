@@ -184,7 +184,7 @@ export function devAct(a) {
   else if (a === 'cash') { s.cr += 1000; ui.devMsg = '+1000 kr.' }
   else if (a === 'alltech') { for (const k in TECH) s.tech[k] = 1; s.rs = null; s.rp = {}; s.rq = []; ui.devMsg = 'Odkryto wszystkie technologie.' }
   else if (a === 'repairall') { syncCond(s); for (const k in s.cond) for (const x of s.cond[k]) { x.c = 100; x.broken = false } ui.devMsg = 'Wszystkie budynki naprawione.' }
-  else if (a === 'order') { ensureOrders(s); makeOffer(s); ui.devMsg = 'Nowa oferta zlecenia LUJ (zakładka RYNEK).' }
+  else if (a === 'order') { ensureOrders(s); makeOffer(s); ui.devMsg = 'Nowa oferta zlecenia LUJ (zakładka IMPERIUM).' }
   else if (a === 'dep') { addDeposit(s, 'Złoże deweloperskie', 1000); ui.devMsg = 'Dodano złoże 1000 t.' }
   else if (a === 'expback') { s.exp.forEach(x => x.left = 1); ui.devMsg = 'Wyprawy wrócą na koniec dnia.' }
   else if (a.startsWith('ch:')) { if (!s.pending) { s.pending = a.slice(3); ui.screen = 'choice'; persist(); return } ui.devMsg = 'Najpierw rozstrzygnij bieżącą decyzję.' }
