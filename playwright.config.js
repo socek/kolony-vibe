@@ -9,9 +9,10 @@ export default defineConfig({
     baseURL: 'http://localhost:5199',
     launchOptions: process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {}
   },
-  webServer: {
-    command: 'npx vite --port 5199 --strictPort',
-    url: 'http://localhost:5199',
-    reuseExistingServer: !process.env.CI
-  }
+  webServer: [
+    // serwer deweloperski do testów rozgrywki
+    { command: 'npx vite --port 5199 --strictPort', url: 'http://localhost:5199', reuseExistingServer: !process.env.CI },
+    // zbudowana gra do testu trybu offline (PWA działa tylko w wersji zbudowanej)
+    { command: 'npx vite build && npx vite preview --port 5200 --strictPort', url: 'http://localhost:5200', reuseExistingServer: !process.env.CI }
+  ]
 })

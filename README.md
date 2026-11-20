@@ -13,6 +13,11 @@ npm run build    # gra w jednym pliku: dist/index.html (można otworzyć z dysku
 
 Menu deweloperskie: dopisz `#iddqd` do adresu gry.
 
+## Publikacja
+
+Każda zmiana wypchnięta na `main` uruchamia testy, a gdy przejdą – publikuje grę na GitHub Pages
+(`.github/workflows/deploy.yml`). Opublikowana gra działa offline i można ją zainstalować na telefonie (PWA).
+
 ## Testy
 
 ```sh
