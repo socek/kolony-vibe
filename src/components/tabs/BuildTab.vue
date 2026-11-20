@@ -3,6 +3,8 @@ import { computed } from 'vue'
 import { game, c, build, demolish, cancelSite, siteFirst } from '../../store.js'
 import { BLD, BLD_GROUPS, TECH, MAINT } from '../../game/constants.js'
 import { fmt, num, daysTxt } from '../../game/format.js'
+import { condMul } from '../../game/wear.js'
+const condOf = (st, k) => { const a = (st.cond && st.cond[k]) || []; return a.length ? { avg: a.reduce((t, x) => t + x.c, 0) / a.length, broken: a.filter(x => x.broken).length } : null }
 import PixelIcon from '../PixelIcon.vue'
 import MeterBar from '../MeterBar.vue'
 
@@ -30,6 +32,7 @@ const rowOf = computed(() => Object.fromEntries(Object.entries(BLD).map(([k, b])
     <div class="small">
       {{ r.b.d }} · koszt {{ r.b.cr }} kr, {{ r.b.mi }} t min. · {{ r.b.w }} prac. · {{ num(r.b.en) }} kWh/dzień · budowa {{ daysTxt(Math.ceil(r.b.bt / r.b.crew)) }} przy {{ r.b.crew }} budowniczych<template v-if="r.b.max"> · maks. {{ r.b.max }}</template>
     </div>
+    <div v-if="s.b[r.k] && condOf(s, r.k)" class="small" :class="condOf(s, r.k).broken ? 'neg' : condOf(s, r.k).avg < 40 ? 'warn' : ''">stan: {{ Math.round(condOf(s, r.k).avg) }}%<template v-if="condOf(s, r.k).broken"> · awarie: {{ condOf(s, r.k).broken }}</template> · sprawność {{ Math.round(condMul(s, r.k) * 100) }}%</div>
     <div v-if="r.lock" class="locknote"><PixelIcon name="lock" />Wymaga technologii: {{ TECH[r.b.req].n }} (zakładka TECHNOLOGIE)</div>
     <div class="cost2">
       <div>

@@ -10,6 +10,7 @@ import { scenarioOf } from './scenarios.js'
 import { CHOICES, CHOICE_KEYS, resolveChoice } from './choices.js'
 import { record } from './history.js'
 import { tickOrders } from './orders.js'
+import { syncCond, tickWear } from './wear.js'
 import { trackStats, bumpStat } from './badges.js'
 
 export function clampStore(s) {
@@ -35,6 +36,7 @@ export function endTurn(s, acc, auto = {}) {
   const add = (k, v) => r.push({ k, v: v || {}, d: 1 })
   const note = (t, cl) => r.push({ k: 'txt', t, c: cl, day: s.m, top: 1 })
 
+  syncCond(s)
   s.prev = snapshot(s)
   s.energy = c.enStore
   if (c.enWaste > 0.01) add('waste', { a: c.enWaste })
@@ -102,6 +104,11 @@ export function endTurn(s, acc, auto = {}) {
   if (tickExpeditions(s, note)) stops.add('exp')
   if (tickCampaigns(s, note)) stops.add('camp')
   for (const r of tickOrders(s, note)) stops.add(r)
+  // zużycie, awarie, rozpad i naprawy budynków
+  { const w = tickWear(s, c.repairPts)
+    w.stops.forEach(r => stops.add(r))
+    if (w.broke.length) add('broke', { a: w.broke.length, _n: w.broke[w.broke.length - 1] })
+    for (const n of w.collapsed) note('Budynek rozpadł się ze starości: ' + n + '. Trzeba zbudować go od nowa.', 'neg') }
   if (s.m > 10 && Math.random() < 0.1) {
     if (Math.random() < 0.4) {
       // zdarzenie z wyborem: odpowiedź automatyczna albo czekanie na decyzję gracza

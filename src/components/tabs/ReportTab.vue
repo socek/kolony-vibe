@@ -3,6 +3,7 @@ import { computed } from 'vue'
 import { game, c } from '../../store.js'
 import { BLD, TECH, MORK, HUNGER_MAX } from '../../game/constants.js'
 import { scenarioOf } from '../../game/scenarios.js'
+import { avgCond, brokenCount } from '../../game/wear.js'
 import { num, fmt, daysTxt } from '../../game/format.js'
 import { techPct, techEta } from '../../game/calc.js'
 import { repLines } from '../../game/report.js'
@@ -71,6 +72,7 @@ const depDays = computed(() => c.value.minProd > 0 ? Math.floor(c.value.deps / c
       <span><PixelIcon name="gun" />Obrona</span>
       <span :class="c.defRed > 0 ? '' : 'neg'">{{ c.defRed > 0 ? 'straty od piratów i meteorytów −' + R(c.defRed * 100) + '%' : 'działa nieobsadzone – nie działają' }} <span class="small">(sprawne działa: {{ num(c.def) }}/{{ s.b.gun }})</span></span>
     </div>
+    <div class="row"><span><PixelIcon name="repair" />Stan budynków</span><span :class="brokenCount(s) ? 'neg' : avgCond(s) < 50 ? 'warn' : ''">średnio {{ Math.round(avgCond(s)) }}%<template v-if="brokenCount(s)"> · awarie: {{ brokenCount(s) }}</template> <span class="small">(naprawy {{ Math.round(c.repairPts) }} pkt/dzień)</span></span></div>
     <div class="row"><span><PixelIcon name="mor" />Morale</span><span><SignedNum :n="nextMor - s.mor" /> <span class="small">({{ R(s.mor) }}% → {{ R(nextMor) }}%; przy obecnych warunkach ustali się na {{ R(c.mt) }}%)</span></span></div>
   </div>
 

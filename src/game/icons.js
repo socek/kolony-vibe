@@ -12,6 +12,7 @@ export const ICONS = {
   work: ['.ff..ff.', '.ff..ff.', '.ffffff.', '..ffff..', '...ff...', '...ff...', '...ff...', '...ff...'],
   build: ['bbbbbb..', 'bbbbbbf.', 'bbbbbb.f', '...ff...', '...ff...', '...ff...', '...ff...', '...ff...'],
   exp: ['.f......', '.fbbbb..', '.fbbbbbb', '.fbbbb..', '.f......', '.f......', '.f......', 'fff.....'],
+  repair: ['.ff..ff.', '.ff..ff.', '.ffffff.', '..ffff..', '...bb...', '...bb...', '...bb...', '...bb...'],
   farm: ['.cc..cc.', 'cccccccc', '.cccccc.', '...cc...', '...cc...', '.dddddd.', '..dddd..', '..dddd..'],
   farm2: ['.ee..ee.', 'eeeeeeee', '.eeeeee.', '...cc...', '...cc...', '.ffffff.', '..ffff..', '..ffff..'],
   power2: ['ffffffff', 'fafafafa', 'ffffffff', 'fafafafa', 'ffffffff', '...bb...', '...bb...', '.bbbbbb.'],

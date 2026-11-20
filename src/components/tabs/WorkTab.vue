@@ -11,7 +11,7 @@ import MeterBar from '../MeterBar.vue'
 const s = computed(() => game.s)
 const infra = computed(() => INFRA.reduce((a, k) => a + c.value.wNeed[k], 0))
 const missing = computed(() => Math.max(0, Math.ceil(c.value.needed - c.value.workforce)))
-const jobs = computed(() => JOBS.filter(k => k === 'build' || s.value.b[k]).map(k => {
+const jobs = computed(() => JOBS.filter(k => k === 'build' || k === 'repair' || s.value.b[k]).map(k => {
   const n = c.value.wNeed[k], E = c.value.E[k], p = prioOf(s.value, k)
   return { k, p, n, E, w: n * E, isB: k === 'build' }
 }))
@@ -43,7 +43,7 @@ const jobs = computed(() => JOBS.filter(k => k === 'build' || s.value.b[k]).map(
   <div v-for="j in jobs" :key="j.k" class="card">
     <div class="row">
       <span class="t"><PixelIcon :name="j.k" />{{ jobName(j.k) }}
-        <span v-if="j.isB" class="small">(placów budowy: {{ s.q.length }})</span><template v-else> ×{{ s.b[j.k] }}</template>
+        <span v-if="j.isB" class="small">(placów budowy: {{ s.q.length }})</span><span v-else-if="j.k === 'repair'" class="small">(naprawy: {{ Math.round(c.repairPts) }} pkt/dzień)</span><template v-else> ×{{ s.b[j.k] }}</template>
       </span>
       <span v-if="j.p">{{ fmt(j.w) }}/{{ fmt(j.n) }} prac.<template v-if="j.n"> ({{ Math.round(j.E * 100) }}%)</template></span>
       <span v-else class="neg">{{ j.isB ? 'WSTRZYMANE' : 'ZATRZYMANY' }}</span>

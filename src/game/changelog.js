@@ -9,6 +9,7 @@ export const versionLabel = (upper = false) => {
 export const CHANGELOG = [
   {
     v: '0.3 „Merveil” (in development)', d: 'w przygotowaniu', items: [
+      'Zużycie budynków: stan spada z czasem, zużyte budynki pracują gorzej i częściej mają awarie, a zużyte do zera się rozpadają. Naprawiają je konserwatorzy – nowa pula pracowników z priorytetem w zakładce PRACA.',
       'Wyprawy wybierają cel poszukiwań: złoża, ruiny (punkty badań), wraki (kredyty, minerały, części do technologii) albo osadnicy (handel, nowi koloniści, konflikt lub stała osada sąsiedzka z handlem w zakładce RYNEK). Żołnierze i inżynierowie mogą dołączyć do ekipy.',
       'Szpitale osłabiają też epidemie.',
       'Specjaliści: naukowcy, inżynierowie i żołnierze pracują o 50% wydajniej na swoich stanowiskach. Nowe budynki: szkoła (kształci specjalistów) i szpital (słabsze epidemie, mniej zgonów z głodu, tylko naukowcy). Laboratoria obsadzają tylko naukowcy.',

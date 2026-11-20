@@ -172,3 +172,11 @@ test('wyprawa do ruin z żołnierzem', async ({ page }) => {
   await page.getByRole('button', { name: 'WYŚLIJ WYPRAWĘ' }).click()
   await expect(page.getByText(/cel: ruiny · 5 osób \(żołn\. 1/)).toBeVisible()
 })
+
+test('konserwatorzy i stan budynków', async ({ page }) => {
+  await newGame(page)
+  await tab(page, 'PRACA')
+  await expect(page.locator('.card', { hasText: 'Konserwatorzy (naprawy' })).toBeVisible()
+  await tab(page, 'RAPORT')
+  await expect(page.getByText('Stan budynków')).toBeVisible()
+})

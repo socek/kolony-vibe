@@ -12,6 +12,7 @@ import { startCampaign } from './game/campaigns.js'
 import { accept, deliver, makeOffer, ensureOrders } from './game/orders.js'
 import { queueTech, unqueueTech, researchNow, nextResearch } from './game/research.js'
 import { resolveChoice } from './game/choices.js'
+import { syncCond } from './game/wear.js'
 import { BADGES, newBadges } from './game/badges.js'
 import { hall, recordGame, grantBadges } from './game/scores.js'
 
@@ -53,7 +54,7 @@ export function siteFirst(i) {
 }
 export function demolish(k) {
   const s = game.s
-  s.b[k]--; s.energy = Math.min(s.energy, batCapOf(s)); clampStore(s)
+  s.b[k]--; syncCond(s); s.energy = Math.min(s.energy, batCapOf(s)); clampStore(s)
   beep(180, 0.08); persist()
 }
 
@@ -151,6 +152,7 @@ export function devAct(a) {
   else if (a === 'fill') { const cc = calc(s); s.food = cc.foodCap; s.min = cc.minCap; s.energy = cc.enCap; ui.devMsg = 'Magazyny pełne.' }
   else if (a === 'cash') { s.cr += 1000; ui.devMsg = '+1000 kr.' }
   else if (a === 'alltech') { for (const k in TECH) s.tech[k] = 1; s.rs = null; s.rp = {}; s.rq = []; ui.devMsg = 'Odkryto wszystkie technologie.' }
+  else if (a === 'repairall') { syncCond(s); for (const k in s.cond) for (const x of s.cond[k]) { x.c = 100; x.broken = false } ui.devMsg = 'Wszystkie budynki naprawione.' }
   else if (a === 'order') { ensureOrders(s); makeOffer(s); ui.devMsg = 'Nowa oferta zlecenia LUJ (zakładka RYNEK).' }
   else if (a === 'dep') { addDeposit(s, 'Złoże deweloperskie', 1000); ui.devMsg = 'Dodano złoże 1000 t.' }
   else if (a === 'expback') { s.exp.forEach(x => x.left = 1); ui.devMsg = 'Wyprawy wrócą na koniec dnia.' }

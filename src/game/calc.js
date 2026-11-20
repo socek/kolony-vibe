@@ -1,6 +1,7 @@
 import { BLD, TECH, MAINT, INFRA, JOBS, HUNGER_MAX, SPEC, SPEC_REQ, SPEC_BONUS, prioOf, capOf, batCapOf, houseCapOf } from './constants.js'
 import { daysTxt } from './format.js'
 import { depTotal } from './expeditions.js'
+import { condMul, repairNeed, REPAIR_PER_WORKER } from './wear.js'
 
 // Wylicza wszystko, co dzieje się w ciągu jednego dnia, bez zmieniania stanu.
 export function calc(s) {
@@ -11,6 +12,7 @@ export function calc(s) {
   const wMul = k => k === 'gun' && t.targeting ? 0.5 : 1
   for (const k in BLD) { wNeed[k] = b[k] * BLD[k].w * af * wMul(k); nb += b[k] }
   wNeed.build = s.q.reduce((a, x) => a + BLD[x.k].crew * af, 0)
+  wNeed.repair = repairNeed(s) * af
 
   // 1) specjaliści trafiają na swoje stanowiska wg priorytetów (gdy ich za dużo – liczeni proporcjonalnie)
   const sp = s.spec || { sci: 0, eng: 0, sol: 0 }
@@ -48,7 +50,11 @@ export function calc(s) {
     if (prioOf(s, k) === 0) { E[k] = 0; M[k] = 0; continue }
     E[k] = n > 0 ? (st + o) / n : 1
     M[k] = n > 0 ? (SPEC_REQ.includes(k) ? E[k] : (o + SPEC_BONUS * st) / n) : 1
+    // zużyte i zepsute budynki pracują gorzej
+    if (BLD[k]) M[k] *= condMul(s, k)
   }
+  // punkty napraw dziennie (inżynierowie naprawiają szybciej)
+  const repairPts = wNeed.repair * (M.repair || 0) / Math.max(af, 0.01) * REPAIR_PER_WORKER
 
   // budowniczowie trafiają na place budowy w kolejności kolejki
   const builders = wNeed.build * E.build, bMul = E.build > 0 ? M.build / E.build : 1
@@ -93,7 +99,7 @@ export function calc(s) {
   mt = Math.max(0, Math.min(100, mt))
   const foodCap = capOf(s, 'food'), minCap = capOf(s, 'min'), foodWaste = Math.max(0, foodAfter - foodCap), minWaste = Math.max(0, s.min + minProd - minCap)
   const enStore = Math.max(0, Math.min(enCap, s.energy + enProd - enNeed * f)), enWaste = Math.max(0, s.energy + enProd - enNeed * f - enCap)
-  return { E, M, specA, ordA, sciMissing, train, hospRed, spTot, wNeed, builders, sites, foodCap, minCap, foodWaste, minWaste, enCap, enStore, enWaste, cap, workforce, needed, e, f, enProd, enNeed, foodProd, foodCons, minPot, deps, minProd, resProd, taxInc, trade, maint, unemp, shortRatio, hungerNext, hungerDeaths, mt, crowd, unempPen, black, starv, recB, def, defRed }
+  return { repairPts, E, M, specA, ordA, sciMissing, train, hospRed, spTot, wNeed, builders, sites, foodCap, minCap, foodWaste, minWaste, enCap, enStore, enWaste, cap, workforce, needed, e, f, enProd, enNeed, foodProd, foodCons, minPot, deps, minProd, resProd, taxInc, trade, maint, unemp, shortRatio, hungerNext, hungerDeaths, mt, crowd, unempPen, black, starv, recB, def, defRed }
 }
 
 export const nextTech = s => Object.entries(TECH).filter(([k]) => !s.tech[k]).map(e => e[1]).sort((a, b) => a.c - b.c)[0]

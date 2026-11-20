@@ -28,6 +28,7 @@ export const REP = {
   nodep: { c: 'neg', f: (v, d) => 'Kopalnie stoją' + dd(d) + ' – wszystkie złoża są wyczerpane. Wyślij wyprawę w zakładce WYPRAWY.' },
   trained: { c: 'pos', f: (v, d) => 'Szkoły wykształciły ' + ws(d) + v.a + ' ' + (v.a === 1 ? 'specjalistę' : 'specjalistów') + ' (ostatnio: ' + SPEC[v._k].n.toLowerCase() + ').' },
   nosci: { c: 'warn', f: (v, d) => 'Brakuje naukowców' + dd(d) + ' – laboratoria i szpitale obsadzają tylko oni (brakuje ' + v._n + '). Wybierz kształcenie naukowców w szkole (zakładka PRACA).' },
+  broke: { c: 'warn', f: (v, d) => (v.a === 1 ? 'Awaria budynku: ' + v._n : 'Awarie budynków: ' + v.a + ' (ostatnia: ' + v._n + ')') + dd(d) + '. Zepsuty budynek nie pracuje, dopóki konserwatorzy go nie naprawią (zakładka PRACA).' },
   nores: { c: 'warn', f: (v, d) => 'Laboratoria nie mają projektu' + dd(d) + ' – wybierz technologię w zakładce TECHNOLOGIE.' }
 }
 

@@ -67,7 +67,7 @@ export const HUNGER_MAX = 12 // po tylu dniach głodu kolonia wymiera
 export const DAYS = 365, YEAR = 2150, KEY = 'kolony-vibe-v2'
 
 export const INFRA = ['battery', 'fridge', 'store', 'house', 'shield']
-export const JOBS = ['build', 'farm', 'farm2', 'synth', 'power', 'power2', 'mine', 'mine2', 'school', 'hosp', 'rec', 'lab', 'port', 'gun']
+export const JOBS = ['build', 'repair', 'farm', 'farm2', 'synth', 'power', 'power2', 'mine', 'mine2', 'school', 'hosp', 'rec', 'lab', 'port', 'gun']
 export const PRIO = [[0, 'STOP'], [1, 'NISKI'], [2, 'ŚREDNI'], [3, 'WYSOKI']]
 export const TABS = [['raport', 'RAPORT'], ['budowa', 'BUDOWA'], ['praca', 'PRACA'], ['wyprawy', 'WYPRAWY'], ['rynek', 'RYNEK'], ['polityka', 'POLITYKA'], ['nauka', 'TECHNOLOGIE'], ['statystyki', 'STATYSTYKI']]
 export const RATIONS = [[0.75, 'Głodowe'], [1, 'Normalne'], [1.25, 'Obfite']]
@@ -77,13 +77,13 @@ export const MNAMES = ['STY', 'LUT', 'MAR', 'KWI', 'MAJ', 'CZE', 'LIP', 'SIE', '
 // Specjaliści: jobs – stanowiska, na których dają premię; req – stanowiska tylko dla nich
 export const SPEC = {
   sci: { n: 'Naukowcy', one: 'naukowiec', jobs: ['lab', 'hosp'], req: ['lab', 'hosp'] },
-  eng: { n: 'Inżynierowie', one: 'inżynier', jobs: ['build', 'power', 'power2', 'mine', 'mine2', 'synth', 'port'], req: [] },
+  eng: { n: 'Inżynierowie', one: 'inżynier', jobs: ['build', 'repair', 'power', 'power2', 'mine', 'mine2', 'synth', 'port'], req: [] },
   sol: { n: 'Żołnierze', one: 'żołnierz', jobs: ['gun'], req: [] }
 }
 export const SPEC_BONUS = 1.5 // sprawność specjalisty na swoim stanowisku (zwykły kolonista = 1)
 export const SPEC_REQ = ['lab', 'hosp']
 export const prioOf = (s, k) => INFRA.includes(k) ? 9 : ((s.prio || {})[k] ?? 2)
-export const jobName = k => k === 'build' ? 'Budowniczowie' : BLD[k].n
+export const jobName = k => k === 'build' ? 'Budowniczowie' : k === 'repair' ? 'Konserwatorzy' : BLD[k].n
 // pojemność magazynu danego surowca: żywność w chłodniach, minerały w magazynach minerałów
 export const capOf = (s, k) => k === 'food'
   ? STBASE + (s.b.fridge || 0) * STCAP * (s.tech.cryo ? 1.5 : 1)
