@@ -82,6 +82,7 @@ export function advance(n) {
   const step = () => {
     why = endTurn(game.s, i > 0).filter(k => k === 'over' || (n > 1 && settings.stops[k]))
     i++
+    persist() // zapis od razu, nie dopiero po animacji
     ui.tab = 'raport'
     ui.turn.fill = n > 1 ? i / n * 100 : 100
     beep(330 + i * 60, 0.04)

@@ -6,7 +6,8 @@ const startDeposit = () => ({ n: 'Złoże macierzyste', t: START_DEPOSIT, max: S
 export function newState() {
   return {
     m: 1, pop: 100, food: 300, energy: 100, min: 200, cr: 500, mor: 60, rs: null, rp: {}, q: [], dep: [startDeposit()], exp: [], camp: [],
-    b: { farm: 3, power: 2, battery: 1, fridge: 1, store: 1, mine: 1, house: 2, rec: 0, lab: 0, port: 0, shield: 0, gun: 0 },
+    // każdy budynek z listy ma licznik (0, jeśli nie ma go na starcie)
+    b: { ...Object.fromEntries(Object.keys(BLD).map(k => [k, 0])), farm: 3, power: 2, battery: 1, fridge: 1, store: 1, mine: 1, house: 2 },
     tax: 10, ration: 1, tech: {}, prio: {},
     pr: { food: 4, min: 6 }, prev: null, over: null,
     report: [
